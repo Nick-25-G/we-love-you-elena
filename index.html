@@ -60,6 +60,105 @@ dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20p
   .butterfly.hold-spin {
   animation: holdSpinY 3s linear infinite;
   }
+  .thanks-dialog {
+  border: 1px solid #d5b7ff;
+  border-radius: 24px;
+  padding: 0;
+  width: min(88%, 380px);
+  background: transparent;
+  color: white;
+  overflow: visible;
+}
+
+.thanks-dialog::backdrop {
+  background: rgba(8, 5, 25, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.thanks-card {
+  text-align: center;
+  padding: 30px 24px;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    #21163d,
+    #38204d,
+    #173d4a
+  );
+  box-shadow: 0 0 30px #a879ff55;
+}
+
+.thanks-icon {
+  font-size: 48px;
+  color: #ffd98a;
+  animation: thanksGlow 2s ease-in-out infinite alternate;
+}
+
+.thanks-card h2 {
+  color: #e3caff;
+  margin: 12px 0;
+}
+
+.thanks-card p {
+  line-height: 1.6;
+  color: #f1eaff;
+}
+
+#continueStar {
+  margin-top: 18px;
+  border: 0;
+  border-radius: 30px;
+  padding: 12px 26px;
+  color: #201332;
+  background: linear-gradient(90deg, #d5b7ff, #ffbd83, #8ce4df);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes thanksGlow {
+  from { transform: scale(1); opacity: .8; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+  #starFlight {
+  position: fixed;
+  left: -60px;
+  top: 65%;
+  z-index: 9999;
+  font-size: 38px;
+  color: #ffd98a;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow:
+    0 0 8px #fff,
+    0 0 20px #d5b7ff,
+    0 0 35px #ffbd83;
+}
+
+#starFlight.fly {
+  animation: starJourney 2.2s ease-in-out forwards;
+}
+
+@keyframes starJourney {
+  0% {
+    left: -60px;
+    top: 70%;
+    opacity: 0;
+    transform: scale(.5) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.3) rotate(220deg);
+  }
+  100% {
+    left: 110%;
+    top: 18%;
+    opacity: 0;
+    transform: scale(.2) rotate(360deg);
+  }
+}
 </style>
 </head>
 <body>
@@ -93,6 +192,21 @@ dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20p
 </main>
 <footer>Hecho con cariño para Elena · We love you Elena ✦</footer>
 <dialog id="starDialog"><button id="closeDialog">Cerrar</button><div id="dialogContent"></div></dialog>
+  <dialog id="thanksDialog" class="thanks-dialog">
+  <div class="thanks-card">
+    <div class="thanks-icon">✦</div>
+    <h2>¡Gracias por participar!</h2>
+    <p>
+      Tu estrella va en camino.
+      Cuando sea aprobada, aparecerá en el cielo de Elena. ✨
+    </p>
+    <button id="continueStar" type="button">
+      Continuar ✨
+    </button>
+  </div>
+</dialog>
+
+<div id="starFlight" aria-hidden="true">✦</div>
 <script>
 const countries = ["Argentina","Bolivia","Brasil","Canadá","Chile","Colombia","Costa Rica","Cuba","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","Puerto Rico","República Dominicana","Uruguay","Venezuela","Alemania","Francia","Italia","Portugal","Reino Unido","Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India","Australia","Otro"];
 const countryEl=document.querySelector("#country");
@@ -145,6 +259,21 @@ function render(){
 }
 function openStar(s){document.querySelector("#dialogContent").innerHTML="";const h=document.createElement("h2");h.textContent="✦ "+s.username;const meta=document.createElement("p");meta.className="muted";meta.textContent="🌍 "+s.country+" · "+s.region;const p=document.createElement("p");p.textContent=s.message;document.querySelector("#dialogContent").append(h,meta,p);dialog.showModal()}
 document.querySelector("#closeDialog").onclick=()=>dialog.close();
+  const thanksDialog = document.querySelector("#thanksDialog");
+const continueStar = document.querySelector("#continueStar");
+const starFlight = document.querySelector("#starFlight");
+
+continueStar.addEventListener("click", () => {
+  thanksDialog.close();
+
+  starFlight.classList.remove("fly");
+  void starFlight.offsetWidth;
+  starFlight.classList.add("fly");
+});
+
+starFlight.addEventListener("animationend", () => {
+  starFlight.classList.remove("fly");
+});
 document.querySelector("#starForm").addEventListener("submit", async e => {
   e.preventDefault();
 
@@ -161,23 +290,24 @@ document.querySelector("#starForm").addEventListener("submit", async e => {
 
   if (!s.username || !country || !s.message) return;
 
+  try {
   const { error } = await supabaseClient
     .from("dedications")
     .insert(s);
 
-  if (error) {
+  if (error) throw error;
+
+  document.querySelector("#dedication").value = "";
+  thanksDialog.showModal();
+
+} catch (error) {
   console.error("Error al enviar la estrella:", error);
 
   document.querySelector("#notice").textContent =
-    "No se pudo enviar: " + error.message;
-
-  return;
+    "No se pudo enviar tu estrella. Comprueba tu conexión e inténtalo de nuevo.";
   }
+  });
 
-  document.querySelector("#dedication").value = "";
-  document.querySelector("#notice").textContent =
-    "¡Tu estrella fue enviada! Aparecerá cuando sea aprobada. ✨";
-});
 loadApprovedStars();
   
 
