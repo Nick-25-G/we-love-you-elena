@@ -14,13 +14,27 @@ main{max-width:1050px;margin:auto;padding:12px 18px 56px}.stage{position:relativ
 .stage:before,.stage:after{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 8% 20%,#fff 99%,transparent),radial-gradient(2px 2px at 78% 18%,#d6c7ff 99%,transparent),radial-gradient(1px 1px at 34% 76%,#fff 99%,transparent),radial-gradient(1px 1px at 89% 66%,#fff 99%,transparent),radial-gradient(2px 2px at 18% 84%,#bca8ff 99%,transparent);background-size:230px 190px;opacity:.65;pointer-events:none}
 .stage:after{filter:blur(1px);transform:translate(45px,30px);opacity:.35}
 .stage-label{position:absolute;top:18px;left:20px;color:#c7b7ff;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;z-index:3}
-.butterfly-wrap{position:absolute;left:50%;top:48%;width:min(82vw,650px);height:390px;transform:translate(-50%,-50%);perspective:1000px;animation:float 5s ease-in-out infinite;z-index:1}
+.butterfly-wrap{
+position:absolute;
+left:calc(50% + var(--drag-x, 0px));
+top:calc(48% + var(--drag-y, 0px));
+width:min(82vw,650px);
+height:390px;
+transform:translate(-50%,-50%);
+perspective:1000px;
+animation:float 5s ease-in-out infinite;
+z-index:1;
+touch-action:none;
+cursor:grab;
+user-select:none;
+}
+.butterfly-wrap.dragging{cursor:grabbing}
 .butterfly{position:absolute;inset:0;transform-style:preserve-3d;animation:turn 18s ease-in-out infinite}
 .wing{position:absolute;top:50%;width:49%;height:72%;transform-style:preserve-3d;filter:drop-shadow(0 0 18px #8e6bff88)}
 .wing.left{left:1%;transform-origin:100% 50%;transform:translateY(-50%) rotateY(17deg);animation:flapL 3.2s ease-in-out infinite}
 .wing.right{right:1%;transform-origin:0 50%;transform:translateY(-50%) rotateY(-17deg);animation:flapR 3.2s ease-in-out infinite}
-.wing-shape{position:absolute;inset:0;border-radius:78% 22% 66% 34% / 48% 38% 62% 52%;background:radial-gradient(ellipse at 45% 45%,#bca8ff55 0 4%,transparent 38%),radial-gradient(ellipse at 65% 65%,#41a7dc66 0 2%,transparent 40%),radial-gradient(ellipse at 25% 75%,#a04bda88,transparent 52%),linear-gradient(135deg,#243b85 0%,#542c91 45%,#13285e 100%);border:1px solid #d5c8ff88;box-shadow:inset 0 0 38px #a78bfa55,inset 0 0 8px #fff8}
-.right .wing-shape{transform:scaleX(-1);border-radius:22% 78% 34% 66% / 38% 48% 52% 62%}
+.wing-shape{position:absolute;inset:0;clip-path:polygon(100% 43%,84% 18%,58% 3%,30% 0%,8% 17%,0% 42%,12% 66%,34% 82%,62% 100%,84% 78%,96% 59%);background:radial-gradient(ellipse at 45% 45%,#bca8ff55 0 4%,transparent 38%),radial-gradient(ellipse at 65% 65%,#41a7dc66 0 2%,transparent 40%),radial-gradient(ellipse at 25% 75%,#a04bda88,transparent 52%),linear-gradient(135deg,#243b85 0%,#542c91 45%,#13285e 100%);border:1px solid #d5c8ff88;box-shadow:inset 0 0 38px #a78bfa55,inset 0 0 8px #fff8}
+.right .wing-shape{transform:scaleX(-1)}
 .wing-shape:after{content:"";position:absolute;inset:8%;border-radius:inherit;background-image:radial-gradient(2px 2px at 20% 20%,#fff 98%,transparent),radial-gradient(1px 1px at 60% 25%,#fff 98%,transparent),radial-gradient(2px 2px at 75% 70%,#d8c8ff 98%,transparent),radial-gradient(1px 1px at 38% 78%,#fff 98%,transparent);background-size:65px 60px;opacity:.9}
 .body{position:absolute;z-index:4;left:50%;top:50%;width:13px;height:155px;border-radius:50%;background:linear-gradient(90deg,#17152f,#d4c7ff,#30204e);transform:translate(-50%,-50%);box-shadow:0 0 22px #c6aaff}
 .body:before,.body:after{content:"";position:absolute;top:-28px;width:55px;height:55px;border-top:2px solid #d7c8ff;border-radius:50% 50% 0 0}.body:before{right:2px;transform:rotate(25deg)}.body:after{left:2px;transform:rotate(-25deg)}
@@ -35,6 +49,17 @@ label{display:block;font-size:.83rem;color:#d8d2f0;margin:13px 0 6px}input,selec
 footer{text-align:center;color:#9695b9;font-size:.78rem;padding:22px 10px}
 dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20px;max-width:420px;width:calc(100% - 30px);padding:22px}dialog::backdrop{background:#030615bb}dialog button{float:right;background:#6550a6;border:0;color:white;padding:8px 14px;border-radius:20px}
 @media(max-width:700px){.panels{grid-template-columns:1fr}.stage{min-height:420px}.butterfly-wrap{height:310px}.hint{font-size:.72rem;padding:0 12px}.panel{padding:18px}}
+  @keyframes holdSpinY {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+  }
+  .butterfly.hold-spin {
+  animation: holdSpinY 3s linear infinite;
+  }
 </style>
 </head>
 <body>
@@ -151,5 +176,172 @@ document.querySelector("#starForm").addEventListener("submit", async e => {
     "¡Tu estrella fue enviada! Aparecerá cuando sea aprobada. ✨";
 });
 loadApprovedStars();
+  
+
+const butterflyWrap = document.querySelector(".butterfly-wrap");
+const butterfly = butterflyWrap?.querySelector(".butterfly");
+
+if (butterflyWrap && butterfly) {
+  const pointers = new Map();
+
+  let dragX = 0;
+  let dragY = 0;
+  let rotateX = 0;
+  let rotateY = 0;
+  let zoom = 1;
+  let gesture = null;
+  let holdTimer = null;
+let holdStartX = 0;
+let holdStartY = 0;
+
+  function centerOf(points) {
+    return {
+      x: (points[0].x + points[1].x) / 2,
+      y: (points[0].y + points[1].y) / 2
+    };
+  }
+
+  function distanceOf(a, b) {
+    return Math.hypot(b.x - a.x, b.y - a.y);
+  }
+
+  function angleOf(a, b) {
+    return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+  }
+
+  function startGesture() {
+    const points = [...pointers.values()];
+
+    if (points.length === 1) {
+      gesture = {
+        type: "one",
+        x: points[0].x,
+        y: points[0].y,
+        dragX,
+        dragY
+      };
+    }
+
+    if (points.length >= 2) {
+      const a = points[0];
+      const b = points[1];
+
+      gesture = {
+        type: "two",
+        center: centerOf([a, b]),
+        distance: distanceOf(a, b),
+        angle: angleOf(a, b),
+        dragX,
+        dragY,
+        rotateX,
+        rotateY,
+        zoom
+      };
+
+      butterfly.style.animation = "none";
+    }
+  }
+
+  function apply3D() {
+    butterfly.style.transform =
+      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${zoom})`;
+  }
+
+  butterflyWrap.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    if (pointers.size === 0) {
+  holdStartX = e.clientX;
+  holdStartY = e.clientY;
+
+  holdTimer = setTimeout(() => {
+    if (pointers.size === 1) {
+      butterfly.classList.add("hold-spin");
+    }
+    holdTimer = null;
+  }, 500);
+    }
+    butterflyWrap.setPointerCapture(e.pointerId);
+
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+if (pointers.size > 1) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+  butterfly.classList.remove("hold-spin");
+}
+    butterflyWrap.classList.add("dragging");
+    startGesture();
+  });
+
+  butterflyWrap.addEventListener("pointermove", e => {
+    if (!pointers.has(e.pointerId)) return;
+if (holdTimer && Math.hypot(
+  e.clientX - holdStartX,
+  e.clientY - holdStartY
+) > 8) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+
+    const points = [...pointers.values()];
+
+    if (points.length === 1 && gesture?.type === "one") {
+      dragX = gesture.dragX + points[0].x - gesture.x;
+      dragY = gesture.dragY + points[0].y - gesture.y;
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+    }
+
+    if (points.length >= 2 && gesture?.type === "two") {
+      const a = points[0];
+      const b = points[1];
+      const center = centerOf([a, b]);
+
+      dragX = gesture.dragX + center.x - gesture.center.x;
+      dragY = gesture.dragY + center.y - gesture.center.y;
+
+      rotateY = gesture.rotateY + angleOf(a, b) - gesture.angle;
+      rotateX = gesture.rotateX + (center.y - gesture.center.y) * 0.25;
+
+      zoom = Math.max(0.7, Math.min(
+        1.4,
+        gesture.zoom * distanceOf(a, b) / Math.max(gesture.distance, 1)
+      ));
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+
+      apply3D();
+    }
+  });
+
+  function stopPointer(e) {
+    if (holdTimer) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+
+butterfly.classList.remove("hold-spin");
+    pointers.delete(e.pointerId);
+
+    if (pointers.size > 0) {
+      startGesture();
+    } else {
+      gesture = null;
+      butterflyWrap.classList.remove("dragging");
+    }
+  }
+
+  butterflyWrap.addEventListener("pointerup", stopPointer);
+  butterflyWrap.addEventListener("pointercancel", stopPointer);
+}
+  
 </script>
 </body></html>
