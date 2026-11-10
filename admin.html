@@ -37,6 +37,32 @@ footer{text-align:center;color:#8585aa;padding:20px;font-size:.78rem}
 const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  async function checkAdmin(){
+    checkAdmin();
+  const {data:{session}} = await supabaseClient.auth.getSession();
+
+  if(!session){
+    document.querySelector("#authMessage").textContent =
+      "Inicia sesión para continuar.";
+    return;
+  }
+
+  const {data:admin,error} = await supabaseClient
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id",session.user.id)
+    .maybeSingle();
+
+  if(error || !admin){
+    document.querySelector("#authMessage").textContent =
+      "Esta cuenta no tiene permisos de administración.";
+    return;
+  }
+
+  document.querySelector("#loginBox").style.display = "none";
+  document.querySelector(".notice").textContent =
+    "Sesión de administradora verificada.";
+  }
   document.querySelector("#googleLogin").addEventListener("click", async () => {
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: "google",
