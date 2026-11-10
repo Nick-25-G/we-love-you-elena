@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d25"><title>Panel privado · We love you Elena</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#242354,#0a1029 65%);color:#f4f0ff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{padding:28px 18px 20px;max-width:1050px;margin:auto}a{color:#cbbaff;text-decoration:none}h1{font:500 clamp(2rem,6vw,3rem) Georgia,serif;margin:8px 0}p{color:#bdbbd9;line-height:1.5}.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#c6b5ff}
+main{max-width:1050px;margin:auto;padding:0 18px 45px}.notice{border:1px solid #bca8ff55;background:#ffffff0b;border-radius:16px;padding:14px;margin:12px 0 20px;font-size:.9rem;color:#ddd5f7}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid #ffffff2a;background:#151b3b;color:#ddd5f7;padding:10px 16px;border-radius:99px;cursor:pointer}.tab.active{background:#6c53ad;border-color:#bba6ff;color:white}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat,.item{background:#131a39;border:1px solid #ffffff20;border-radius:18px;padding:16px}.stat strong{font-size:1.7rem;display:block;color:#e2d6ff}.stat span,.small{font-size:.8rem;color:#aaa9ce}
+#entries{display:grid;gap:12px;margin-top:14px}.item-top{display:flex;justify-content:space-between;gap:12px;align-items:start}.item h3{margin:0;font-size:1rem}.item p{margin:12px 0;color:#f0eaff}.meta{font-size:.8rem;color:#aaa9ce;margin-top:5px}.status{font-size:.72rem;padding:5px 9px;border-radius:99px;background:#ffffff13;white-space:nowrap}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{border:0;border-radius:99px;padding:9px 14px;font-weight:650;cursor:pointer}.approve{background:#b9f0d9;color:#103a2a}.reject{background:#ffd0d7;color:#54202a}.delete{background:#ffffff16;color:#eee}.empty{padding:30px;text-align:center;color:#aaa9ce;border:1px dashed #ffffff30;border-radius:18px}
+footer{text-align:center;color:#8585aa;padding:20px;font-size:.78rem}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.item-top{display:block}.status{display:inline-block;margin-top:8px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header><div class="eyebrow">✦ área privada de administración</div><h1>Panel de moderación</h1><p>We love you Elena · Aquí puedes revisar las estrellas antes de que formen parte del universo público.</p><a href="index.html">← Volver al prototipo público</a></header>
+<main>
+<div class="notice"><b>Importante:</b> esta es una demostración local. Los registros se comparten con el prototipo solo en este mismo navegador. No es todavía un panel con inicio de sesión seguro ni una moderación compartida por internet.</div>
+<section class="stats"><div class="stat"><strong id="pendingCount">0</strong><span>Pendientes</span></div><div class="stat"><strong id="approvedCount">0</strong><span>Aprobadas</span></div><div class="stat"><strong id="rejectedCount">0</strong><span>Rechazadas</span></div></section>
+<nav class="tabs" aria-label="Filtros">
+<button class="tab active" data-filter="pending">Pendientes</button><button class="tab" data-filter="approved">Aprobadas</button><button class="tab" data-filter="rejected">Rechazadas</button><button class="tab" data-filter="all">Todas</button>
+</nav>
+<div id="entries"></div>
+</main><footer>We love you Elena · Moderación personal</footer>
+<script>
+const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const KEY="wlye-stars-demo-v1";let entries=[];let filter="pending";
+try{entries=JSON.parse(localStorage.getItem(KEY)||"[]")}catch{}
+// En la primera visita, los datos antiguos del prototipo se marcan como pendientes.
+entries=entries.map(x=>({...x,status:x.status||"pending"}));
+function save(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
+function render(){
+ document.querySelector("#pendingCount").textContent=entries.filter(x=>x.status==="pending").length;
+ document.querySelector("#approvedCount").textContent=entries.filter(x=>x.status==="approved").length;
+ document.querySelector("#rejectedCount").textContent=entries.filter(x=>x.status==="rejected").length;
+ const root=document.querySelector("#entries");root.innerHTML="";
+ const shown=entries.filter(x=>filter==="all"||x.status===filter).slice().reverse();
+ if(!shown.length){root.innerHTML='<div class="empty">No hay dedicatorias en esta sección.</div>';return}
+ shown.forEach((entry)=>{
+  const idx=entries.indexOf(entry),card=document.createElement("article");card.className="item";
+  const top=document.createElement("div");top.className="item-top";
+  const info=document.createElement("div"),title=document.createElement("h3");title.textContent=entry.username||"Usuario";
+  const meta=document.createElement("div");meta.className="meta";meta.textContent=(entry.country||"País no indicado")+" · "+(entry.region||"Región no indicada");
+  info.append(title,meta);const status=document.createElement("span");status.className="status";status.textContent=({pending:"Pendiente",approved:"Aprobada",rejected:"Rechazada"})[entry.status]||"Pendiente";top.append(info,status);
+  const message=document.createElement("p");message.textContent=entry.message||"";
+  const actions=document.createElement("div");actions.className="actions";
+  if(entry.status!=="approved"){const b=document.createElement("button");b.className="approve";b.textContent="Aprobar";b.onclick=()=>{entries[idx].status="approved";save()};actions.append(b)}
+  if(entry.status!=="rejected"){const b=document.createElement("button");b.className="reject";b.textContent="Rechazar";b.onclick=()=>{entries[idx].status="rejected";save()};actions.append(b)}
+  const del=document.createElement("button");del.className="delete";del.textContent="Eliminar";del.onclick=()=>{if(confirm("¿Eliminar definitivamente esta dedicatoria de este navegador?")){entries.splice(idx,1);save()}};actions.append(del);
+  card.append(top,message,actions);root.append(card);
+ });
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.filter;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render()}));
+render();
+</script></body></html>
