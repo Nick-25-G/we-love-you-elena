@@ -78,7 +78,7 @@ dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20p
 <form id="starForm">
 <label for="username">Tu nombre de usuario</label><input id="username" maxlength="24" placeholder="@tu_usuario" required>
 <label for="country">País</label><select id="country" required><option value="">Selecciona tu país</option></select>
-<label for="dedication">Tu dedicatoria</label><textarea id="dedication" maxlength="240" placeholder="Escribe unas palabras para Elena..." required></textarea>
+<label for="dedication">Tu dedicatoria</label><textarea id="dedication" placeholder="Escribe unas palabras para Elena..." required></textarea>
 <label for="color">Color de tu estrella</label><select id="color"><option value="#fff0a6">Dorado</option><option value="#a9caff">Azul</option><option value="#d5b7ff">Violeta</option><option value="#ffb9dd">Rosa</option><option value="#a8f0d0">Verde</option></select>
 <button class="submit" type="submit">Enviar mi estrella ✦</button>
 </form>
@@ -166,9 +166,12 @@ document.querySelector("#starForm").addEventListener("submit", async e => {
     .insert(s);
 
   if (error) {
-    document.querySelector("#notice").textContent =
-      "No se pudo enviar tu estrella. Inténtalo de nuevo.";
-    return;
+  console.error("Error al enviar la estrella:", error);
+
+  document.querySelector("#notice").textContent =
+    "No se pudo enviar: " + error.message;
+
+  return;
   }
 
   document.querySelector("#dedication").value = "";
