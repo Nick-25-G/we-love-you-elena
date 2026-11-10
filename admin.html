@@ -38,8 +38,7 @@ const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   async function checkAdmin(){
-    checkAdmin();
-  const {data:{session}} = await supabaseClient.auth.getSession();
+const {data:{session}} = await supabaseClient.auth.getSession();
 
   if(!session){
     document.querySelector("#authMessage").textContent =
@@ -63,6 +62,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   document.querySelector(".notice").textContent =
     "Sesión de administradora verificada.";
   }
+  checkAdmin();
   document.querySelector("#googleLogin").addEventListener("click", async () => {
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: "google",
