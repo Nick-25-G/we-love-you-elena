@@ -631,7 +631,8 @@ margin: 0 16px 12px auto;
   };
 
   document.querySelector("#elenaSecretClose").onclick = () => {
-    door.classList.remove("open");
+    door.style.display = "flex";
+door.classList.add("open");
     codeInput.value = "";
     message.textContent = "";
   };
