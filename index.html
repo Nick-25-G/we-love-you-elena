@@ -796,6 +796,7 @@ Object.keys(countries).sort().forEach(country => {
   dedicationList.append(group);
 });
 
+
 dedicationList.replaceChildren();
 
 function normalizeCountry(name) {
@@ -806,7 +807,6 @@ function normalizeCountry(name) {
     .toLowerCase();
 }
 
-// Crear un catálogo de regiones reconocido por el navegador.
 const regionNames = new Intl.DisplayNames(["es"], {
   type: "region"
 });
@@ -824,7 +824,6 @@ for (let first = 65; first <= 90; first++) {
   }
 }
 
-// Alias para nombres habituales.
 const aliases = {
   "mexico": "MX",
   "estados unidos": "US",
@@ -904,7 +903,6 @@ Object.keys(countries).sort().forEach(country => {
 
   dedicationList.append(group);
 });
-
 
       door.classList.remove("open");
       codeInput.value = "";
