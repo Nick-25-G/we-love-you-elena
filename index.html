@@ -672,26 +672,239 @@ margin: 0 16px 12px auto;
         return;
       }
 
-      dedicationList.replaceChildren();
+      
+dedicationList.replaceChildren();
 
-      (result.dedications || []).forEach(item => {
-        const card = document.createElement("article");
-        card.className = "elenaDedication";
+function normalizeCountry(name) {
+  return (name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
 
-        const title = document.createElement("h3");
-        title.textContent = "✦ " + (item.username || "Una estrella");
+const countryCodes = {
+  "ecuador": "EC",
+  "mexico": "MX",
+  "estados unidos": "US",
+  "united states": "US",
+  "argentina": "AR",
+  "colombia": "CO",
+  "peru": "PE",
+  "chile": "CL",
+  "brasil": "BR",
+  "brazil": "BR",
+  "espana": "ES",
+  "spain": "ES",
+  "canada": "CA",
+  "francia": "FR",
+  "france": "FR",
+  "italia": "IT",
+  "italy": "IT",
+  "alemania": "DE",
+  "germany": "DE",
+  "japon": "JP",
+  "japan": "JP",
+  "corea del sur": "KR",
+  "south korea": "KR",
+  "tailandia": "TH",
+  "thailand": "TH",
+  "filipinas": "PH",
+  "philippines": "PH",
+  "reino unido": "GB",
+  "united kingdom": "GB",
+  "portugal": "PT",
+  "venezuela": "VE",
+  "uruguay": "UY",
+  "paraguay": "PY",
+  "bolivia": "BO",
+  "costa rica": "CR",
+  "panama": "PA",
+  "guatemala": "GT",
+  "honduras": "HN",
+  "el salvador": "SV",
+  "nicaragua": "NI",
+  "cuba": "CU",
+  "republica dominicana": "DO",
+  "puerto rico": "PR",
+  "india": "IN",
+  "china": "CN",
+  "australia": "AU",
+  "nueva zelanda": "NZ",
+  "new zealand": "NZ",
+  "paises bajos": "NL",
+  "netherlands": "NL",
+  "suiza": "CH",
+  "switzerland": "CH",
+  "belgica": "BE",
+  "belgium": "BE",
+  "paises": "XX"
+};
 
-        const location = document.createElement("p");
-        location.textContent =
-          "🌍 " + (item.country || "") +
-          (item.region ? " · " + item.region : "");
+function countryFlag(country) {
+  const code = countryCodes[normalizeCountry(country)];
 
-        const note = document.createElement("p");
-        note.textContent = item.message || "";
+  if (!code || code.length !== 2) return "🌍";
 
-        card.append(title, location, note);
-        dedicationList.append(card);
-      });
+  return String.fromCodePoint(
+    ...[...code].map(letter =>
+      127397 + letter.charCodeAt(0)
+    )
+  );
+}
+
+const countries = {};
+
+(result.dedications || []).forEach(item => {
+  const country = (item.country || "Otros rincones").trim();
+
+  if (!countries[country]) {
+    countries[country] = [];
+  }
+
+  countries[country].push(item);
+});
+
+Object.keys(countries).sort().forEach(country => {
+  const group = document.createElement("section");
+  group.className = "elenaDedication";
+
+  const heading = document.createElement("h3");
+  heading.textContent =
+    countryFlag(country) + " " + country +
+    " · " + countries[country].length + " estrellas";
+
+  group.append(heading);
+
+  countries[country].forEach(item => {
+    const card = document.createElement("article");
+    card.className = "elenaDedication";
+
+    const title = document.createElement("h4");
+    title.textContent = "✦ " + (item.username || "Una estrella");
+
+    const location = document.createElement("p");
+    location.textContent = item.region || "";
+
+    const note = document.createElement("p");
+    note.textContent = item.message || "";
+
+    card.append(title, location, note);
+    group.append(card);
+  });
+
+  dedicationList.append(group);
+});
+
+dedicationList.replaceChildren();
+
+function normalizeCountry(name) {
+  return (name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+// Crear un catálogo de regiones reconocido por el navegador.
+const regionNames = new Intl.DisplayNames(["es"], {
+  type: "region"
+});
+
+const countryCodes = {};
+
+for (let first = 65; first <= 90; first++) {
+  for (let second = 65; second <= 90; second++) {
+    const code = String.fromCharCode(first, second);
+    const name = regionNames.of(code);
+
+    if (name && name !== code) {
+      countryCodes[normalizeCountry(name)] = code;
+    }
+  }
+}
+
+// Alias para nombres habituales.
+const aliases = {
+  "mexico": "MX",
+  "estados unidos": "US",
+  "united states": "US",
+  "eeuu": "US",
+  "brasil": "BR",
+  "brazil": "BR",
+  "espana": "ES",
+  "spain": "ES",
+  "peru": "PE",
+  "corea del sur": "KR",
+  "south korea": "KR",
+  "reino unido": "GB",
+  "united kingdom": "GB",
+  "paises bajos": "NL",
+  "holanda": "NL",
+  "rusia": "RU",
+  "russia": "RU",
+  "vaticano": "VA",
+  "ciudad del vaticano": "VA",
+  "palestina": "PS"
+};
+
+Object.assign(countryCodes, aliases);
+
+function countryFlag(country) {
+  const code = countryCodes[normalizeCountry(country)];
+
+  if (!code) return "🌍";
+
+  return String.fromCodePoint(
+    ...[...code].map(letter =>
+      127397 + letter.charCodeAt(0)
+    )
+  );
+}
+
+const countries = {};
+
+(result.dedications || []).forEach(item => {
+  const country = (item.country || "Otros rincones").trim();
+
+  if (!countries[country]) {
+    countries[country] = [];
+  }
+
+  countries[country].push(item);
+});
+
+Object.keys(countries).sort().forEach(country => {
+  const group = document.createElement("section");
+  group.className = "elenaDedication";
+
+  const heading = document.createElement("h3");
+  heading.textContent =
+    countryFlag(country) + " " + country +
+    " · " + countries[country].length + " estrellas";
+
+  group.append(heading);
+
+  countries[country].forEach(item => {
+    const card = document.createElement("article");
+    card.className = "elenaDedication";
+
+    const title = document.createElement("h4");
+    title.textContent = "✦ " + (item.username || "Una estrella");
+
+    const location = document.createElement("p");
+    location.textContent = item.region || "";
+
+    const note = document.createElement("p");
+    note.textContent = item.message || "";
+
+    card.append(title, location, note);
+    group.append(card);
+  });
+
+  dedicationList.append(group);
+});
+
 
       door.classList.remove("open");
       codeInput.value = "";
