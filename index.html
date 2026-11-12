@@ -163,7 +163,10 @@ dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20p
 </head>
 <body>
 <header><div class="eyebrow">un universo de cariño · una estrella a la vez</div><h1>We love you Elena</h1><p>Desde distintos rincones del mundo, dejamos pequeñas estrellas para recordarte cuánto cariño puede reunir un solo universo.</p></header>
-<main>
+<button id="elenaSecretButton" aria-label="Entrada secreta">
+  🦋
+</button>
+  <main>
 <section class="stage" aria-label="Mariposa galáctica interactiva">
 <div class="stage-label">✦ Nuestra mariposa de estrellas</div>
 <div class="butterfly-wrap"><div class="butterfly" id="butterfly">
@@ -480,9 +483,8 @@ butterfly.classList.remove("hold-spin");
   
 <style>
 #elenaSecretButton {
-  position: fixed;
-  top: 16px;
-  right: 16px;
+  position: static; display: block;
+margin: 0 16px 12px auto;
   z-index: 9998;
   width: 46px;
   height: 46px;
@@ -580,9 +582,7 @@ butterfly.classList.remove("hold-spin");
 }
 </style>
 
-<button id="elenaSecretButton" aria-label="Entrada secreta">
-  🦋
-</button>
+
 
 <div id="elenaSecretDoor">
   <div id="elenaSecretPanel">
