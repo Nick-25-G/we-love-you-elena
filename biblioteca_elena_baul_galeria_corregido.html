@@ -1281,7 +1281,19 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   chest.rotation.y=Math.PI/2;
   chest.userData={secret:'creativeChest'};
   scene.add(chest);
-  interactive.push(chest);
+    const chestHitArea=new THREE.Mesh(
+    new THREE.BoxGeometry(1.35,.9,1.0),
+    new THREE.MeshBasicMaterial({
+      transparent:true,
+      opacity:0,
+      depthWrite:false,
+      colorWrite:false
+    })
+  );
+  chestHitArea.position.set(0,.36,0);
+  chestHitArea.userData={secret:'creativeChest'};
+  chest.add(chestHitArea);
+  interactive.push(chestHitArea);
   const chestWood=mat('#573521',.55), chestEdge=mat('#9b7040',.42), chestDark=mat('#2c1b16');
   // Base robusta, esquinas y herrajes antiguos.
   addBox(chest,1.12,.54,.78,0,.29,0,chestWood);
