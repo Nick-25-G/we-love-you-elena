@@ -1353,11 +1353,11 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     });
   }
 
-  // Libros de países: se distribuyen solo en estanterías disponibles.
-  // Se reservan la estantería 3 para la vitrina y la 9 para el baúl.
-  const bookShelfSlots=[0,1,2,4,5,7,8,10,11];
+
+  // Libros de países: se conserva exactamente la distribución original.
   groups.forEach((group,i)=>{
-    const shelfIndex=bookShelfSlots[Math.floor(i/65)%bookShelfSlots.length];
+    let shelfIndex=(6+Math.floor(i/65))%12;
+    if(shelfIndex===6)shelfIndex=5;
     const slot=i%65, level=Math.floor(slot/13), col=slot%13;
     const shelf=shelfGroups[shelfIndex], x=-1.38+col*.23, y=.48+level*.86;
     const decoration=shelfDecorations[shelfIndex][slot];if(decoration){shelf.remove(decoration);decoration.geometry.dispose();}
