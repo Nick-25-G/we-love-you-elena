@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d25"><title>Panel privado · We love you Elena</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#242354,#0a1029 65%);color:#f4f0ff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{padding:28px 18px 20px;max-width:1050px;margin:auto}a{color:#cbbaff;text-decoration:none}h1{font:500 clamp(2rem,6vw,3rem) Georgia,serif;margin:8px 0}p{color:#bdbbd9;line-height:1.5}.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#c6b5ff}
+main{max-width:1050px;margin:auto;padding:0 18px 45px}.notice{border:1px solid #bca8ff55;background:#ffffff0b;border-radius:16px;padding:14px;margin:12px 0 20px;font-size:.9rem;color:#ddd5f7}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid #ffffff2a;background:#151b3b;color:#ddd5f7;padding:10px 16px;border-radius:99px;cursor:pointer}.tab.active{background:#6c53ad;border-color:#bba6ff;color:white}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat,.item{background:#131a39;border:1px solid #ffffff20;border-radius:18px;padding:16px}.stat strong{font-size:1.7rem;display:block;color:#e2d6ff}.stat span,.small{font-size:.8rem;color:#aaa9ce}
+#entries{display:grid;gap:12px;margin-top:14px}.item-top{display:flex;justify-content:space-between;gap:12px;align-items:start}.item h3{margin:0;font-size:1rem}.item p{margin:12px 0;color:#f0eaff}.meta{font-size:.8rem;color:#aaa9ce;margin-top:5px}.status{font-size:.72rem;padding:5px 9px;border-radius:99px;background:#ffffff13;white-space:nowrap}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{border:0;border-radius:99px;padding:9px 14px;font-weight:650;cursor:pointer}.approve{background:#b9f0d9;color:#103a2a}.reject{background:#ffd0d7;color:#54202a}.delete{background:#ffffff16;color:#eee}.empty{padding:30px;text-align:center;color:#aaa9ce;border:1px dashed #ffffff30;border-radius:18px}
+
+.artwork{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,300px);gap:16px;align-items:start}
+.artwork img{display:block;width:100%;max-height:340px;object-fit:contain;background:#090f29;border:1px solid #ffffff25;border-radius:14px}
+.artwork-info{min-width:0}.artwork-info p{white-space:pre-wrap;overflow-wrap:anywhere}
+.artwork .meta{margin:7px 0 12px}
+.panel-switch{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.panel-switch button{border:1px solid #ffffff2a;background:#151b3b;color:#ddd5f7;padding:10px 16px;border-radius:99px;cursor:pointer}
+.panel-switch button.active{background:#6c53ad;border-color:#bba6ff;color:white}
+#creativityPanel,#memoriesPanel{display:none}
+@media(max-width:650px){.artwork{grid-template-columns:1fr}.artwork img{max-height:420px}}
+footer{text-align:center;color:#8585aa;padding:20px;font-size:.78rem}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.item-top{display:block}.status{display:inline-block;margin-top:8px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header><div class="eyebrow">✦ área privada de administración</div><h1>Panel de moderación</h1><p>We love you Elena · Aquí puedes revisar las estrellas antes de que formen parte del universo público.</p><a href="index.html">← Volver al prototipo público</a></header>
+<main>
+  <section id="loginBox" style="background:#131a39;border:1px solid #ffffff30;border-radius:18px;padding:22px;margin:15px 0;text-align:center">
+  <h2>Acceso de administración</h2>
+  <p>Inicia sesión con tu cuenta de Google para moderar las dedicatorias.</p>
+  <button id="googleLogin" style="background:#bba6ff;color:#17102e;border:0;border-radius:99px;padding:12px 20px;font-weight:bold">
+    Iniciar sesión con Google
+  </button>
+  <p id="authMessage"></p>
+  </section>
+<div class="notice"><b>Acceso protegido:</b> inicia sesión con la cuenta de Google autorizada para revisar y moderar los envíos.</div>
+<nav class="panel-switch" aria-label="Secciones del panel">
+<button type="button" class="active" data-panel="dedications">⭐ Dedicatorias</button>
+<button type="button" data-panel="creativity">🎨 Muro de la Creatividad</button>
+<button type="button" data-panel="memories">📷 Mapa de los Recuerdos</button>
+</nav>
+<section id="dedicationsPanel">
+  <section class="stats"><div class="stat"><strong id="pendingCount">0</strong><span>Pendientes</span></div><div class="stat"><strong id="approvedCount">0</strong><span>Aprobadas</span></div><div class="stat"><strong id="rejectedCount">0</strong><span>Rechazadas</span></div></section>
+  <nav class="tabs" aria-label="Filtros de dedicatorias">
+  <button class="tab active" data-filter="pending">Pendientes</button><button class="tab" data-filter="approved">Aprobadas</button><button class="tab" data-filter="rejected">Rechazadas</button><button class="tab" data-filter="all">Todas</button>
+  </nav>
+  <div id="entries"></div>
+</section>
+<section id="creativityPanel">
+  <p>Revisa los dibujos, collages y creaciones enviados para Elena. Solo las obras aprobadas podrán aparecer en el muro público.</p>
+  <section class="stats"><div class="stat"><strong id="artPendingCount">0</strong><span>Pendientes</span></div><div class="stat"><strong id="artApprovedCount">0</strong><span>Aprobadas</span></div><div class="stat"><strong id="artRejectedCount">0</strong><span>Rechazadas</span></div></section>
+  <nav class="tabs" aria-label="Filtros de creaciones">
+    <button type="button" class="tab active" data-art-filter="pending">Pendientes</button><button type="button" class="tab" data-art-filter="approved">Aprobadas</button><button type="button" class="tab" data-art-filter="rejected">Rechazadas</button><button type="button" class="tab" data-art-filter="all">Todas</button>
+  </nav>
+  <div id="artEntries"></div>
+</section>
+<section id="memoriesPanel">
+  <p>Revisa las fotografías que enviaron para el Mapa de los Recuerdos. Solo las aprobadas podrán verse dentro de la biblioteca secreta de Elena; no se publican en la página principal.</p>
+  <section class="stats"><div class="stat"><strong id="memoryPendingCount">0</strong><span>Pendientes</span></div><div class="stat"><strong id="memoryApprovedCount">0</strong><span>Aprobadas</span></div><div class="stat"><strong id="memoryRejectedCount">0</strong><span>Rechazadas</span></div></section>
+  <nav class="tabs" aria-label="Filtros de recuerdos">
+    <button type="button" class="tab active" data-memory-filter="pending">Pendientes</button><button type="button" class="tab" data-memory-filter="approved">Aprobadas</button><button type="button" class="tab" data-memory-filter="rejected">Rechazadas</button><button type="button" class="tab" data-memory-filter="all">Todas</button>
+  </nav>
+  <div id="memoryEntries"></div>
+</section>
+</main><footer>We love you Elena · Moderación personal</footer>
+<script>
+const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  async function checkAdmin(){
+const {data:{session}} = await supabaseClient.auth.getSession();
+
+  if(!session){
+    document.querySelector("#authMessage").textContent =
+      "Inicia sesión para continuar.";
+    return;
+  }
+
+  const {data:admin,error} = await supabaseClient
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id",session.user.id)
+    .maybeSingle();
+
+  if(error || !admin){
+    document.querySelector("#authMessage").textContent =
+      "Esta cuenta no tiene permisos de administración.";
+    return;
+  }
+
+  document.querySelector("#loginBox").style.display = "none";
+  document.querySelector(".notice").textContent =
+    "Sesión de administradora verificada.";
+    await loadEntries();
+    await loadCreativity();
+    await loadMemories();
+  }
+  checkAdmin();
+  document.querySelector("#googleLogin").addEventListener("click", async () => {
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.href
+    }
+  });
+
+  if (error) {
+    document.querySelector("#authMessage").textContent =
+      "Error al iniciar sesión: " + error.message;
+  }
+});
+ let entries=[];
+let filter="pending";
+
+async function loadEntries(){
+  const {data,error}=await supabaseClient
+    .from("dedications")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    alert("Error al cargar dedicatorias: "+error.message);
+    return;
+  }
+
+  entries=data||[];
+  render();
+  }
+  async function updateStatus(id,status){
+  const {error}=await supabaseClient
+    .from("dedications")
+    .update({status:status})
+    .eq("id",id);
+
+  if(error){
+    alert("Error: "+error.message);
+    return;
+  }
+
+  await loadEntries();
+}
+
+async function deleteEntry(id){
+  const {error}=await supabaseClient
+    .from("dedications")
+    .delete()
+    .eq("id",id);
+
+  if(error){
+    alert("Error: "+error.message);
+    return;
+  }
+
+  await loadEntries();
+}
+function render(){
+ document.querySelector("#pendingCount").textContent=entries.filter(x=>x.status==="pending").length;
+ document.querySelector("#approvedCount").textContent=entries.filter(x=>x.status==="approved").length;
+ document.querySelector("#rejectedCount").textContent=entries.filter(x=>x.status==="rejected").length;
+ const root=document.querySelector("#entries");root.innerHTML="";
+ const shown=entries.filter(x=>filter==="all"||x.status===filter).slice().reverse();
+ if(!shown.length){root.innerHTML='<div class="empty">No hay dedicatorias en esta sección.</div>';return}
+ shown.forEach((entry)=>{
+  const idx=entries.indexOf(entry),card=document.createElement("article");card.className="item";
+  const top=document.createElement("div");top.className="item-top";
+  const info=document.createElement("div"),title=document.createElement("h3");title.textContent=entry.username||"Usuario";
+  const meta=document.createElement("div");meta.className="meta";meta.textContent=(entry.country||"País no indicado")+" · "+(entry.region||"Región no indicada");
+  info.append(title,meta);const status=document.createElement("span");status.className="status";status.textContent=({pending:"Pendiente",approved:"Aprobada",rejected:"Rechazada"})[entry.status]||"Pendiente";top.append(info,status);
+  const message=document.createElement("p");message.textContent=entry.message||"";
+  const actions=document.createElement("div");actions.className="actions";
+  if(entry.status!=="approved"){const b=document.createElement("button");b.className="approve";b.textContent="Aprobar";b.onclick=()=>updateStatus(entry.id,"approved");actions.append(b)}
+  if(entry.status!=="rejected"){const b=document.createElement("button");b.className="reject";b.textContent="Rechazar";b.onclick=()=>updateStatus(entry.id,"rejected");actions.append(b)}
+  const del=document.createElement("button");del.className="delete";del.textContent="Eliminar";del.onclick=()=>{
+  if(confirm("¿Eliminar definitivamente esta dedicatoria?")){
+    deleteEntry(entry.id);
+  }
+};actions.append(del);
+  card.append(top,message,actions);root.append(card);
+ });
+}
+document.querySelectorAll('#dedicationsPanel .tab').forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.filter;document.querySelectorAll('#dedicationsPanel .tab').forEach(x=>x.classList.toggle("active",x===b));render()}));
+render();
+
+// Moderación del Muro de la Creatividad
+let artworks=[];
+let artFilter="pending";
+
+async function loadCreativity(){
+  const {data,error}=await supabaseClient
+    .from("creativity_submissions")
+    .select("*")
+    .order("created_at",{ascending:false});
+  if(error){
+    const root=document.querySelector("#artEntries");
+    root.innerHTML='<div class="empty">No se pudieron cargar las creaciones: '+escapeHtml(error.message)+'</div>';
+    return;
+  }
+  artworks=data||[];
+  renderArtworks();
+}
+
+function escapeHtml(value){
+  return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+
+function renderArtworks(){
+  document.querySelector("#artPendingCount").textContent=artworks.filter(x=>x.status==="pending").length;
+  document.querySelector("#artApprovedCount").textContent=artworks.filter(x=>x.status==="approved").length;
+  document.querySelector("#artRejectedCount").textContent=artworks.filter(x=>x.status==="rejected").length;
+  const root=document.querySelector("#artEntries");
+  root.innerHTML="";
+  const shown=artworks.filter(x=>artFilter==="all"||x.status===artFilter);
+  if(!shown.length){root.innerHTML='<div class="empty">No hay creaciones en esta sección.</div>';return;}
+  shown.forEach(item=>{
+    const card=document.createElement("article");card.className="item artwork";
+    const info=document.createElement("div");info.className="artwork-info";
+    const title=document.createElement("h3");title.textContent=item.title||"Creación sin título";
+    const meta=document.createElement("div");meta.className="meta";
+    const date=item.created_at?new Date(item.created_at).toLocaleString("es-EC"):"Fecha no disponible";
+    meta.textContent=(item.username||"Anónimo")+" · "+(item.country||"País no indicado")+" · "+date;
+    const status=document.createElement("span");status.className="status";
+    status.textContent=({pending:"Pendiente",approved:"Aprobada",rejected:"Rechazada"})[item.status]||"Pendiente";
+    const actions=document.createElement("div");actions.className="actions";
+    if(item.status!=="approved"){const b=document.createElement("button");b.className="approve";b.textContent="Aprobar";b.onclick=()=>updateArtworkStatus(item.id,"approved");actions.append(b);}
+    if(item.status!=="rejected"){const b=document.createElement("button");b.className="reject";b.textContent="Rechazar";b.onclick=()=>updateArtworkStatus(item.id,"rejected");actions.append(b);}
+    const del=document.createElement("button");del.className="delete";del.textContent="Eliminar";
+    del.onclick=()=>{if(confirm("¿Eliminar definitivamente esta creación y su imagen?"))deleteArtwork(item);};
+    actions.append(del);
+    info.append(title,meta,status,actions);
+    const image=document.createElement("img");
+    const {data:urlData}=supabaseClient.storage.from("creativity-wall").getPublicUrl(item.image_path);
+    image.src=urlData.publicUrl;image.alt=item.title||"Creación enviada para Elena";image.loading="lazy";
+    image.onerror=()=>{image.alt="No se pudo cargar la imagen";image.style.minHeight="100px";};
+    card.append(info,image);root.append(card);
+  });
+}
+
+async function updateArtworkStatus(id,status){
+  const {error}=await supabaseClient.from("creativity_submissions").update({status}).eq("id",id);
+  if(error){alert("No se pudo actualizar la creación: "+error.message);return;}
+  await loadCreativity();
+}
+
+async function deleteArtwork(item){
+  const {error}=await supabaseClient.from("creativity_submissions").delete().eq("id",item.id);
+  if(error){alert("No se pudo eliminar la creación: "+error.message);return;}
+  const {error:storageError}=await supabaseClient.storage.from("creativity-wall").remove([item.image_path]);
+  if(storageError)alert("La creación se eliminó de la lista, pero no se pudo borrar el archivo de imagen: "+storageError.message);
+  await loadCreativity();
+}
+
+document.querySelectorAll("[data-art-filter]").forEach(b=>b.addEventListener("click",()=>{
+  artFilter=b.dataset.artFilter;
+  document.querySelectorAll("[data-art-filter]").forEach(x=>x.classList.toggle("active",x===b));
+  renderArtworks();
+}));
+
+
+// Moderación del Mapa de los Recuerdos (fotografías privadas)
+let memoryPhotos=[];
+let memoryFilter="pending";
+
+async function loadMemories(){
+  const root=document.querySelector("#memoryEntries");
+  const {data,error}=await supabaseClient
+    .from("memory_photo_submissions")
+    .select("*")
+    .order("created_at",{ascending:false});
+  if(error){
+    root.innerHTML='<div class="empty">No se pudieron cargar los recuerdos: '+escapeHtml(error.message)+'</div>';
+    return;
+  }
+  memoryPhotos=data||[];
+  await renderMemories();
+}
+
+async function renderMemories(){
+  document.querySelector("#memoryPendingCount").textContent=memoryPhotos.filter(x=>x.status==="pending").length;
+  document.querySelector("#memoryApprovedCount").textContent=memoryPhotos.filter(x=>x.status==="approved").length;
+  document.querySelector("#memoryRejectedCount").textContent=memoryPhotos.filter(x=>x.status==="rejected").length;
+  const root=document.querySelector("#memoryEntries");
+  root.replaceChildren();
+  const shown=memoryPhotos.filter(x=>memoryFilter==="all"||x.status===memoryFilter);
+  if(!shown.length){root.innerHTML='<div class="empty">No hay fotografías en esta sección.</div>';return;}
+  for(const item of shown){
+    const card=document.createElement("article");card.className="item artwork";
+    const info=document.createElement("div");info.className="artwork-info";
+    const title=document.createElement("h3");title.textContent=item.display_name||"Recuerdo anónimo";
+    const date=item.created_at?new Date(item.created_at).toLocaleString("es-EC"):"Fecha no disponible";
+    const meta=document.createElement("div");meta.className="meta";meta.textContent=(item.country||"País no indicado")+" · "+date;
+    const message=document.createElement("p");message.textContent=item.message||"Sin mensaje adicional.";
+    const status=document.createElement("span");status.className="status";status.textContent=({pending:"Pendiente",approved:"Aprobada",rejected:"Rechazada"})[item.status]||"Pendiente";
+    const actions=document.createElement("div");actions.className="actions";
+    if(item.status!=="approved"){const b=document.createElement("button");b.className="approve";b.textContent="Aprobar";b.onclick=()=>updateMemoryStatus(item.id,"approved");actions.append(b);}
+    if(item.status!=="rejected"){const b=document.createElement("button");b.className="reject";b.textContent="Rechazar";b.onclick=()=>updateMemoryStatus(item.id,"rejected");actions.append(b);}
+    const del=document.createElement("button");del.className="delete";del.textContent="Eliminar";del.onclick=()=>{if(confirm("¿Eliminar definitivamente esta fotografía y su mensaje?"))deleteMemoryPhoto(item);};actions.append(del);
+    info.append(title,meta,message,status,actions);
+    const image=document.createElement("img");image.alt="Fotografía enviada para el Mapa de los Recuerdos";image.loading="lazy";
+    const {data:urlData,error:urlError}=await supabaseClient.storage.from("elena-memory-photos").createSignedUrl(item.image_path,3600);
+    if(!urlError&&urlData?.signedUrl){image.src=urlData.signedUrl;}else{image.alt="No se pudo generar una vista previa de esta fotografía.";}
+    card.append(info,image);root.append(card);
+  }
+}
+
+async function updateMemoryStatus(id,status){
+  const {error}=await supabaseClient.from("memory_photo_submissions").update({status}).eq("id",id);
+  if(error){alert("No se pudo actualizar el recuerdo: "+error.message);return;}
+  await loadMemories();
+}
+
+async function deleteMemoryPhoto(item){
+  const {error}=await supabaseClient.from("memory_photo_submissions").delete().eq("id",item.id);
+  if(error){alert("No se pudo eliminar el recuerdo: "+error.message);return;}
+  const {error:storageError}=await supabaseClient.storage.from("elena-memory-photos").remove([item.image_path]);
+  if(storageError)alert("El registro se eliminó, pero no se pudo borrar la fotografía: "+storageError.message);
+  await loadMemories();
+}
+
+document.querySelectorAll("[data-memory-filter]").forEach(b=>b.addEventListener("click",()=>{
+  memoryFilter=b.dataset.memoryFilter;
+  document.querySelectorAll("[data-memory-filter]").forEach(x=>x.classList.toggle("active",x===b));
+  renderMemories();
+}));
+
+document.querySelectorAll("[data-panel]").forEach(b=>b.addEventListener("click",()=>{
+  const panel=b.dataset.panel;
+  document.querySelector("#dedicationsPanel").style.display=panel==="dedications"?"block":"none";
+  document.querySelector("#creativityPanel").style.display=panel==="creativity"?"block":"none";
+  document.querySelector("#memoriesPanel").style.display=panel==="memories"?"block":"none";
+  document.querySelectorAll("[data-panel]").forEach(x=>x.classList.toggle("active",x===b));
+}));
+
+</script></body></html>
