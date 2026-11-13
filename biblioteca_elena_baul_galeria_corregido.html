@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="es">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d25">
+<title>We love you Elena ✦</title>
+<style>
+:root{--night:#080d25;--deep:#111b43;--purple:#6544a5;--lav:#bca8ff;--white:#f4f0ff}
+*{box-sizing:border-box}body{margin:0;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 50% 20%,#20245c 0,#111638 36%,#080d25 76%);min-height:100vh}
+header{text-align:center;padding:38px 16px 14px}header .eyebrow{letter-spacing:.28em;text-transform:uppercase;color:#c7b7ff;font-size:.72rem}h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(2.3rem,7vw,4.7rem);margin:12px 0 8px;text-shadow:0 0 25px #8d70ff88}header p{color:#c5c4e2;margin:0 auto;max-width:620px;line-height:1.6}
+main{max-width:1050px;margin:auto;padding:12px 18px 56px}.stage{position:relative;min-height:490px;border:1px solid #ffffff20;border-radius:28px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#39316c77,transparent 42%),linear-gradient(140deg,#0c1534,#17133b 55%,#090e29);box-shadow:0 20px 70px #0006}
+.stage:before,.stage:after{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 8% 20%,#fff 99%,transparent),radial-gradient(2px 2px at 78% 18%,#d6c7ff 99%,transparent),radial-gradient(1px 1px at 34% 76%,#fff 99%,transparent),radial-gradient(1px 1px at 89% 66%,#fff 99%,transparent),radial-gradient(2px 2px at 18% 84%,#bca8ff 99%,transparent);background-size:230px 190px;opacity:.65;pointer-events:none}
+.stage:after{filter:blur(1px);transform:translate(45px,30px);opacity:.35}
+.stage-label{position:absolute;top:18px;left:20px;color:#c7b7ff;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;z-index:3}
+.butterfly-wrap{
+position:absolute;
+left:calc(50% + var(--drag-x, 0px));
+top:calc(48% + var(--drag-y, 0px));
+width:min(82vw,650px);
+height:390px;
+transform:translate(-50%,-50%);
+perspective:1000px;
+animation:float 5s ease-in-out infinite;
+z-index:1;
+touch-action:none;
+cursor:grab;
+user-select:none;
+}
+.butterfly-wrap.dragging{cursor:grabbing}
+.butterfly{position:absolute;inset:0;transform-style:preserve-3d;animation:turn 18s ease-in-out infinite}
+.wing{position:absolute;top:50%;width:49%;height:72%;transform-style:preserve-3d;filter:drop-shadow(0 0 18px #8e6bff88)}
+.wing.left{left:1%;transform-origin:100% 50%;transform:translateY(-50%) rotateY(17deg);animation:flapL 3.2s ease-in-out infinite}
+.wing.right{right:1%;transform-origin:0 50%;transform:translateY(-50%) rotateY(-17deg);animation:flapR 3.2s ease-in-out infinite}
+.wing-shape{position:absolute;inset:0;clip-path:polygon(100% 43%,84% 18%,58% 3%,30% 0%,8% 17%,0% 42%,12% 66%,34% 82%,62% 100%,84% 78%,96% 59%);background:radial-gradient(ellipse at 45% 45%,#bca8ff55 0 4%,transparent 38%),radial-gradient(ellipse at 65% 65%,#41a7dc66 0 2%,transparent 40%),radial-gradient(ellipse at 25% 75%,#a04bda88,transparent 52%),linear-gradient(135deg,#243b85 0%,#542c91 45%,#13285e 100%);border:1px solid #d5c8ff88;box-shadow:inset 0 0 38px #a78bfa55,inset 0 0 8px #fff8}
+.right .wing-shape{transform:scaleX(-1)}
+.wing-shape:after{content:"";position:absolute;inset:8%;border-radius:inherit;background-image:radial-gradient(2px 2px at 20% 20%,#fff 98%,transparent),radial-gradient(1px 1px at 60% 25%,#fff 98%,transparent),radial-gradient(2px 2px at 75% 70%,#d8c8ff 98%,transparent),radial-gradient(1px 1px at 38% 78%,#fff 98%,transparent);background-size:65px 60px;opacity:.9}
+.body{position:absolute;z-index:4;left:50%;top:50%;width:13px;height:155px;border-radius:50%;background:linear-gradient(90deg,#17152f,#d4c7ff,#30204e);transform:translate(-50%,-50%);box-shadow:0 0 22px #c6aaff}
+.body:before,.body:after{content:"";position:absolute;top:-28px;width:55px;height:55px;border-top:2px solid #d7c8ff;border-radius:50% 50% 0 0}.body:before{right:2px;transform:rotate(25deg)}.body:after{left:2px;transform:rotate(-25deg)}
+.star{position:absolute;z-index:5;border:0;background:transparent;color:#fff4b5;font-size:17px;text-shadow:0 0 9px #fff,0 0 18px #bba4ff;cursor:pointer;padding:4px;animation:twinkle 2.2s ease-in-out infinite alternate}
+.star:hover{transform:scale(1.7);color:white}
+.hint{position:absolute;bottom:17px;left:0;right:0;text-align:center;color:#d1c9ed;font-size:.82rem;z-index:5}
+@keyframes float{50%{transform:translate(-50%,-53%)}}@keyframes turn{0%,100%{transform:rotateY(-7deg)}50%{transform:rotateY(7deg)}}@keyframes flapL{50%{transform:translateY(-50%) rotateY(48deg)}}@keyframes flapR{50%{transform:translateY(-50%) rotateY(-48deg)}}@keyframes twinkle{to{opacity:.45;filter:brightness(1.7)}}
+.panels{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:20px}.panel{background:#111936c9;border:1px solid #ffffff20;border-radius:22px;padding:22px;backdrop-filter:blur(12px)}h2{font-family:Georgia,serif;font-weight:500;font-size:1.6rem;margin:0 0 7px}.muted{color:#b8b8d8;font-size:.9rem;line-height:1.55;margin-top:0}
+label{display:block;font-size:.83rem;color:#d8d2f0;margin:13px 0 6px}input,select,textarea{width:100%;border:1px solid #8272b5;background:#0b1230;color:white;border-radius:12px;padding:12px;font:inherit}textarea{min-height:95px;resize:vertical}button.submit{margin-top:15px;border:0;border-radius:999px;padding:13px 20px;background:linear-gradient(100deg,#7c5bd4,#4d83c8);color:white;font-weight:700;cursor:pointer;width:100%}button.submit:hover{filter:brightness(1.12)}
+.stats{display:flex;gap:12px;margin-top:15px}.stat{flex:1;background:#ffffff0b;border-radius:14px;padding:13px}.stat strong{display:block;font-size:1.5rem;color:#e2d8ff}.stat span{font-size:.75rem;color:#b8b8d8}
+#messageList{display:grid;gap:9px;max-height:250px;overflow:auto}.message{padding:11px 12px;border-radius:13px;background:#ffffff0b;border:1px solid #ffffff12}.message b{font-size:.9rem}.message small{color:#b7addd}.message p{margin:6px 0 0;color:#e6e0f6;font-size:.88rem;line-height:1.45}
+footer{text-align:center;color:#9695b9;font-size:.78rem;padding:22px 10px}
+dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20px;max-width:420px;width:calc(100% - 30px);padding:22px}dialog::backdrop{background:#030615bb}dialog button{float:right;background:#6550a6;border:0;color:white;padding:8px 14px;border-radius:20px}
+@media(max-width:700px){.panels{grid-template-columns:1fr}.stage{min-height:420px}.butterfly-wrap{height:310px}.hint{font-size:.72rem;padding:0 12px}.panel{padding:18px}}
+  @keyframes holdSpinY {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+  }
+  .butterfly.hold-spin {
+  animation: holdSpinY 3s linear infinite;
+  }
+  .thanks-dialog {
+  border: 1px solid #d5b7ff;
+  border-radius: 24px;
+  padding: 0;
+  width: min(88%, 380px);
+  background: transparent;
+  color: white;
+  overflow: visible;
+}
+
+.thanks-dialog::backdrop {
+  background: rgba(8, 5, 25, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.thanks-card {
+  text-align: center;
+  padding: 30px 24px;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    #21163d,
+    #38204d,
+    #173d4a
+  );
+  box-shadow: 0 0 30px #a879ff55;
+}
+
+.thanks-icon {
+  font-size: 48px;
+  color: #ffd98a;
+  animation: thanksGlow 2s ease-in-out infinite alternate;
+}
+
+.thanks-card h2 {
+  color: #e3caff;
+  margin: 12px 0;
+}
+
+.thanks-card p {
+  line-height: 1.6;
+  color: #f1eaff;
+}
+
+#continueStar {
+  margin-top: 18px;
+  border: 0;
+  border-radius: 30px;
+  padding: 12px 26px;
+  color: #201332;
+  background: linear-gradient(90deg, #d5b7ff, #ffbd83, #8ce4df);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes thanksGlow {
+  from { transform: scale(1); opacity: .8; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+  #starFlight {
+  position: fixed;
+  left: -60px;
+  top: 65%;
+  z-index: 9999;
+  font-size: 38px;
+  color: #ffd98a;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow:
+    0 0 8px #fff,
+    0 0 20px #d5b7ff,
+    0 0 35px #ffbd83;
+}
+
+#starFlight.fly {
+  animation: starJourney 2.2s ease-in-out forwards;
+}
+
+@keyframes starJourney {
+  0% {
+    left: -60px;
+    top: 70%;
+    opacity: 0;
+    transform: scale(.5) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.3) rotate(220deg);
+  }
+  100% {
+    left: 110%;
+    top: 18%;
+    opacity: 0;
+    transform: scale(.2) rotate(360deg);
+  }
+}
+
+/* Apertura cinematográfica de la biblioteca secreta (5 segundos) */
+#elenaLibraryIntro {
+  display:none; position:fixed; inset:0; z-index:10001; overflow:hidden;
+  align-items:center; justify-content:center; flex-direction:column; gap:18px;
+  color:#fff; text-align:center; padding:24px; box-sizing:border-box;
+  background:radial-gradient(circle at 50% 45%, #49336f 0%, #171027 48%, #070611 100%);
+}
+#elenaLibraryIntro.play { display:flex; }
+#elenaLibraryIntro .intro-stars { position:absolute; inset:0; opacity:0;
+  background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#d9b8ff 1px,transparent 1.5px);
+  background-size:47px 53px,71px 67px; background-position:0 0,22px 31px;
+  animation:introStars 5s ease-out forwards; }
+#elenaLibraryIntro .intro-butterfly { z-index:1; font-size:64px; filter:drop-shadow(0 0 18px #d9b8ff);
+  animation:introButterfly 1.15s ease-in-out both; }
+#elenaLibraryIntro .intro-doors { z-index:1; position:absolute; width:min(72vw,330px); height:min(52vh,360px);
+  border:3px solid #c9a7ff; border-radius:15px 15px 5px 5px;
+  background:linear-gradient(90deg,#392451,#76529a 48%,#392451);
+  box-shadow:0 0 35px #b88cff99,inset 0 0 25px #120b20; transform:scale(.72); opacity:0;
+  animation:introDoor 1.65s 0.65s ease-in-out forwards; }
+#elenaLibraryIntro .intro-doors:before,#elenaLibraryIntro .intro-doors:after { content:""; position:absolute; top:0; bottom:0; width:50%;
+  background:linear-gradient(135deg,#654580,#241735); border:1px solid #d6b8ff; }
+#elenaLibraryIntro .intro-doors:before { left:0; transform-origin:left; animation:doorLeft 1.2s 1.35s ease-in forwards; }
+#elenaLibraryIntro .intro-doors:after { right:0; transform-origin:right; animation:doorRight 1.2s 1.35s ease-in forwards; }
+#elenaLibraryIntro .intro-shelves { z-index:2; position:absolute; bottom:14%; width:min(82vw,520px); height:34%; opacity:0;
+  display:flex; align-items:flex-end; justify-content:center; gap:9px; border-bottom:8px solid #c39bff;
+  animation:shelvesAppear 1.1s 2.25s ease-out forwards; }
+#elenaLibraryIntro .intro-shelves span { display:block; width:12%; height:var(--h); border-radius:4px 4px 0 0;
+  background:linear-gradient(90deg,#6d4c91,#d0a9ff,#76549b); box-shadow:0 0 12px #b98cff66; }
+#elenaLibraryIntro .intro-cat { z-index:3; position:absolute; bottom:8%; font-size:48px; opacity:0;
+  animation:catArrives .8s 3.55s ease-out forwards; }
+#elenaLibraryIntro .intro-title { z-index:4; margin-top:230px; font-size:clamp(23px,5vw,34px); font-weight:700;
+  text-shadow:0 0 14px #d4b4ff,0 0 28px #a77bea; opacity:0; transform:translateY(12px);
+  animation:titleAppears 1s 3.85s ease-out forwards; }
+#elenaLibraryIntro .intro-subtitle { z-index:4; margin:0; opacity:0; animation:titleAppears .8s 4.15s ease-out forwards; }
+@keyframes introStars { 0%{opacity:0;transform:scale(.8)} 30%,85%{opacity:1;transform:scale(1.08)} 100%{opacity:.5;transform:scale(1)} }
+@keyframes introButterfly { 0%{opacity:0;transform:translateY(45px) scale(.4) rotate(-18deg)} 35%{opacity:1;transform:translateY(-20px) scale(1.15) rotate(8deg)} 100%{opacity:0;transform:translateY(-110px) scale(.7)} }
+@keyframes introDoor { 0%{opacity:0;transform:scale(.72)} 35%{opacity:1;transform:scale(1)} 100%{opacity:1;transform:scale(1)} }
+@keyframes doorLeft { to{transform:perspective(500px) rotateY(-78deg);opacity:.25} }
+@keyframes doorRight { to{transform:perspective(500px) rotateY(78deg);opacity:.25} }
+@keyframes shelvesAppear { 0%{opacity:0;transform:translateY(55px) scale(.8)} 100%{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes catArrives { from{opacity:0;transform:translateX(-90px)} to{opacity:1;transform:translateX(0)} }
+@keyframes titleAppears { to{opacity:1;transform:translateY(0)} }
+@media(prefers-reduced-motion:reduce){#elenaLibraryIntro *{animation-duration:.01ms!important;animation-delay:0ms!important}}
+
+
+/* Sala tridimensional 360°: cámara libre, estantes envolventes y libros seleccionables */
+.three-library{position:relative;z-index:2;height:min(68vh,620px);min-height:390px;overflow:hidden;border:1px solid #947655;border-radius:10px;background:#090d1b;box-shadow:inset 0 0 55px #000}
+.three-library canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.three-library canvas:active{cursor:grabbing}
+.three-hud{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:linear-gradient(#080910b8,transparent);pointer-events:none;font:10px Arial,sans-serif;letter-spacing:1.5px;color:#ead7b7}
+.three-hud div{display:flex;gap:6px;pointer-events:auto}
+.three-hud button{width:34px;height:32px;border:1px solid #b99b70;border-radius:50%;background:#211b1ddd;color:#f7e7c9;font-size:20px}
+.three-loading{position:absolute;inset:0;display:grid;place-items:center;color:#e8d3ad;font:16px Georgia,serif;z-index:4;background:#0b1020}
+.three-loading.hidden{display:none}
+#elenaSecretLibrary .library-shelf-heading,#elenaSecretLibrary #elenaSecretDedications{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;clip-path:inset(50%)!important}
+@media(max-width:560px){.three-library{height:62vh;min-height:390px}.three-hud{font-size:9px}}
+
+
+
+/* Etapa inmersiva: la sala 3D ocupa toda la pantalla del dispositivo */
+#elenaSecretLibrary{padding:0!important;overflow:hidden!important;background:#080b16!important}
+#elenaSecretLibrary .library-topbar{position:absolute;z-index:12;top:0;left:0;right:0;max-width:none;margin:0;padding:15px clamp(14px,3vw,30px);border:0;background:linear-gradient(180deg,#080a13e8 0%,#080a1377 65%,transparent 100%);pointer-events:none}
+#elenaSecretLibrary .library-topbar h2{font-size:clamp(19px,3vw,27px);text-shadow:0 2px 12px #000}
+#elenaSecretLibrary .library-kicker{font-size:9px}
+#elenaSecretLibrary .library-exit{pointer-events:auto;background:#211c1ddd;backdrop-filter:blur(8px)}
+#elenaSecretLibrary .library-room{position:absolute;inset:0;max-width:none;min-height:0;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;background:#090d1b;box-shadow:none}
+#elenaSecretLibrary .three-library{position:absolute;inset:0;width:100%;height:100%;min-height:0;border:0;border-radius:0;overflow:hidden}
+#elenaSecretLibrary .three-hud{top:auto;bottom:0;padding:18px 16px max(18px,env(safe-area-inset-bottom));background:linear-gradient(0deg,#080910dd,transparent);font-size:10px;letter-spacing:1.3px}
+#elenaSecretLibrary .three-hud button{width:40px;height:40px;font-size:22px;background:#211b1ddd;backdrop-filter:blur(8px)}
+#elenaSecretLibrary .library-welcome{display:none!important}
+#elenaSecretLibrary .lookaround-label,#elenaSecretLibrary .lookaround-viewport,#elenaSecretLibrary .lookaround-hint,#elenaSecretLibrary .library-shelf-heading,#elenaSecretLibrary #elenaSecretDedications,#elenaSecretLibrary .library-window,#elenaSecretLibrary .library-rest-corner,#elenaSecretLibrary .library-cat,#elenaSecretLibrary .library-footnote{display:none!important}
+#elenaSecretLibrary .library-room:before,#elenaSecretLibrary .library-room:after{display:none}
+#bookReadingOverlay{z-index:10030}
+#bookReadingOverlay.open .reading-book{animation:bookArrives .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes bookArrives{from{opacity:0;transform:translateY(45px) scale(.72) rotateX(18deg)}to{opacity:1;transform:translateY(0) scale(1) rotateX(0)}}
+@media(max-width:560px){#elenaSecretLibrary .library-topbar{padding-top:max(12px,env(safe-area-inset-top));padding-bottom:14px}#elenaSecretLibrary .library-welcome{top:86px;max-width:calc(100% - 24px)}#elenaSecretLibrary .library-welcome p{font-size:12px;line-height:1.55}#elenaSecretLibrary .three-hud{padding-bottom:max(16px,env(safe-area-inset-bottom))}}
+
+</style>
+</head>
+<body>
+<header><div class="eyebrow">un universo de cariño · una estrella a la vez</div><h1>We love you Elena</h1><p>Desde distintos rincones del mundo, dejamos pequeñas estrellas para recordarte cuánto cariño puede reunir un solo universo.</p></header>
+<button id="elenaSecretButton" aria-label="Entrada secreta">
+  🦋
+</button>
+  <main>
+<section class="stage" aria-label="Mariposa galáctica interactiva">
+<div class="stage-label">✦ Nuestra mariposa de estrellas</div>
+<div class="butterfly-wrap"><div class="butterfly" id="butterfly">
+<div class="wing left"><div class="wing-shape"></div></div><div class="wing right"><div class="wing-shape"></div></div><div class="body"></div>
+</div></div>
+<div id="stars"></div><div class="hint">Toca una estrella para descubrir su dedicatoria · La mariposa se mueve suavemente</div>
+</section>
+<section class="panels">
+<div class="panel">
+<h2>Deja tu estrella ✧</h2><p class="muted">Puedes enviar varias estrellas con el mismo usuario. Elige el país desde donde participas.</p>
+<form id="starForm">
+<label for="username">Tu nombre de usuario</label><input id="username" maxlength="24" placeholder="@tu_usuario" required>
+<label for="country">País</label><select id="country" required><option value="">Selecciona tu país</option></select>
+<label for="dedication">Tu dedicatoria</label><textarea id="dedication" placeholder="Escribe unas palabras para Elena..." required></textarea>
+<label for="color">Color de tu estrella</label><select id="color"><option value="#fff0a6">Dorado</option><option value="#a9caff">Azul</option><option value="#d5b7ff">Violeta</option><option value="#ffb9dd">Rosa</option><option value="#a8f0d0">Verde</option></select>
+<button class="submit" type="submit">Enviar mi estrella ✦</button>
+</form>
+<p class="muted" id="notice" aria-live="polite"></p>
+</div>
+<div class="panel">
+<h2>Nuestro universo</h2><p class="muted">Cada estrella representa una dedicatoria. Los datos de este prototipo se guardan únicamente en este navegador.</p>
+<div class="stats"><div class="stat"><strong id="starCount">0</strong><span>Estrellas</span></div><div class="stat"><strong id="countryCount">0</strong><span>Países</span></div></div>
+<h2 style="margin-top:22px">Dedicatorias recientes</h2><div id="messageList"><p class="muted">Tu estrella puede ser la primera.</p></div>
+</div>
+</section>
+</main>
+<footer>Hecho con cariño para Elena · We love you Elena ✦</footer>
+<dialog id="starDialog"><button id="closeDialog">Cerrar</button><div id="dialogContent"></div></dialog>
+  <dialog id="thanksDialog" class="thanks-dialog">
+  <div class="thanks-card">
+    <div class="thanks-icon">✦</div>
+    <h2>¡Gracias por participar!</h2>
+    <p>
+      Tu estrella va en camino.
+      Cuando sea aprobada, aparecerá en el cielo de Elena. ✨
+    </p>
+    <button id="continueStar" type="button">
+      Continuar ✨
+    </button>
+  </div>
+</dialog>
+
+<div id="starFlight" aria-hidden="true">✦</div>
+<script>
+const countries = ["Argentina","Bolivia","Brasil","Canadá","Chile","Colombia","Costa Rica","Cuba","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","Puerto Rico","República Dominicana","Uruguay","Venezuela","Alemania","Francia","Italia","Portugal","Reino Unido","Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India","Australia","Otro"];
+const countryEl=document.querySelector("#country");
+countries.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;countryEl.append(o)});
+const zones={"Sudamérica": ["Argentina","Bolivia","Brasil","Chile","Colombia","Ecuador","Paraguay","Perú","Uruguay","Venezuela"],"Norteamérica": ["Canadá","Estados Unidos","México","Cuba","Costa Rica","El Salvador","Guatemala","Honduras","Nicaragua","Panamá","Puerto Rico","República Dominicana"],"Europa":["España","Alemania","Francia","Italia","Portugal","Reino Unido"],"Asia":["Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India"],"Oceanía":["Australia"]};
+function region(country){return Object.entries(zones).find(([r,arr])=>arr.includes(country))?.[0]||"Otros";}
+const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let stars = [];
+const stage=document.querySelector("#stars"), list=document.querySelector("#messageList"), dialog=document.querySelector("#starDialog");
+function positionFor(s,i){let side=s.region==="Sudamérica"||s.region==="Norteamérica"?"left":s.region==="Europa"||s.region==="Asia"?"right":(i%2?"left":"right");let left=side==="left"?12+(i*37%34):54+(i*41%34);let top=24+(i*29%54);return {left,top};}
+function render(){
+ stage.innerHTML="";
+ stars.forEach((s,i)=>{const p=positionFor(s,i),b=document.createElement("button");b.className="star";b.type="button";b.textContent="✦";b.style.left=p.left+"%";b.style.top=p.top+"%";b.style.color=s.color;b.style.animationDelay=(i%7)*.2+"s";b.setAttribute("aria-label","Estrella de "+s.username+" desde "+s.country);b.onclick=()=>openStar(s);stage.append(b)});
+ document.querySelector("#starCount").textContent=stars.length;
+ document.querySelector("#countryCount").textContent=new Set(stars.map(s=>s.country)).size;
+ list.innerHTML="";
+ if(!stars.length){list.innerHTML='<p class="muted">Tu estrella puede ser la primera.</p>';return}
+ [...stars].reverse().slice(0,8).forEach(s=>{const d=document.createElement("div");d.className="message";const b=document.createElement("b");b.textContent=s.username+" ";const sm=document.createElement("small");sm.textContent="· "+s.country;const p=document.createElement("p");p.textContent=s.message;d.append(b,sm,p);list.append(d)});
+}
+  async function loadApprovedStars() {
+  const { data, error } = await supabaseClient
+    .from("dedications")
+    .select("username,country,region,message,color,created_at")
+    .eq("status", "approved")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    document.querySelector("#notice").textContent =
+      "No se pudieron cargar las estrellas. Inténtalo más tarde.";
+    return;
+  }
+
+  stars = (data || []).map(row => ({
+    username: row.username,
+    country: row.country,
+    region: row.region,
+    message: row.message,
+    color: row.color,
+    date: row.created_at
+  }));
+
+  render();
+}
+function openStar(s){document.querySelector("#dialogContent").innerHTML="";const h=document.createElement("h2");h.textContent="✦ "+s.username;const meta=document.createElement("p");meta.className="muted";meta.textContent="🌍 "+s.country+" · "+s.region;const p=document.createElement("p");p.textContent=s.message;document.querySelector("#dialogContent").append(h,meta,p);dialog.showModal()}
+document.querySelector("#closeDialog").onclick=()=>dialog.close();
+  const thanksDialog = document.querySelector("#thanksDialog");
+const continueStar = document.querySelector("#continueStar");
+const starFlight = document.querySelector("#starFlight");
+
+continueStar.addEventListener("click", () => {
+  thanksDialog.close();
+
+  starFlight.classList.remove("fly");
+  void starFlight.offsetWidth;
+  starFlight.classList.add("fly");
+});
+
+starFlight.addEventListener("animationend", () => {
+  starFlight.classList.remove("fly");
+});
+document.querySelector("#starForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const country = document.querySelector("#country").value;
+
+  const s = {
+    username: document.querySelector("#username").value.trim(),
+    country,
+    region: region(country),
+    message: document.querySelector("#dedication").value.trim(),
+    color: document.querySelector("#color").value,
+    status: "pending"
+  };
+
+  if (!s.username || !country || !s.message) return;
+
+  try {
+  const { error } = await supabaseClient
+    .from("dedications")
+    .insert(s);
+
+  if (error) throw error;
+
+  document.querySelector("#dedication").value = "";
+  thanksDialog.showModal();
+
+} catch (error) {
+  console.error("Error al enviar la estrella:", error);
+
+  document.querySelector("#notice").textContent =
+    "No se pudo enviar tu estrella. Comprueba tu conexión e inténtalo de nuevo.";
+  }
+  });
+
+loadApprovedStars();
+  
+
+const butterflyWrap = document.querySelector(".butterfly-wrap");
+const butterfly = butterflyWrap?.querySelector(".butterfly");
+
+if (butterflyWrap && butterfly) {
+  const pointers = new Map();
+
+  let dragX = 0;
+  let dragY = 0;
+  let rotateX = 0;
+  let rotateY = 0;
+  let zoom = 1;
+  let gesture = null;
+  let holdTimer = null;
+let holdStartX = 0;
+let holdStartY = 0;
+
+  function centerOf(points) {
+    return {
+      x: (points[0].x + points[1].x) / 2,
+      y: (points[0].y + points[1].y) / 2
+    };
+  }
+
+  function distanceOf(a, b) {
+    return Math.hypot(b.x - a.x, b.y - a.y);
+  }
+
+  function angleOf(a, b) {
+    return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+  }
+
+  function startGesture() {
+    const points = [...pointers.values()];
+
+    if (points.length === 1) {
+      gesture = {
+        type: "one",
+        x: points[0].x,
+        y: points[0].y,
+        dragX,
+        dragY
+      };
+    }
+
+    if (points.length >= 2) {
+      const a = points[0];
+      const b = points[1];
+
+      gesture = {
+        type: "two",
+        center: centerOf([a, b]),
+        distance: distanceOf(a, b),
+        angle: angleOf(a, b),
+        dragX,
+        dragY,
+        rotateX,
+        rotateY,
+        zoom
+      };
+
+      butterfly.style.animation = "none";
+    }
+  }
+
+  function apply3D() {
+    butterfly.style.transform =
+      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${zoom})`;
+  }
+
+  butterflyWrap.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    if (pointers.size === 0) {
+  holdStartX = e.clientX;
+  holdStartY = e.clientY;
+
+  holdTimer = setTimeout(() => {
+    if (pointers.size === 1) {
+      butterfly.classList.add("hold-spin");
+    }
+    holdTimer = null;
+  }, 500);
+    }
+    butterflyWrap.setPointerCapture(e.pointerId);
+
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+if (pointers.size > 1) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+  butterfly.classList.remove("hold-spin");
+}
+    butterflyWrap.classList.add("dragging");
+    startGesture();
+  });
+
+  butterflyWrap.addEventListener("pointermove", e => {
+    if (!pointers.has(e.pointerId)) return;
+if (holdTimer && Math.hypot(
+  e.clientX - holdStartX,
+  e.clientY - holdStartY
+) > 8) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+
+    const points = [...pointers.values()];
+
+    if (points.length === 1 && gesture?.type === "one") {
+      dragX = gesture.dragX + points[0].x - gesture.x;
+      dragY = gesture.dragY + points[0].y - gesture.y;
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+    }
+
+    if (points.length >= 2 && gesture?.type === "two") {
+      const a = points[0];
+      const b = points[1];
+      const center = centerOf([a, b]);
+
+      dragX = gesture.dragX + center.x - gesture.center.x;
+      dragY = gesture.dragY + center.y - gesture.center.y;
+
+      rotateY = gesture.rotateY + angleOf(a, b) - gesture.angle;
+      rotateX = gesture.rotateX + (center.y - gesture.center.y) * 0.25;
+
+      zoom = Math.max(0.7, Math.min(
+        1.4,
+        gesture.zoom * distanceOf(a, b) / Math.max(gesture.distance, 1)
+      ));
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+
+      apply3D();
+    }
+  });
+
+  function stopPointer(e) {
+    if (holdTimer) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+
+butterfly.classList.remove("hold-spin");
+    pointers.delete(e.pointerId);
+
+    if (pointers.size > 0) {
+      startGesture();
+    } else {
+      gesture = null;
+      butterflyWrap.classList.remove("dragging");
+    }
+  }
+
+  butterflyWrap.addEventListener("pointerup", stopPointer);
+  butterflyWrap.addEventListener("pointercancel", stopPointer);
+}
+  
+</script>
+  
+<style>
+#elenaSecretButton {
+  position: static; display: block;
+margin: 0 16px 12px auto;
+  z-index: 9998;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #b99cff;
+  border-radius: 50%;
+  background: #211638;
+  color: #e6d5ff;
+  font-size: 25px;
+  box-shadow: 0 0 18px #a879ff88;
+  cursor: pointer;
+}
+
+#elenaSecretDoor {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(circle, #30204e, #090716 75%);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+#elenaSecretDoor.open {
+  display: flex;
+}
+
+#elenaSecretPanel {
+  width: min(100%, 380px);
+  text-align: center;
+  padding: 28px 22px;
+  border: 1px solid #a98ad9;
+  border-radius: 22px;
+  background: #171126;
+  box-shadow: 0 0 35px #9c70dc55;
+}
+
+#elenaSecretPanel input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  margin: 14px 0;
+  border-radius: 10px;
+  border: 1px solid #a98ad9;
+  background: #0e0a19;
+  color: white;
+  font-size: 16px;
+}
+
+#elenaSecretPanel button {
+  padding: 11px 20px;
+  margin: 5px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#elenaSecretEnter {
+  background: #b99cff;
+  color: #211638;
+}
+
+#elenaSecretClose {
+  background: #352849;
+  color: white;
+}
+
+#elenaSecretMessage {
+  min-height: 24px;
+  color: #e5caff;
+}
+
+#elenaSecretLibrary {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  padding: 28px 18px;
+  background: radial-gradient(circle at top, #30204e, #090716 75%);
+  color: white;
+}
+
+#elenaSecretLibrary h2 {
+  text-align: center;
+}
+
+.elenaDedication {
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid #725b98;
+  border-radius: 14px;
+  background: #211832;
+}
+
+/* Primera sala de la biblioteca: ambiente cálido y lectura descansada */
+#elenaSecretLibrary{background:radial-gradient(ellipse at 50% 0%,#3a3150 0%,#171522 48%,#090b16 100%);padding:20px 16px 34px;color:#f4ead8;font-family:Georgia,serif}
+.library-topbar{max-width:1050px;margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #a78b674d;padding-bottom:14px}
+.library-kicker{font:10px/1.4 Arial,sans-serif;letter-spacing:2.5px;color:#c9b58f}
+.library-topbar h2{margin:5px 0 0;text-align:left;font-size:clamp(23px,5vw,34px);font-weight:500;color:#f3e4c8}
+.library-exit{border:1px solid #a98c68;background:#292331;color:#f5e9d6;border-radius:22px;padding:10px 13px;font-size:13px}
+.library-room{position:relative;isolation:isolate;overflow:hidden;max-width:1050px;min-height:620px;margin:auto;padding:22px clamp(14px,4vw,42px) 28px;border:1px solid #80694f;border-radius:12px;background:linear-gradient(90deg,#211c20 0%,#493629 13%,#352a28 50%,#493629 87%,#211c20 100%);box-shadow:inset 0 0 65px #08070b,0 18px 55px #0008}
+.library-room:before{content:"";position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(90deg,transparent 0 9%,#d1a56b0b 9.2% 9.5%),linear-gradient(180deg,#17172a 0%,transparent 35%,#100d12 100%)}
+.library-room:after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:0;height:18%;background:repeating-linear-gradient(90deg,#60442e 0 2px,#3b2b25 2px 95px);border-top:5px solid #78563a;box-shadow:inset 0 12px 18px #130e0b}
+.library-window{position:absolute;right:7%;top:22px;width:clamp(105px,19vw,190px);height:clamp(145px,23vw,220px);border:9px solid #6e5038;border-radius:48% 48% 5px 5px;background:radial-gradient(ellipse at 55% 35%,#4b4c73 0%,#1a2541 48%,#101323 100%);box-shadow:0 0 35px #8c83b044,inset 0 0 25px #a6a6d033;opacity:.9}
+.library-window span,.library-window i,.library-window b,.library-window em{position:absolute;color:#f7e9c4;text-shadow:0 0 10px #fff; font-style:normal}.library-window span{top:18%;left:25%}.library-window i{top:42%;right:20%}.library-window b{top:65%;left:55%}.library-window em{top:28%;right:40%}
+.library-welcome{position:relative;z-index:1;max-width:470px;margin:10px 0 35px;padding:15px 18px 15px 22px;background:linear-gradient(135deg,#b18b5c22,#1b1724dd);border:1px solid #b69a6e88;box-shadow:0 5px 22px #0005;color:#f1dfc0}
+.library-welcome span{position:absolute;left:8px;top:8px;color:#e9ca8c}.library-welcome p{margin:0;font-size:14px;line-height:1.75}
+.library-shelf-heading{position:relative;z-index:1;margin:0 0 13px;color:#ead5ae;font:11px Arial,sans-serif;letter-spacing:2px}.library-shelf-heading small{display:block;margin-top:6px;color:#c4b6a0;letter-spacing:.2px;font-size:12px}
+.library-shelves{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px;padding-bottom:20px}
+.library-shelves>.elenaDedication{position:relative;margin:0;padding:12px 12px 16px;border:1px solid #886646;border-radius:5px;background:linear-gradient(180deg,#61452f,#3d2a23);box-shadow:0 9px 16px #080608aa,inset 0 0 0 3px #2b211d;cursor:default}
+.library-shelves>.elenaDedication:after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:linear-gradient(#98704a,#513821);border-top:2px solid #b28a5b}
+.library-shelves>.elenaDedication h3{margin:0 0 10px;padding:8px 9px;background:#241c1b;border:1px solid #8e6a46;color:#f1d9ad;font-size:15px;font-weight:500;text-align:center}
+.library-shelves>.elenaDedication article{margin:7px 0;padding:10px 11px;border:1px solid #b0926a66;border-radius:3px;background:#e9dcc5;color:#382b24;box-shadow:0 2px 4px #160e0b55}
+.library-shelves>.elenaDedication article h4{margin:0 0 4px;font:600 12px Arial,sans-serif;color:#694b32}.library-shelves>.elenaDedication article p{margin:5px 0;font-size:13px;line-height:1.55;overflow-wrap:anywhere}.library-shelves>.elenaDedication article p:nth-of-type(1){font:11px Arial,sans-serif;color:#806b56}
+.library-rest-corner{position:relative;z-index:1;display:flex;align-items:center;gap:14px;max-width:720px;margin:22px auto 8px;padding:18px;background:#211d1cdd;border:1px solid #9c805e;border-radius:7px;box-shadow:0 0 22px #d2a56a18}.library-rest-corner strong{color:#e9d0a7;font-size:17px;font-weight:500}.library-rest-corner p{margin:7px 0 0;color:#e0d3c0;font-size:13px;line-height:1.7}.rest-lamp{font-size:29px;color:#e7c98e;text-shadow:0 0 16px #e8bd74}.rest-chair{font-size:30px;opacity:.8}.library-cat{position:relative;z-index:1;text-align:right;margin-top:14px;font-size:30px;opacity:.88}.library-cat small{display:block;font:10px Arial,sans-serif;letter-spacing:1px;color:#c8b99e}.library-footnote{max-width:1000px;margin:14px auto 0;text-align:center;color:#c9bda9;font:12px/1.6 Arial,sans-serif}
+@media(max-width:560px){.library-room{padding:18px 12px 24px;min-height:600px}.library-window{right:12px;top:15px;opacity:.62}.library-welcome{max-width:78%;margin-top:8px}.library-welcome p{font-size:12px}.library-shelves{grid-template-columns:1fr}.library-rest-corner{align-items:flex-start}.rest-chair{display:none}}
+
+/* Exploración panorámica inicial: movimiento manual, suave y compatible con móvil */
+.lookaround-label{position:relative;z-index:2;margin:8px 0 9px;color:#e9d5b3;font:11px Arial,sans-serif;letter-spacing:2px}
+.lookaround-label small{display:block;margin-top:6px;color:#c8b99e;letter-spacing:.2px;font-size:12px}
+.lookaround-viewport{position:relative;z-index:2;height:220px;overflow-x:auto;overflow-y:hidden;border:1px solid #947655;border-radius:8px;background:#15131c;scrollbar-color:#947655 #211b1b;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;cursor:grab;touch-action:pan-x;}
+.lookaround-viewport.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
+.lookaround-world{display:grid;grid-template-columns: minmax(230px,.8fr) minmax(330px,1.35fr) minmax(230px,.8fr);width:max(100%,790px);height:100%;background:linear-gradient(180deg,#24243a,#352820 70%,#211817);}
+.lookaround-zone{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:9px;padding:16px 12px 17px;text-align:center;overflow:hidden;border-right:5px solid #63472f;scroll-snap-align:center;background:linear-gradient(90deg,#211a1b,#493528 50%,#211a1b);}
+.lookaround-zone:before{content:"";position:absolute;inset:0 0 18% ;opacity:.55;background:repeating-linear-gradient(90deg,transparent 0 17%,#d8b47a12 17.2% 17.7%),linear-gradient(180deg,#101426,#3c2b26 75%);pointer-events:none}
+.zone-window{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:58%;height:78px;border:7px solid #76563a;border-radius:48% 48% 4px 4px;background:radial-gradient(ellipse,#596080,#18203c 70%);color:#f6e5b8;padding-top:24px;box-shadow:0 0 22px #9a91c044}
+.zone-shelf{position:relative;z-index:1;width:88%;padding:10px 5px;border-top:8px solid #8b6640;border-bottom:7px solid #62452f;background:repeating-linear-gradient(90deg,#68452e 0 12px,#a77c4b 13px 17px,#34251e 18px 22px);color:#f1d5a0;letter-spacing:8px;text-shadow:0 0 8px #e8c58a}
+.zone-lamp{position:absolute;right:17%;top:43%;color:#f0ce8a;text-shadow:0 0 18px #f2c77b;font-size:23px;animation:lampBreath 4s ease-in-out infinite}
+.zone-object{position:relative;z-index:2;margin-bottom:1px;padding:7px 14px;border:1px solid #b39469;border-radius:7px;background:#211a19dd;color:#f4e6cc;font-size:27px;cursor:pointer;box-shadow:0 0 18px #e5c58a18}
+.zone-object small{display:block;font:11px Arial,sans-serif;color:#ead6b8;margin-top:3px}
+.lookaround-zone strong{position:relative;z-index:1;color:#f0d9b5;font:16px Georgia,serif}
+.lookaround-zone>small{position:relative;z-index:1;color:#d1bea2;font:11px Arial,sans-serif}
+.zone-table{position:relative;z-index:1;width:72%;padding:13px;border:5px solid #795638;border-radius:50%;background:#38251d;color:#e9c995;box-shadow:0 12px 18px #080606aa;font-size:22px}
+.world-map-art{position:relative;z-index:1;margin-bottom:8px;font-size:62px;filter:drop-shadow(0 0 13px #9c9bd0)}
+.lookaround-hint{margin:7px 0 20px;color:#c8b99e;font:11px/1.5 Arial,sans-serif;text-align:center}
+@keyframes lampBreath{50%{opacity:.55;text-shadow:0 0 28px #f2c77b;transform:scale(1.08)}}
+.library-shelves>.elenaDedication{cursor:pointer;transition:transform .25s,box-shadow .25s}
+.library-shelves>.elenaDedication:hover,.library-shelves>.elenaDedication:focus-within{transform:translateY(-4px);box-shadow:0 14px 22px #080608cc,0 0 0 1px #d7b47b66}
+.book-reading-overlay{display:none;position:fixed;inset:0;z-index:10020;align-items:center;justify-content:center;padding:18px;background:#08070deF;backdrop-filter:blur(8px)}
+.book-reading-overlay.open{display:flex;animation:readingFade .35s ease both}
+.reading-book{width:min(100%,520px);padding:17px;border:1px solid #a9875c;border-radius:12px;background:linear-gradient(135deg,#3d2b22,#211a1b);box-shadow:0 24px 70px #000b;color:#f3e7d2;animation:bookArrives .55s cubic-bezier(.2,.8,.2,1) both}
+.reading-topline{display:flex;justify-content:space-between;align-items:center;color:#d5bd94;font:10px Arial,sans-serif;letter-spacing:2px}
+.reading-topline button,.reading-controls button{border:1px solid #a98a63;border-radius:20px;background:#30251f;color:#f4e6d0;padding:8px 12px}
+.reading-book h2{text-align:center;font:24px Georgia,serif;color:#f3dfbd;margin:12px 0}
+.paper-page{min-height:260px;padding:24px 22px;border:1px solid #c7b18d;background:linear-gradient(90deg,#e6d8bd,#f4ead7 8%,#f4ead7 92%,#dfcfb1);color:#43372b;box-shadow:inset 0 0 22px #8c704222;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.paper-mark{color:#98774e;font-size:20px}.paper-page h3{font:600 16px Arial,sans-serif;color:#74563a;margin:12px 0 4px}.paper-page p{font:16px/1.85 Georgia,serif;overflow-wrap:anywhere}.paper-page .reading-region{font:12px Arial,sans-serif;color:#89775f;margin:3px 0}
+.reading-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px;color:#dfcba9;font:12px Arial,sans-serif}
+.reading-controls button:disabled{opacity:.35;cursor:not-allowed}
+.secret-discovery{display:none;position:fixed;z-index:10030;left:50%;bottom:22px;transform:translateX(-50%);width:min(90%,420px);padding:18px 42px 18px 18px;border:1px solid #c1a476;border-radius:10px;background:#211b20f5;color:#f3e6cf;box-shadow:0 12px 35px #0009;font:14px/1.65 Georgia,serif}
+.secret-discovery.open{display:block;animation:readingFade .3s ease both}
+.secret-discovery button{position:absolute;right:10px;top:8px;border:0;background:transparent;color:#f3e6cf;font-size:18px}
+@keyframes readingFade{from{opacity:0}to{opacity:1}}@keyframes bookArrives{from{opacity:0;transform:translateY(35px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){.lookaround-viewport{height:205px}.lookaround-world{grid-template-columns:230px 330px 230px}.paper-page{min-height:245px;padding:18px}.paper-page p{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.zone-lamp{animation:none}.reading-book{animation:none}.book-reading-overlay.open,.secret-discovery.open{animation:none}}
+
+/* Placa de bienvenida interactiva de la pared posterior */
+#welcomeWallDialog{display:none;position:fixed;inset:0;z-index:10050;align-items:center;justify-content:center;padding:22px;background:#050817df;backdrop-filter:blur(8px)}
+#welcomeWallDialog.open{display:flex}
+#welcomeWallDialog .welcome-card{position:relative;width:min(92vw,560px);padding:34px 28px 30px;border:2px solid #c4a574;border-radius:12px;background:linear-gradient(145deg,#35271f,#171522);box-shadow:0 20px 70px #000c;color:#f3e5c9;text-align:center}
+#welcomeWallDialog h2{font:26px Georgia,serif;color:#f1d6a7;margin:0 0 18px}
+#welcomeWallDialog p{font:clamp(17px,3.7vw,21px)/1.9 Georgia,serif;margin:0}
+#welcomeWallDialog button{position:absolute;right:12px;top:10px;border:1px solid #c4a574;border-radius:50%;width:36px;height:36px;background:#211a1b;color:#fff1d5;font-size:19px}
+</style>
+
+
+
+<div id="elenaSecretDoor">
+  <div id="elenaSecretPanel">
+    <div style="font-size:48px">🦋</div>
+    <h2>Una puerta entre estrellas</h2>
+    <p>Hay un pequeño universo que te está esperando...</p>
+
+    <input
+      id="elenaSecretCode"
+      type="password"
+      placeholder="Tu clave secreta"
+      autocomplete="off"
+    >
+
+    <p id="elenaSecretMessage" aria-live="polite"></p>
+
+    <button id="elenaSecretEnter">Abrir la puerta ✨</button>
+    <button id="elenaSecretClose">Volver</button>
+  </div>
+</div>
+
+
+<div id="elenaLibraryIntro" aria-live="polite" aria-label="Abriendo la biblioteca secreta">
+  <div class="intro-stars"></div>
+  <div class="intro-butterfly">🦋</div>
+  <div class="intro-doors"></div>
+  <div class="intro-shelves" aria-hidden="true">
+    <span style="--h:72%"></span><span style="--h:90%"></span><span style="--h:65%"></span>
+    <span style="--h:82%"></span><span style="--h:96%"></span><span style="--h:70%"></span><span style="--h:86%"></span>
+  </div>
+  <div class="intro-cat">🐈‍⬛</div>
+  <div class="intro-title">✦ La biblioteca secreta de Elena ✦</div>
+  <p class="intro-subtitle">Cada libro guarda las palabras de quienes te quieren.</p>
+</div>
+
+<div id="elenaSecretLibrary" aria-label="Biblioteca secreta de Elena">
+  <div class="library-topbar">
+    <div><span class="library-kicker">UN REFUGIO ENTRE LAS ESTRELLAS</span><h2>La biblioteca de Elena</h2></div>
+    <button id="elenaSecretLibraryClose" class="library-exit" aria-label="Cerrar biblioteca">Salir ✕</button>
+  </div>
+  <div class="library-room">
+    <div class="library-window" aria-hidden="true"><span>✦</span><i>✧</i><b>·</b><em>✦</em></div>
+    <div class="library-welcome"><span>✧</span><p>Allá afuera, en ese inmenso universo, eres la «Vice Elena». Pero aquí dentro puedes ser simplemente Elena. No necesitas cargar con el peso de todos; aquí solo tienes que ser tú misma.</p></div>
+    <div class="lookaround-label">✦ LA BIBLIOTECA EN 360° <small>Arrastra para mirar alrededor · pellizca o usa los controles para acercarte</small></div>
+    <div class="three-library" id="threeLibrary" aria-label="Biblioteca tridimensional interactiva"><div class="three-loading" id="threeLoading">Preparando tu biblioteca…</div><div class="three-hud"><span>360° · EXPLORA A TU RITMO</span><div><button type="button" id="zoomOut360" aria-label="Alejar">−</button><button type="button" id="zoomIn360" aria-label="Acercar">+</button><button type="button" id="reset360" aria-label="Centrar vista">◎</button></div></div></div><div class="lookaround-viewport" id="libraryLookaround" tabindex="0" aria-label="Recorrido panorámico por la biblioteca" hidden>
+      <div class="lookaround-world" id="libraryWorld">
+        <section class="lookaround-zone zone-angel">
+          <div class="zone-window">✧　✦　·</div><div class="zone-lamp">♨</div>
+          <div class="zone-object" role="button" tabindex="0" data-secret="angel">🪽<small>Un recuerdo lleno de luz</small></div>
+          <div class="zone-shelf">▥ ▥ ▥ ▥ ▥</div><strong>El rincón de los recuerdos</strong>
+        </section>
+        <section class="lookaround-zone zone-center">
+          <div class="zone-window">✦　·　✧　·　✦</div><div class="zone-shelf">▥ ▥ ▥ ▥ ▥ ▥ ▥</div>
+          <div class="zone-table">✧　📖　✧</div><strong>Los libros del mundo</strong><small>Historias reunidas desde muchos países</small>
+        </section>
+        <section class="lookaround-zone zone-map">
+          <div class="zone-window">✧　·　✦</div><div class="world-map-art">🌎</div>
+          <div class="zone-object" role="button" tabindex="0" data-secret="map">⭐<small>Mapa de las estrellas</small></div>
+          <button type="button" data-secret="volleyball" hidden aria-hidden="true" tabindex="-1"></button>
+          <strong>Un mundo unido por el cariño</strong>
+        </section>
+      </div>
+    </div>
+    <p class="lookaround-hint">Puedes recorrer la panorámica de lado a lado. En esta etapa es una vista panorámica interactiva; más adelante construiremos la experiencia 3D de 360°.</p>
+    <div class="library-shelf-heading"><span>LOS RECUERDOS DEL MUNDO</span><small>Libros creados con las dedicatorias que te dejaron</small></div>
+    <div id="elenaSecretDedications" class="library-shelves"></div>
+    <div class="library-rest-corner">
+      <div class="rest-lamp">☼</div><div><strong>Un rincón para descansar</strong><p>En este lugar se reúnen los mensajes de todas las personas que te admiramos y te queremos. Gracias por estar siempre para nosotros, incluso en esos momentos en los que tú también necesitas que alguien esté para ti. Recuerda que no tienes que poder con todo ni cuidar de todos siempre. Tú también mereces recibir todo ese cariño que tantas veces nos das.</p></div>
+      <div class="rest-chair" aria-hidden="true">🪑</div>
+    </div>
+    <div class="library-cat" aria-hidden="true">🐈‍⬛<small>guardiana de los recuerdos</small></div>
+  </div>
+  <p class="library-footnote">Puedes recorrer este lugar con calma. Cada libro reúne las voces de quienes te quieren. 🦋</p>
+</div>
+<div class="book-reading-overlay" id="bookReadingOverlay" aria-hidden="true">
+  <section class="reading-book" role="dialog" aria-modal="true" aria-labelledby="readingBookTitle">
+    <div class="reading-topline"><span>UN RECUERDO DEL MUNDO</span><button type="button" id="closeReadingBook" aria-label="Cerrar libro">✕</button></div>
+    <h2 id="readingBookTitle">Libro de recuerdos</h2>
+    <div class="paper-page" id="readingPaper"><div class="paper-mark">✦</div><h3 id="readingAuthor"></h3><p class="reading-region" id="readingRegion"></p><p id="readingMessage"></p><div class="paper-mark">❦</div></div>
+    <div class="reading-controls"><button type="button" id="previousDedication">← Anterior</button><span id="readingPageCount">1 / 1</span><button type="button" id="nextDedication">Siguiente →</button></div>
+  </section>
+</div>
+<div id="multilingualSecretTriggers" hidden aria-hidden="true">
+  <button type="button" data-secret="msg-en"></button><button type="button" data-secret="msg-fr"></button><button type="button" data-secret="msg-it"></button><button type="button" data-secret="msg-pt"></button><button type="button" data-secret="msg-ja"></button><button type="button" data-secret="msg-ko"></button><button type="button" data-secret="msg-de"></button><button type="button" data-secret="msg-th"></button><button type="button" data-secret="msg-zh"></button><button type="button" data-secret="msg-ar"></button><button type="button" data-secret="msg-ru"></button><button type="button" data-secret="msg-tr"></button>
+</div>
+<div class="secret-discovery" id="secretDiscovery" role="status" aria-live="polite"><button type="button" id="closeSecretDiscovery" aria-label="Cerrar">✕</button><span id="secretDiscoveryText"></span></div>
+<div id="welcomeWallDialog" role="dialog" aria-modal="true" aria-labelledby="welcomeWallTitle"><section class="welcome-card"><button type="button" id="closeWelcomeWall" aria-label="Cerrar mensaje">✕</button><h2 id="welcomeWallTitle">Un lugar para ser tú misma</h2><p>Allá afuera, en ese inmenso universo, eres la «Vice Elena». Pero aquí dentro puedes ser simplemente Elena. No necesitas cargar con el peso de todos; aquí solo tienes que ser tú misma.</p></section></div>
+
+<script>
+(() => {
+  const welcomeDialog=document.getElementById('welcomeWallDialog');
+  document.getElementById('closeWelcomeWall').addEventListener('click',()=>welcomeDialog.classList.remove('open'));
+  welcomeDialog.addEventListener('click',event=>{if(event.target===welcomeDialog)welcomeDialog.classList.remove('open');});
+  const endpoint =
+    "https://jiiniyttaifztzbtqhnl.supabase.co/functions/v1/elena-library";
+
+  const door = document.querySelector("#elenaSecretDoor");
+  const codeInput = document.querySelector("#elenaSecretCode");
+  const message = document.querySelector("#elenaSecretMessage");
+  const library = document.querySelector("#elenaSecretLibrary");
+  const dedicationList =
+    document.querySelector("#elenaSecretDedications");
+
+  document.querySelector("#elenaSecretButton").onclick = () => {
+    door.classList.add("open");
+    codeInput.focus();
+  };
+
+  document.querySelector("#elenaSecretClose").onclick = () => {
+    door.classList.remove("open");
+    codeInput.value = "";
+    message.textContent = "";
+  };
+
+  document.querySelector("#elenaSecretLibraryClose").onclick = () => {
+    library.style.display = "none";
+  };
+
+  let activePages = [];
+  let activePageIndex = 0;
+  const bookOverlay = document.querySelector("#bookReadingOverlay");
+  const pageAuthor = document.querySelector("#readingAuthor");
+  const pageRegion = document.querySelector("#readingRegion");
+  const pageMessage = document.querySelector("#readingMessage");
+  const pageCount = document.querySelector("#readingPageCount");
+  const previousPage = document.querySelector("#previousDedication");
+  const nextPage = document.querySelector("#nextDedication");
+
+  function renderBookPage() {
+    const page = activePages[activePageIndex];
+    if (!page) return;
+    pageAuthor.textContent = page.author;
+    pageRegion.textContent = page.region;
+    pageMessage.textContent = page.message;
+    pageCount.textContent = (activePageIndex + 1) + " / " + activePages.length;
+    previousPage.disabled = activePageIndex === 0;
+    nextPage.disabled = activePageIndex === activePages.length - 1;
+  }
+
+  function openCountryBook(country, group) {
+    pageAuthor.style.display = ''; pageRegion.style.display = '';
+    document.querySelector('.reading-controls').style.display = '';
+    document.querySelector('.reading-topline span').textContent = 'UN RECUERDO DEL MUNDO';
+    activePages = [...group.querySelectorAll("article")].map(article => ({
+      author: article.querySelector("h4")?.textContent || "Una estrella",
+      region: article.querySelector("p")?.textContent || "",
+      message: article.querySelectorAll("p")[1]?.textContent || ""
+    }));
+    if (!activePages.length) return;
+    activePageIndex = 0;
+    document.querySelector("#readingBookTitle").textContent = "Libro de " + country;
+    renderBookPage();
+    bookOverlay.classList.add("open");
+    bookOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeCountryBook() {
+    bookOverlay.classList.remove("open");
+    bookOverlay.setAttribute("aria-hidden", "true");
+    window.dispatchEvent(new Event("elena-book-reader-closed"));
+  }
+  function openMemoryMessage(title, message, eyebrow='UN RECUERDO ESPECIAL') {
+    activePages = [{author:'', region:'', message}];
+    activePageIndex = 0;
+    document.querySelector('#readingBookTitle').textContent = title;
+    document.querySelector('.reading-topline span').textContent = eyebrow;
+    pageAuthor.style.display = 'none'; pageRegion.style.display = 'none';
+    document.querySelector('.reading-controls').style.display = 'none';
+    renderBookPage();
+    bookOverlay.classList.add('open'); bookOverlay.setAttribute('aria-hidden','false');
+  }
+  function openViceNote() {
+    openMemoryMessage('Un mensaje para Elena', 'Allá afuera, en ese inmenso universo, eres la «Vice Elena». Pero aquí dentro puedes ser simplemente Elena. No necesitas cargar con el peso de todos; aquí solo tienes que ser tú misma.', 'UNA NOTA ESPECIAL');
+  }
+  window.addEventListener('open-vice-note', openViceNote);
+  window.addEventListener('open-reading-note', () => openMemoryMessage('Un lugar lleno de cariño', 'En este lugar se reúnen los mensajes de todas las personas que te admiramos y te queremos. Gracias por estar siempre para nosotros, incluso en esos momentos en los que tú también necesitas que alguien esté para ti. Recuerda que no tienes que poder con todo ni cuidar de todos siempre. Tú también mereces recibir todo ese cariño que tantas veces nos das.', 'UNA NOTA EN LA BIBLIOTECA'));
+  window.addEventListener('birthday-cake-tap', () => {
+    openMemoryMessage('¡Feliz cumpleaños, Elena!', '¡Feliz cumpleaños, Elena! Que este día esté lleno de cariño, alegría y momentos bonitos. 🦋', 'UN PEQUEÑO DESEO DE CUMPLEAÑOS');
+  });
+  document.querySelector("#closeReadingBook").addEventListener("click", closeCountryBook);
+  bookOverlay.addEventListener("click", event => { if (event.target === bookOverlay) closeCountryBook(); });
+  previousPage.addEventListener("click", () => { if (activePageIndex > 0) { activePageIndex--; renderBookPage(); } });
+  nextPage.addEventListener("click", () => { if (activePageIndex < activePages.length - 1) { activePageIndex++; renderBookPage(); } });
+
+  const lookaround = document.querySelector("#libraryLookaround");
+  let dragging = false, dragStartX = 0, scrollStart = 0;
+  lookaround.addEventListener("pointerdown", event => {
+    if (event.target.closest("[data-secret]")) return;
+    dragging = true; dragStartX = event.clientX; scrollStart = lookaround.scrollLeft;
+    lookaround.classList.add("is-dragging");
+    lookaround.setPointerCapture(event.pointerId);
+  });
+  lookaround.addEventListener("pointermove", event => {
+    if (!dragging) return;
+    lookaround.scrollLeft = scrollStart - (event.clientX - dragStartX);
+  });
+  const stopDragging = () => { dragging = false; lookaround.classList.remove("is-dragging"); };
+  lookaround.addEventListener("pointerup", stopDragging);
+  lookaround.addEventListener("pointercancel", stopDragging);
+
+  const discovery = document.querySelector("#secretDiscovery");
+  const discoveryText = document.querySelector("#secretDiscoveryText");
+  const discoveries = {
+    angel: {title:'Un recuerdo que te acompaña', eyebrow:'EL RECUERDO DEL ÁNGEL', message:'Desde arriba te mandan sus bendiciones los ángeles que te cuidan. Estarían muy orgullosos de vos por ser la persona que eres; en tu corazón vivirán siempre.'},
+    map: {title:'Un mundo unido por el cariño', eyebrow:'EL GLOBO DEL MUNDO', message:'Tu huella es tan grande que ha llegado a cada rincón del mundo. Aunque estemos lejos, de alguna manera, todos llevamos un pedacito de ti con nosotros.'},
+    volleyball: {title:'Un espacio para lo que te hace feliz', eyebrow:'UN RECUERDO DE VOLEIBOL', message:'Entre tantos recuerdos, también hay espacio para las cosas que te hacen feliz. Nunca dejes de disfrutar aquello que amas.'},
+    'msg-en': {title:'A little message', eyebrow:'ENGLISH', message:'You deserve to receive the same kindness you give to the world.'},
+    'msg-fr': {title:'Un petit message', eyebrow:'FRANÇAIS', message:'Même les étoiles ont besoin de se reposer.'},
+    'msg-it': {title:'Un piccolo messaggio', eyebrow:'ITALIANO', message:'Il mondo è più bello perché tu esisti.'},
+    'msg-pt': {title:'Uma pequena mensagem', eyebrow:'PORTUGUÊS', message:'Você também merece ser cuidada.'},
+    'msg-ja': {title:'小さなメッセージ', eyebrow:'日本語', message:'あなたは今のままで素晴らしい。'},
+    'msg-ko': {title:'작은 메시지', eyebrow:'한국어', message:'당신도 사랑받고 쉴 자격이 있어요.'},
+    'msg-de': {title:'Eine kleine Nachricht', eyebrow:'DEUTSCH', message:'Du bist genauso wertvoll, wie du bist.'},
+    'msg-th': {title:'ข้อความเล็ก ๆ', eyebrow:'ภาษาไทย', message:'คุณก็สมควรได้รับความอบอุ่นแบบเดียวกับที่คุณมอบให้พวกเรานะ'},
+    'msg-zh': {title:'一份小小的留言', eyebrow:'中文', message:'你也值得被温柔以待。'},
+    'msg-ar': {title:'رسالة صغيرة', eyebrow:'العربية', message:'أنتِ أيضًا تستحقين الحب والراحة.'},
+    'msg-ru': {title:'Небольшое послание', eyebrow:'РУССКИЙ', message:'Ты тоже заслуживаешь заботы и тепла.'},
+    'msg-tr': {title:'Küçük bir mesaj', eyebrow:'TÜRKÇE', message:'Sen de sevgiyi ve huzuru hak ediyorsun.'}
+  };
+  function revealSecret(target) {
+    const item = discoveries[target.dataset.secret];
+    if (!item) return;
+    openMemoryMessage(item.title, item.message, item.eyebrow);
+  }
+  document.querySelectorAll("[data-secret]").forEach(target => {
+    target.addEventListener("click", () => revealSecret(target));
+    target.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); revealSecret(target); } });
+  });
+  document.querySelector("#closeSecretDiscovery").addEventListener("click", () => discovery.classList.remove("open"));
+
+  async function enterLibrary() {
+    const code = codeInput.value;
+    if (!code) {
+      message.textContent = "Escribe tu clave secreta.";
+      return;
+    }
+
+    const enterButton = document.querySelector("#elenaSecretEnter");
+    enterButton.disabled = true;
+    message.textContent = "La puerta está escuchando...";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        },
+        body: JSON.stringify({ code })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.success !== true) {
+        message.textContent =
+          response.status === 429
+            ? "Demasiados intentos. Inténtalo más tarde."
+            : "¡Tú no eres Elena! 🐈";
+        return;
+      }
+
+      
+dedicationList.replaceChildren();
+
+function normalizeCountry(name) {
+  return (name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+const regionNames = new Intl.DisplayNames(["es"], {
+  type: "region"
+});
+
+const countryCodes = {};
+
+for (let first = 65; first <= 90; first++) {
+  for (let second = 65; second <= 90; second++) {
+    const code = String.fromCharCode(first, second);
+    const name = regionNames.of(code);
+
+    if (name && name !== code) {
+      countryCodes[normalizeCountry(name)] = code;
+    }
+  }
+}
+
+const aliases = {
+  "mexico": "MX",
+  "estados unidos": "US",
+  "united states": "US",
+  "eeuu": "US",
+  "brasil": "BR",
+  "brazil": "BR",
+  "espana": "ES",
+  "spain": "ES",
+  "peru": "PE",
+  "corea del sur": "KR",
+  "south korea": "KR",
+  "reino unido": "GB",
+  "united kingdom": "GB",
+  "paises bajos": "NL",
+  "holanda": "NL",
+  "rusia": "RU",
+  "russia": "RU",
+  "vaticano": "VA",
+  "ciudad del vaticano": "VA",
+  "palestina": "PS"
+};
+
+Object.assign(countryCodes, aliases);
+
+function countryFlag(country) {
+  const code = countryCodes[normalizeCountry(country)];
+
+  if (!code) return "🌍";
+
+  return String.fromCodePoint(
+    ...[...code].map(letter =>
+      127397 + letter.charCodeAt(0)
+    )
+  );
+}
+
+const countries = {};
+
+(result.dedications || []).forEach(item => {
+  const country = (item.country || "Otros rincones").trim();
+
+  if (!countries[country]) {
+    countries[country] = [];
+  }
+
+  countries[country].push(item);
+});
+
+Object.keys(countries).sort().forEach(country => {
+  const group = document.createElement("section");
+  group.className = "elenaDedication";
+
+  const heading = document.createElement("h3");
+  heading.textContent =
+    countryFlag(country) + " " + country +
+    " · " + countries[country].length + " estrellas";
+
+  group.append(heading);
+
+  countries[country].forEach(item => {
+    const card = document.createElement("article");
+    card.className = "elenaDedication";
+
+    const title = document.createElement("h4");
+    title.textContent = "✦ " + (item.username || "Una estrella");
+
+    const location = document.createElement("p");
+    location.textContent = item.region || "";
+
+    const note = document.createElement("p");
+    note.textContent = item.message || "";
+
+    card.append(title, location, note);
+    group.append(card);
+  });
+
+  group.setAttribute("role", "button");
+  group.setAttribute("tabindex", "0");
+  group.setAttribute("aria-label", "Abrir libro de " + country);
+  group.addEventListener("click", () => openCountryBook(country, group));
+  group.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openCountryBook(country, group);
+    }
+  });
+  dedicationList.append(group);
+});
+
+      door.classList.remove("open");
+      codeInput.value = "";
+
+      const intro = document.querySelector("#elenaLibraryIntro");
+      intro.classList.remove("play");
+      void intro.offsetWidth;
+      intro.classList.add("play");
+
+      window.setTimeout(() => {
+        intro.classList.remove("play");
+        library.style.display = "block";
+      }, 5000);
+
+    } catch (error) {
+      message.textContent = "No pudimos abrir la puerta. Inténtalo luego.";
+    } finally {
+      enterButton.disabled = false;
+    }
+  }
+
+  document.querySelector("#elenaSecretEnter").onclick = enterLibrary;
+
+  codeInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") enterLibrary();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") { closeCountryBook(); discovery.classList.remove("open"); }
+  });
+})();
+</script>
+
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+(() => {
+ const host=document.getElementById('threeLibrary'); if(!host) return;
+ const loading=document.getElementById('threeLoading');
+ let renderer,scene,camera,raf, yaw=0,pitch=-0.05,zoom=70,drag=false,lastX=0,lastY=0,startX=0,startY=0,pinchStart=0;
+ const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),interactive=[];
+ const mat=(color,roughness=.8)=>new THREE.MeshStandardMaterial({color,roughness});
+ const wood=mat('#513725'),darkWood=mat('#2b201d'),gold=mat('#b18a55'),floorMat=mat('#30251f');
+ let groups=[];
+ let activeBookMotion=null;
+ let activeBookState=null;
+ let chest=null, gallerySheets=[], sheetTargets=[];
+ function labelTexture(text){const c=document.createElement('canvas');c.width=128;c.height=512;const x=c.getContext('2d');x.fillStyle='#211a17';x.fillRect(0,0,128,512);x.strokeStyle='#c6a16b';x.lineWidth=5;x.strokeRect(5,5,118,502);x.save();x.translate(64,256);x.rotate(-Math.PI/2);x.fillStyle='#f1dfbd';x.font='bold 34px Georgia';x.textAlign='center';x.textBaseline='middle';x.fillText(text.slice(0,22),0,0,470);x.restore();const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;}
+ function addBox(parent,w,h,d,x,y,z,material){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);parent.add(m);return m;}
+ function makeBook(parent,group,idx,x,y,z,angle){const colors=['#6d392e','#345044','#34476a','#76552e','#533c68','#8a5a3a','#344e58'];const book=addBox(parent,.23,.66,.12,x,y,z,mat(colors[idx%colors.length],.55));book.rotation.y=angle;book.userData={group};interactive.push(book);const spine=addBox(parent,.035,.61,.126,x-.085,y,z-.005, gold);spine.rotation.y=angle;spine.userData={group};interactive.push(spine);return book;}
+ function build(){
+  const w=host.clientWidth,h=host.clientHeight;if(!w||!h){setTimeout(build,100);return;}
+  scene=new THREE.Scene();scene.background=new THREE.Color('#11182a');scene.fog=new THREE.Fog('#11182a',10,25);
+  camera=new THREE.PerspectiveCamera(70,w/h,.1,60);camera.position.set(0,1.62,0);
+  renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(w,h);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;host.insertBefore(renderer.domElement,host.firstChild);
+  scene.add(new THREE.HemisphereLight('#d6d9ff','#4a3021',2));const lamp=new THREE.PointLight('#ffd69a',85,18);lamp.position.set(0,4,0);scene.add(lamp);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(8,64),floorMat);floor.rotation.x=-Math.PI/2;floor.position.y=0;scene.add(floor);
+  const ceiling=new THREE.Mesh(new THREE.CircleGeometry(8,64),mat('#211d2a'));ceiling.rotation.x=Math.PI/2;ceiling.position.y=5.5;scene.add(ceiling);
+  const wall=new THREE.Mesh(new THREE.CylinderGeometry(8,8,5.5,96,1,true),mat('#302521'));wall.position.y=2.75;scene.add(wall);
+  // Ventanas discretas en las demás paredes. La pared posterior queda reservada
+  // para una ventana panorámica al universo y una placa de bienvenida táctil.
+  for(let i=0;i<8;i++){if(i===4)continue;const a=i*Math.PI/4;const win=new THREE.Mesh(new THREE.PlaneGeometry(1.15,2.25),new THREE.MeshBasicMaterial({color:'#293c61'}));win.position.set(Math.sin(a)*7.91,3.45,Math.cos(a)*7.91);win.rotation.y=a+Math.PI;scene.add(win);}
+  const rearWindow=new THREE.Group();rearWindow.position.set(0,3.05,-7.91);scene.add(rearWindow);
+  const space=new THREE.Mesh(new THREE.PlaneGeometry(3.15,2.35),new THREE.MeshBasicMaterial({color:'#101d45'}));space.position.z=.015;rearWindow.add(space);
+  // Estrellas y nebulosas dentro de la ventana, sin animación invasiva.
+  const nebula=new THREE.Mesh(new THREE.PlaneGeometry(2.95,2.15),new THREE.MeshBasicMaterial({color:'#354b86',transparent:true,opacity:.42}));nebula.position.z=.005;rearWindow.add(nebula);
+  for(let i=0;i<42;i++){const star=new THREE.Mesh(new THREE.SphereGeometry(.018+(i%4)*.006,6,6),new THREE.MeshBasicMaterial({color:i%5===0?'#d8c4ff':'#fff0c9'}));star.position.set((Math.random()-.5)*2.9,(Math.random()-.5)*2.05,.045);rearWindow.add(star);}
+  const frameMat=mat('#765536');
+  addBox(rearWindow,3.42,.16,.18,0,1.25,.06,frameMat);addBox(rearWindow,3.42,.16,.18,0,-1.25,.06,frameMat);
+  addBox(rearWindow,.16,2.58,.18,-1.63,0,.06,frameMat);addBox(rearWindow,.16,2.58,.18,1.63,0,.06,frameMat);
+  addBox(rearWindow,.10,2.35,.12,0,0,.08,gold);addBox(rearWindow,3.15,.10,.12,0,0,.08,gold);
+  // Placa sobre la ventana. Su superficie es seleccionable desde la cámara 360°.
+  const plaqueCanvas=document.createElement('canvas');plaqueCanvas.width=1024;plaqueCanvas.height=220;const pc=plaqueCanvas.getContext('2d');
+  pc.fillStyle='#2a201c';pc.fillRect(0,0,1024,220);pc.strokeStyle='#c5a16b';pc.lineWidth=12;pc.strokeRect(12,12,1000,196);
+  pc.fillStyle='#f2dfbd';pc.font='bold 52px Georgia';pc.textAlign='center';pc.textBaseline='middle';pc.fillText('✧  UN LUGAR PARA SER TÚ MISMA  ✧',512,110);
+  const plaqueTex=new THREE.CanvasTexture(plaqueCanvas);plaqueTex.colorSpace=THREE.SRGBColorSpace;
+  const plaque=new THREE.Mesh(new THREE.PlaneGeometry(3.7,.8),new THREE.MeshBasicMaterial({map:plaqueTex,side:THREE.DoubleSide}));plaque.position.set(0,4.78,-7.88);plaque.userData={secret:'welcome'};scene.add(plaque);interactive.push(plaque);
+  // Segunda nota permanente: placa discreta cerca de la zona de lectura, también táctil.
+  const readingNoteCanvas=document.createElement('canvas');readingNoteCanvas.width=1000;readingNoteCanvas.height=560;const rctx=readingNoteCanvas.getContext('2d');
+  rctx.fillStyle='#ead9b8';rctx.fillRect(0,0,1000,560);rctx.strokeStyle='#98734b';rctx.lineWidth=16;rctx.strokeRect(16,16,968,528);rctx.fillStyle='#624b35';rctx.textAlign='center';rctx.textBaseline='middle';rctx.font='bold 42px Georgia';rctx.fillText('UN LUGAR LLENO DE CARIÑO',500,92);rctx.font='30px Georgia';
+  ['En este lugar se reúnen los mensajes de todas las personas','que te admiramos y te queremos. Gracias por estar siempre','para nosotros, incluso cuando tú también necesitas apoyo.','No tienes que poder con todo ni cuidar de todos siempre.','Tú también mereces recibir todo ese cariño.'].forEach((line,i)=>rctx.fillText(line,500,190+i*68));
+  const readingNoteTexture=new THREE.CanvasTexture(readingNoteCanvas);readingNoteTexture.colorSpace=THREE.SRGBColorSpace;
+  const readingNote=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.22),new THREE.MeshBasicMaterial({map:readingNoteTexture,side:THREE.DoubleSide}));readingNote.position.set(-3.9,2.75,-6.85);readingNote.rotation.y=-.52;readingNote.userData={secret:'readingNote'};scene.add(readingNote);interactive.push(readingNote);
+  // Estanterías envolventes. Se deja libre solo el tramo central de la pared posterior.
+  // Las demás estanterías conservan sus coordenadas originales.
+  groups=[...document.querySelectorAll('#elenaSecretDedications > section')];
+  const shelfGroups=[], shelfDecorations=[];
+  for(let i=0;i<12;i++){if(i===6)continue;const a=i*Math.PI*2/12;const shelf=new THREE.Group();shelf.position.set(Math.sin(a)*6.45,0,Math.cos(a)*6.45);shelf.rotation.y=a+Math.PI;shelf.scale.set(1.05,1,1);scene.add(shelf);shelfGroups[i]=shelf;
+   const decorations=[];addBox(shelf,3.25,4.1,.34,0,2.1,0,wood);for(let level=0;level<5;level++){const y=.48+level*.86;addBox(shelf,3.05,.12,.62,0,y,.26,gold);for(let b=0;b<13;b++){const x=-1.38+b*.23;const deco=addBox(shelf,.16,.59,.16,x,y+.34,.24,mat(['#6c3d32','#385346','#384b6c','#78552f','#503b62'][((b+level+i)%5)],.6));deco.rotation.z=(b%3-1)*.035;decorations.push(deco);}}shelfDecorations[i]=decorations;
+  }
+  // Vitrina abierta de recuerdos en el lado este (estantería 3, hacia +X).
+  // Se conserva la estructura de madera y sus baldas; solo se retiran los bloques decorativos que parecían libros.
+  const memoryShelf=shelfGroups[3];
+  shelfDecorations[3].forEach(piece=>{memoryShelf.remove(piece);piece.geometry.dispose();if(piece.material && piece.material.dispose)piece.material.dispose();});
+  shelfDecorations[3]=[];
+  const displayGold=mat('#b18a55');
+  const displayDark=mat('#4a3022');
+  // Tres pequeños pedestales, separados y sin puertas ni cristal.
+  addBox(memoryShelf,.78,.09,.54,-1.02,.55,.72,displayGold);
+  addBox(memoryShelf,.78,.09,.54,.02,.55,.72,displayGold);
+  addBox(memoryShelf,.78,.09,.54,1.05,1.41,.72,displayGold);
+  // Ángel de porcelana: cabeza, cuerpo, alas y aureola delicada.
+  const angelDisplay=new THREE.Group();angelDisplay.position.set(-1.02,.53,.72);angelDisplay.userData={secret:'angel'};memoryShelf.add(angelDisplay);interactive.push(angelDisplay);
+  const porcelain=mat('#f4eee3');
+  const angelBody=new THREE.Mesh(new THREE.SphereGeometry(.17,18,14),porcelain);angelBody.scale.set(.82,1.25,.58);angelBody.position.y=.28;angelDisplay.add(angelBody);
+  const angelHead=new THREE.Mesh(new THREE.SphereGeometry(.105,16,12),porcelain);angelHead.position.set(0,.53,0);angelDisplay.add(angelHead);
+  const leftWing=new THREE.Mesh(new THREE.SphereGeometry(.15,14,10),porcelain);leftWing.scale.set(.55,1.1,.32);leftWing.position.set(-.19,.34,-.015);leftWing.rotation.z=-.38;angelDisplay.add(leftWing);
+  const rightWing=leftWing.clone();rightWing.position.x=.19;rightWing.rotation.z=.38;angelDisplay.add(rightWing);
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(.105,.012,8,28),mat('#d8b879'));halo.position.set(0,.68,0);angelDisplay.add(halo);
+  // Globo terráqueo sobre su soporte, con rotación lenta y continua.
+  const globeDisplay=new THREE.Group();globeDisplay.position.set(.02,.57,.72);globeDisplay.userData={secret:'map'};memoryShelf.add(globeDisplay);interactive.push(globeDisplay);
+  addBox(globeDisplay,.36,.055,.32,0,.05,0,displayDark);
+  const globeStem=new THREE.Mesh(new THREE.CylinderGeometry(.035,.055,.25,12),displayGold);globeStem.position.y=.2;globeDisplay.add(globeStem);
+  const globeSphere=new THREE.Mesh(new THREE.SphereGeometry(.245,28,20),mat('#426f91'));globeSphere.name='memoryGlobeSphere';globeSphere.position.y=.47;globeDisplay.add(globeSphere);
+  const continentMat=mat('#71936d');
+  [[-.09,.53,.19,.09,.055],[.08,.43,.205,.06,.09],[-.02,.34,.22,.08,.05],[.13,.58,.17,.05,.04]].forEach(([x,y,z,sx,sy])=>{const land=new THREE.Mesh(new THREE.SphereGeometry(1,10,8),continentMat);land.scale.set(sx,sy,.018);land.position.set(x,y,z);globeDisplay.add(land);});
+  const globeAxis=new THREE.Mesh(new THREE.TorusGeometry(.27,.009,6,32),displayGold);globeAxis.position.y=.47;globeAxis.rotation.x=.28;globeDisplay.add(globeAxis);
+  // Pelota de voleibol en una balda superior, con costuras visibles.
+  const volleyballDisplay=new THREE.Group();volleyballDisplay.position.set(1.05,1.455,.72);volleyballDisplay.userData={secret:'volleyball'};memoryShelf.add(volleyballDisplay);interactive.push(volleyballDisplay);
+  const ball=new THREE.Mesh(new THREE.SphereGeometry(.235,24,18),mat('#eee6d2'));ball.position.y=.24;volleyballDisplay.add(ball);
+  const seamMat=mat('#8c7658');
+  const seamA=new THREE.Mesh(new THREE.TorusGeometry(.236,.007,6,48),seamMat);seamA.position.y=.24;volleyballDisplay.add(seamA);
+  const seamB=seamA.clone();seamB.rotation.x=Math.PI/2;volleyballDisplay.add(seamB);
+  const seamC=seamA.clone();seamC.rotation.y=Math.PI/2;volleyballDisplay.add(seamC);
+  // La vitrina se completa con pequeños recuerdos interactivos en las baldas superiores.
+  // Cada pieza abre una nota en su idioma original, sin traducciones.
+  const keepsakeColors=['#e8c77e','#a9b8d8','#c88f9e','#9ebd9a','#c5a5d8','#e0b987'];
+  const keepsakeDefs=[
+   ['msg-en','star'],['msg-fr','moon'],['msg-it','butterfly'],['msg-pt','drawer'],
+   ['msg-ja','lantern'],['msg-ko','heart'],['msg-de','compass'],['msg-th','feather'],
+   ['msg-zh','crystal'],['msg-ar','key'],['msg-ru','frame'],['msg-tr','music']
+  ];
+  keepsakeDefs.forEach(([secret,kind],idx)=>{
+   const row=Math.floor(idx/4),col=idx%4;
+   const root=new THREE.Group();root.position.set(-1.18+col*.78,2.12+row*.88,.69);root.userData={secret};memoryShelf.add(root);interactive.push(root);
+   const color=mat(keepsakeColors[idx%keepsakeColors.length],.48);
+   if(kind==='star'||kind==='crystal'){
+    const gem=new THREE.Mesh(new THREE.OctahedronGeometry(kind==='star'?.13:.16,0),color);gem.position.y=.18;root.add(gem);
+    if(kind==='star'){const ring=new THREE.Mesh(new THREE.TorusGeometry(.17,.012,6,24),displayGold);ring.position.y=.18;root.add(ring);}
+   }else if(kind==='moon'){
+    const moon=new THREE.Mesh(new THREE.TorusGeometry(.14,.055,10,24,Math.PI*1.55),color);moon.rotation.z=-.55;moon.position.y=.18;root.add(moon);
+   }else if(kind==='butterfly'){
+    const body=new THREE.Mesh(new THREE.SphereGeometry(.035,8,8),displayDark);body.scale.set(.6,2.5,.6);body.position.y=.18;root.add(body);
+    [-1,1].forEach(side=>{const wing=new THREE.Mesh(new THREE.SphereGeometry(.09,12,10),color);wing.scale.set(1.1,.72,.22);wing.position.set(side*.09,.21,0);root.add(wing);});
+   }else if(kind==='drawer'||kind==='music'||kind==='frame'){
+    const box=addBox(root,kind==='frame'?.28:.28,kind==='frame'?.24:.18,.18,0,.16,0,displayDark);
+    if(kind==='frame'){const panel=addBox(root,.21,.17,.012,0,.17,.1,color);}
+    else {const knob=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),displayGold);knob.position.set(0,.16,.105);root.add(knob);}
+    if(kind==='music'){const lid=addBox(root,.3,.035,.2,0,.27,0,color);lid.rotation.x=-.12;}
+   }else if(kind==='lantern'){
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(.09,.11,.2,12),displayGold);body.position.y=.17;root.add(body);const glow=new THREE.Mesh(new THREE.SphereGeometry(.055,10,10),mat('#ffe2a0'));glow.position.y=.17;root.add(glow);
+   }else if(kind==='heart'){
+    const heart=new THREE.Mesh(new THREE.SphereGeometry(.12,14,12),color);heart.scale.set(1,.85,.55);heart.rotation.z=.35;heart.position.y=.18;root.add(heart);
+   }else if(kind==='compass'){
+    const disk=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.045,24),displayGold);disk.position.y=.15;root.add(disk);const needle=new THREE.Mesh(new THREE.ConeGeometry(.035,.16,8),color);needle.position.y=.25;root.add(needle);
+   }else if(kind==='feather'){
+    const stem=addBox(root,.018,.27,.018,0,.17,0,displayGold);stem.rotation.z=-.25;
+    for(let j=0;j<4;j++){const barb=addBox(root,.11,.025,.018,(j%2?1:-1)*.045,.12+j*.035,0,color);barb.rotation.z=(j%2?-.5:.5);}
+   }else if(kind==='key'){
+    const shaft=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.22,8),displayGold);shaft.rotation.z=Math.PI/2;shaft.position.y=.17;root.add(shaft);const bow=new THREE.Mesh(new THREE.TorusGeometry(.06,.018,8,20),color);bow.position.set(-.13,.17,0);root.add(bow);
+   }
+   const plinth=addBox(root,.34,.045,.28,0,.025,0,displayGold);plinth.position.y=.025;
+  });
+
+  // BAÚL DE LA GALERÍA: ocupa únicamente el antiguo estante del lado oeste (índice 9).
+  // Los libros se redistribuyen en las demás estanterías sin perder sus dedicatorias.
+  const westShelf=shelfGroups[9];
+  scene.remove(westShelf);
+  chest=new THREE.Group();
+  chest.position.set(-6.45,0,0);
+  chest.rotation.y=Math.PI/2;
+  chest.userData={secret:'creativeChest'};
+  scene.add(chest);
+  interactive.push(chest);
+  const chestWood=mat('#573521',.55), chestEdge=mat('#9b7040',.42), chestDark=mat('#2c1b16');
+  // Base robusta, esquinas y herrajes antiguos.
+  addBox(chest,1.12,.54,.78,0,.29,0,chestWood);
+  addBox(chest,1.16,.075,.82,0,.57,0,chestEdge);
+  addBox(chest,1.02,.045,.72,0,.31,.405,chestDark);
+  for(const x of [-.48,.48]){
+    for(const z of [-.32,.32]){
+      const corner=addBox(chest,.09,.58,.09,x,.3,z,chestEdge);
+      corner.material=chestEdge;
+    }
+  }
+  // Bandas metálicas frontales y cerradura.
+  for(const x of [-.34,.34]){
+    const band=addBox(chest,.055,.48,.025,x,.31,.405,chestEdge);
+  }
+  const lockPlate=addBox(chest,.19,.18,.045,0,.39,.43,chestEdge);
+  const lockHole=new THREE.Mesh(new THREE.TorusGeometry(.045,.012,8,18),chestDark);
+  lockHole.position.set(0,.4,.46);chest.add(lockHole);
+  // Tapa articulada con bisagra en el borde posterior.
+  const lidHinge=new THREE.Group();
+  lidHinge.position.set(0,.57,-.37);
+  chest.add(lidHinge);
+  addBox(lidHinge,1.16,.19,.82,0,.055,.37,chestWood);
+  addBox(lidHinge,1.18,.045,.84,0,-.045,.37,chestEdge);
+  for(const x of [-.36,.36]){
+    const lidBand=addBox(lidHinge,.055,.2,.78,x,.055,.37,chestEdge);
+  }
+  chest.userData.lid=lidHinge;
+  // Seis hojas vacías que aparecerán al abrirse el baúl. Nunca se dibuja contenido ficticio.
+  gallerySheets=[];
+  sheetTargets=[];
+  const sheetPaper=mat('#fffdf7',.95);
+  const sheetFrame=mat('#b99a70',.65);
+  const sheetPin=mat('#b88d52',.45);
+  const sheetSpecs=[
+    [-1.25,2.15], [0,2.15], [1.25,2.15],
+    [-1.25,3.55], [0,3.55], [1.25,3.55]
+  ];
+  sheetSpecs.forEach(([z,y],idx)=>{
+    const page=new THREE.Group();
+    // Empiezan ocultas dentro del baúl.
+    page.visible=false;
+    const paper=new THREE.Mesh(new THREE.PlaneGeometry(.88,1.12),sheetPaper);
+    paper.position.z=.012;
+    page.add(paper);
+    const border=new THREE.Mesh(new THREE.PlaneGeometry(.94,1.18),new THREE.MeshBasicMaterial({color:'#b99a70',side:THREE.DoubleSide}));
+    border.position.z=-.012;
+    page.add(border);
+    const pin=new THREE.Mesh(new THREE.SphereGeometry(.045,10,8),sheetPin);
+    pin.position.set(0,.48,.035);page.add(pin);
+    scene.add(page);
+    gallerySheets.push(page);
+    // La pared oeste está orientada hacia el centro de la biblioteca.
+    sheetTargets.push(new THREE.Vector3(-7.72,y,z));
+  });
+  chest.userData.gallerySheets=gallerySheets;
+  chest.userData.sheetTargets=sheetTargets;
+  chest.userData.opened=false;
+  chest.userData.openStarted=0;
+  function openCreativeChest(){
+    if(chest.userData.opened)return;
+    chest.userData.opened=true;
+    chest.userData.openStarted=performance.now();
+    gallerySheets.forEach((page,i)=>{
+      page.visible=true;
+      page.position.set(-6.35, .78+i*.018, (i-2.5)*.055);
+      page.rotation.set(0,Math.PI/2,0);
+      page.scale.setScalar(.18);
+    });
+  }
+
+  // Libros de países: se distribuyen solo en estanterías disponibles.
+  // Se reservan la estantería 3 para la vitrina y la 9 para el baúl.
+  const bookShelfSlots=[0,1,2,4,5,7,8,10,11];
+  groups.forEach((group,i)=>{
+    const shelfIndex=bookShelfSlots[Math.floor(i/65)%bookShelfSlots.length];
+    const slot=i%65, level=Math.floor(slot/13), col=slot%13;
+    const shelf=shelfGroups[shelfIndex], x=-1.38+col*.23, y=.48+level*.86;
+    const decoration=shelfDecorations[shelfIndex][slot];if(decoration){shelf.remove(decoration);decoration.geometry.dispose();}
+    const book=addBox(shelf,.17,.62,.19,x,y+.37,.19,mat(['#784536','#3d6654','#465d83','#8a6536','#624978'][i%5],.48));
+    book.rotation.z=((i%3)-1)*.025;
+    book.userData={group,bookRoot:book};
+    group._threeBook=book;group._threeBookParent=shelf;
+    interactive.push(book);
+    const title=(group.querySelector('h3')?.textContent||'Libro').replace(/\s*[·•]\s*\d+.*$/,'').trim();
+    const spineLabel=new THREE.Mesh(new THREE.PlaneGeometry(.14,.55),new THREE.MeshBasicMaterial({map:labelTexture(title),side:THREE.DoubleSide}));
+    spineLabel.position.set(x,y+.37,.291);spineLabel.userData={group,bookRoot:book};
+    shelf.add(spineLabel);interactive.push(spineLabel);group._threeLabel=spineLabel;
+  });
+  // Mesa central, libro abierto decorativo, sillones y guardiana
+  const table=addBox(scene,2.1,.16,1.35,0,.95,-1.3,wood);addBox(scene,.14,.9,.14,-.82,.48,-1.3,darkWood);addBox(scene,.14,.9,.14,.82,.48,-1.3,darkWood);
+  const openBook=addBox(scene,.92,.06,.66,0,1.08,-1.3,mat('#e7d7b9'));openBook.rotation.y=.12;
+  // Nota permanente sobre el costado derecho de la mesa, fuera del espacio de aterrizaje del libro.
+  const viceNoteCanvas=document.createElement('canvas');viceNoteCanvas.width=900;viceNoteCanvas.height=620;
+  const vctx=viceNoteCanvas.getContext('2d');
+  vctx.fillStyle='#ead9b8';vctx.fillRect(0,0,900,620);
+  vctx.strokeStyle='#98734b';vctx.lineWidth=18;vctx.strokeRect(18,18,864,584);
+  vctx.strokeStyle='#c3a477';vctx.lineWidth=3;vctx.strokeRect(38,38,824,544);
+  vctx.fillStyle='#624b35';vctx.textAlign='center';vctx.textBaseline='middle';
+  vctx.font='bold 42px Georgia';vctx.fillText('✧ UN MENSAJE PARA TI ✧',450,105);
+  vctx.font='34px Georgia';
+  ['Allá afuera, en ese inmenso universo,','eres la «Vice Elena».','Pero aquí dentro puedes ser simplemente Elena.','No necesitas cargar con el peso de todos;','aquí solo tienes que ser tú misma.'].forEach((line,i)=>vctx.fillText(line,450,210+i*70));
+  const viceNoteTexture=new THREE.CanvasTexture(viceNoteCanvas);viceNoteTexture.colorSpace=THREE.SRGBColorSpace;
+  const viceNote=new THREE.Mesh(new THREE.PlaneGeometry(.66,.44),new THREE.MeshBasicMaterial({map:viceNoteTexture,side:THREE.DoubleSide}));
+  viceNote.rotation.x=-Math.PI/2;viceNote.position.set(.76,1.045,-1.3);viceNote.userData={secret:'viceNote'};scene.add(viceNote);interactive.push(viceNote);
+  // Pastel de cumpleaños en la punta opuesta a la nota, sin invadir el espacio de llegada de los libros.
+  const birthdayCake=new THREE.Group();birthdayCake.position.set(-.76,1.035,-1.3);birthdayCake.userData={secret:'birthdayCake'};scene.add(birthdayCake);interactive.push(birthdayCake);
+  const cakeBase=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.17,32),mat('#d8a6a0'));cakeBase.position.y=.085;birthdayCake.add(cakeBase);
+  const cakeTop=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.025,32),mat('#f2dfc8'));cakeTop.position.y=.18;birthdayCake.add(cakeTop);
+  const icingEdge=new THREE.Mesh(new THREE.TorusGeometry(.18,.018,8,40),mat('#fff0dc'));icingEdge.rotation.x=Math.PI/2;icingEdge.position.y=.18;birthdayCake.add(icingEdge);
+  const candle=new THREE.Mesh(new THREE.CylinderGeometry(.025,.03,.15,12),mat('#f4e7b9'));candle.position.set(0,.265,0);birthdayCake.add(candle);
+  const wick=new THREE.Mesh(new THREE.CylinderGeometry(.004,.004,.025,6),mat('#4a3022'));wick.position.set(0,.352,0);birthdayCake.add(wick);
+  const flameMaterial=new THREE.MeshStandardMaterial({color:'#ffbd58',emissive:'#ff8a24',emissiveIntensity:1.4,roughness:.35});
+  const candleFlame=new THREE.Mesh(new THREE.SphereGeometry(.035,12,10),flameMaterial);candleFlame.name='birthdayCandleFlame';candleFlame.scale.set(.72,1.45,.72);candleFlame.position.set(0,.397,0);birthdayCake.add(candleFlame);
+  const cakeDecor=mat('#c78383');for(let i=0;i<8;i++){const a=i*Math.PI/4;const berry=new THREE.Mesh(new THREE.SphereGeometry(.018,8,8),cakeDecor);berry.position.set(Math.cos(a)*.145,.205,Math.sin(a)*.145);birthdayCake.add(berry);}
+  const cat=new THREE.Mesh(new THREE.SphereGeometry(.28,20,14),mat('#17151b'));cat.position.set(2.1,.42,-2.5);scene.add(cat);const ears=addBox(scene,.5,.18,.25,2.1,.72,-2.5,mat('#17151b'));
+  // Pequeñas estrellas flotantes
+  const stars=new THREE.Group();for(let i=0;i<130;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.018,6,6),new THREE.MeshBasicMaterial({color:i%4?'#f5e6c8':'#b9b4ff'}));const a=Math.random()*Math.PI*2;s.position.set(Math.sin(a)*(7.7+Math.random()*.2),.8+Math.random()*4.2,Math.cos(a)*(7.7+Math.random()*.2));stars.add(s);}scene.add(stars);
+  loading.classList.add('hidden');animate();
+ }
+ function updateCamera(){camera.rotation.order='YXZ';camera.rotation.y=yaw;camera.rotation.x=pitch;camera.fov=zoom;camera.updateProjectionMatrix();}
+ function animate(){raf=requestAnimationFrame(animate);updateCamera();const memoryGlobe=scene.getObjectByName('memoryGlobeSphere');if(memoryGlobe)memoryGlobe.rotation.y+=.003;const flame=scene.getObjectByName('birthdayCandleFlame');if(flame){const t=performance.now()*.008;flame.scale.set(.72+Math.sin(t)*.08,1.45+Math.sin(t*1.7)*.12,.72+Math.cos(t)*.07);}
+  if(chest.userData.opened){
+    const elapsed=performance.now()-chest.userData.openStarted;
+    const lidT=Math.min(1,elapsed/850);chest.userData.lid.rotation.x=-1.28*(1-Math.pow(1-lidT,3));
+    gallerySheets.forEach((page,i)=>{
+      const t=Math.max(0,Math.min(1,(elapsed-180-i*115)/1250));
+      if(t>0){
+        const eased=1-Math.pow(1-t,3),target=sheetTargets[i];
+        const start=new THREE.Vector3(-6.35,.78+i*.018,(i-2.5)*.055);
+        page.position.lerpVectors(start,target,eased);
+        page.scale.setScalar(.18+.82*eased);
+        page.rotation.y=Math.PI/2+(1-eased)*(.22*(i%2?1:-1));
+      }
+    });
+  }
+  renderer.render(scene,camera);}
+ function onDown(e){drag=true;lastX=startX=e.clientX;lastY=startY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId);}
+ function onMove(e){if(!drag)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;yaw-=dx*.004;pitch=Math.max(-1.05,Math.min(1.05,pitch-dy*.003));}
+ function animateBookTo(group,returning,done){
+  const source=group&&group._threeBook;if(!source){done?.();return;}
+  if(activeBookMotion)return;
+  const fromPos=source.getWorldPosition(new THREE.Vector3());
+  const fromQuat=source.getWorldQuaternion(new THREE.Quaternion());
+  const fromScale=source.getWorldScale(new THREE.Vector3());
+  let toPos,toQuat,toScale;
+  if(!returning){
+    const parent=source.parent;
+    activeBookState={group,source,parent,position:source.position.clone(),quaternion:source.quaternion.clone(),scale:source.scale.clone()};
+    scene.attach(source);
+    // Centro exacto de la mesa: superficie a y=1.03; el libro queda tumbado encima.
+    toPos=new THREE.Vector3(0,1.145,-1.3);
+    toQuat=new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI/2,0,0));
+    toScale=new THREE.Vector3(2.3,1.35,1.35);
+  }else{
+    const state=activeBookState;if(!state||state.group!==group){done?.();return;}
+    toPos=state.parent.localToWorld(state.position.clone());
+    toQuat=state.parent.getWorldQuaternion(new THREE.Quaternion()).multiply(state.quaternion);
+    toScale=state.parent.getWorldScale(new THREE.Vector3()).multiply(state.scale);
+  }
+  const started=performance.now(),duration=780;
+  activeBookMotion=true;
+  function step(now){
+    const t=Math.min(1,(now-started)/duration),ease=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    source.position.lerpVectors(fromPos,toPos,ease);
+    source.quaternion.slerpQuaternions(fromQuat,toQuat,ease);
+    source.scale.lerpVectors(fromScale,toScale,ease);
+    if(t<1){requestAnimationFrame(step);return;}
+    activeBookMotion=false;
+    if(returning&&activeBookState){
+      const state=activeBookState;state.parent.attach(source);
+      source.position.copy(state.position);source.quaternion.copy(state.quaternion);source.scale.copy(state.scale);
+      activeBookState=null;
+    }
+    done?.();
+  }
+  requestAnimationFrame(step);
+ }
+ function flyBookToTable(group,done){animateBookTo(group,false,done);}
+ function playBirthdayTune(){
+  const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return;
+  try{const ctx=new AudioCtx();ctx.resume();const now=ctx.currentTime;const notes=[261.63,261.63,293.66,261.63,349.23,329.63,261.63,261.63,293.66,261.63,392.00,349.23,261.63,261.63,523.25,440.00,349.23,329.63,293.66,466.16,466.16,440.00,349.23,392.00,349.23];
+   notes.forEach((freq,i)=>{const start=now+i*.6;const osc=ctx.createOscillator();const gain=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,start);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(.12,start+.035);gain.gain.setValueAtTime(.12,start+.43);gain.gain.exponentialRampToValueAtTime(.0001,start+.57);osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+.58);});
+   setTimeout(()=>ctx.close().catch(()=>{}),15100);
+  }catch(err){console.warn('No se pudo reproducir el sonido de cumpleaños:',err);}
+ }
+ function returnBookToShelf(){if(!activeBookState)return;const group=activeBookState.group;animateBookTo(group,true);}
+ function onUp(e){if(!drag)return;drag=false;if(Math.abs(e.clientX-startX)+Math.abs(e.clientY-startY)>12)return;const r=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(interactive,true)[0];if(hit){let o=hit.object;while(o&&!o.userData.group&&!o.userData.secret)o=o.parent;if(o?.userData.group){const group=o.userData.group;if(activeBookState||activeBookMotion)return;flyBookToTable(group,()=>setTimeout(()=>group.click(),850));}else if(o?.userData.secret==='welcome'){document.getElementById('welcomeWallDialog').classList.add('open');}else if(o?.userData.secret==='viceNote'){window.dispatchEvent(new Event('open-vice-note'));}else if(o?.userData.secret==='readingNote'){window.dispatchEvent(new Event('open-reading-note'));}else if(o?.userData.secret==='birthdayCake'){window.dispatchEvent(new Event('birthday-cake-tap'));playBirthdayTune();}else if(o?.userData.secret==='creativeChest'){openCreativeChest();}else if(o?.userData.secret)document.querySelector('[data-secret="'+o.userData.secret+'"]').click();}}
+ // Los controles se conectan cuando el lienzo 3D ya está creado.
+ function attach(){const c=renderer.domElement;c.addEventListener('pointerdown',onDown);c.addEventListener('pointermove',onMove);c.addEventListener('pointerup',onUp);c.addEventListener('pointercancel',()=>drag=false);c.addEventListener('wheel',e=>{zoom=Math.max(42,Math.min(88,zoom+e.deltaY*.025));e.preventDefault();},{passive:false});let initialDist=0;c.addEventListener('touchstart',e=>{if(e.touches.length===2)initialDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);},{passive:true});c.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(42,Math.min(88,zoom+(initialDist-d)*.08));initialDist=d;}},{passive:true});}
+ document.getElementById('zoomIn360').onclick=()=>zoom=Math.max(42,zoom-6);document.getElementById('zoomOut360').onclick=()=>zoom=Math.min(88,zoom+6);document.getElementById('reset360').onclick=()=>{yaw=0;pitch=-.05;zoom=70;};
+ const observer=new ResizeObserver(()=>{if(!renderer)return;const w=host.clientWidth,h=host.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});observer.observe(host);
+ window.addEventListener('elena-book-reader-closed',returnBookToShelf);
+ const watch=new MutationObserver(()=>{if(document.getElementById('elenaSecretLibrary').style.display==='block'&&!renderer){build();setTimeout(()=>{if(renderer)attach();},150);watch.disconnect();}});watch.observe(document.getElementById('elenaSecretLibrary'),{attributes:true,attributeFilter:['style']});
+})();
+</script>
+
+</body></html>
