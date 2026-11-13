@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="es">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d25">
+<title>We love you Elena ✦</title>
+<style>
+:root{--night:#080d25;--deep:#111b43;--purple:#6544a5;--lav:#bca8ff;--white:#f4f0ff}
+*{box-sizing:border-box}body{margin:0;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 50% 20%,#20245c 0,#111638 36%,#080d25 76%);min-height:100vh}
+header{text-align:center;padding:38px 16px 14px}header .eyebrow{letter-spacing:.28em;text-transform:uppercase;color:#c7b7ff;font-size:.72rem}h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(2.3rem,7vw,4.7rem);margin:12px 0 8px;text-shadow:0 0 25px #8d70ff88}header p{color:#c5c4e2;margin:0 auto;max-width:620px;line-height:1.6}
+main{max-width:1050px;margin:auto;padding:12px 18px 56px}.stage{position:relative;min-height:490px;border:1px solid #ffffff20;border-radius:28px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#39316c77,transparent 42%),linear-gradient(140deg,#0c1534,#17133b 55%,#090e29);box-shadow:0 20px 70px #0006}
+.stage:before,.stage:after{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 8% 20%,#fff 99%,transparent),radial-gradient(2px 2px at 78% 18%,#d6c7ff 99%,transparent),radial-gradient(1px 1px at 34% 76%,#fff 99%,transparent),radial-gradient(1px 1px at 89% 66%,#fff 99%,transparent),radial-gradient(2px 2px at 18% 84%,#bca8ff 99%,transparent);background-size:230px 190px;opacity:.65;pointer-events:none}
+.stage:after{filter:blur(1px);transform:translate(45px,30px);opacity:.35}
+.stage-label{position:absolute;top:18px;left:20px;color:#c7b7ff;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;z-index:3}
+.butterfly-wrap{
+position:absolute;
+left:calc(50% + var(--drag-x, 0px));
+top:calc(48% + var(--drag-y, 0px));
+width:min(82vw,650px);
+height:390px;
+transform:translate(-50%,-50%);
+perspective:1000px;
+animation:float 5s ease-in-out infinite;
+z-index:1;
+touch-action:none;
+cursor:grab;
+user-select:none;
+}
+.butterfly-wrap.dragging{cursor:grabbing}
+.butterfly{position:absolute;inset:0;transform-style:preserve-3d;animation:turn 18s ease-in-out infinite}
+.wing{position:absolute;top:50%;width:49%;height:72%;transform-style:preserve-3d;filter:drop-shadow(0 0 18px #8e6bff88)}
+.wing.left{left:1%;transform-origin:100% 50%;transform:translateY(-50%) rotateY(17deg);animation:flapL 3.2s ease-in-out infinite}
+.wing.right{right:1%;transform-origin:0 50%;transform:translateY(-50%) rotateY(-17deg);animation:flapR 3.2s ease-in-out infinite}
+.wing-shape{position:absolute;inset:0;clip-path:polygon(100% 43%,84% 18%,58% 3%,30% 0%,8% 17%,0% 42%,12% 66%,34% 82%,62% 100%,84% 78%,96% 59%);background:radial-gradient(ellipse at 45% 45%,#bca8ff55 0 4%,transparent 38%),radial-gradient(ellipse at 65% 65%,#41a7dc66 0 2%,transparent 40%),radial-gradient(ellipse at 25% 75%,#a04bda88,transparent 52%),linear-gradient(135deg,#243b85 0%,#542c91 45%,#13285e 100%);border:1px solid #d5c8ff88;box-shadow:inset 0 0 38px #a78bfa55,inset 0 0 8px #fff8}
+.right .wing-shape{transform:scaleX(-1)}
+.wing-shape:after{content:"";position:absolute;inset:8%;border-radius:inherit;background-image:radial-gradient(2px 2px at 20% 20%,#fff 98%,transparent),radial-gradient(1px 1px at 60% 25%,#fff 98%,transparent),radial-gradient(2px 2px at 75% 70%,#d8c8ff 98%,transparent),radial-gradient(1px 1px at 38% 78%,#fff 98%,transparent);background-size:65px 60px;opacity:.9}
+.body{position:absolute;z-index:4;left:50%;top:50%;width:13px;height:155px;border-radius:50%;background:linear-gradient(90deg,#17152f,#d4c7ff,#30204e);transform:translate(-50%,-50%);box-shadow:0 0 22px #c6aaff}
+.body:before,.body:after{content:"";position:absolute;top:-28px;width:55px;height:55px;border-top:2px solid #d7c8ff;border-radius:50% 50% 0 0}.body:before{right:2px;transform:rotate(25deg)}.body:after{left:2px;transform:rotate(-25deg)}
+.star{position:absolute;z-index:5;border:0;background:transparent;color:#fff4b5;font-size:17px;text-shadow:0 0 9px #fff,0 0 18px #bba4ff;cursor:pointer;padding:4px;animation:twinkle 2.2s ease-in-out infinite alternate}
+.star:hover{transform:scale(1.7);color:white}
+.hint{position:absolute;bottom:17px;left:0;right:0;text-align:center;color:#d1c9ed;font-size:.82rem;z-index:5}
+@keyframes float{50%{transform:translate(-50%,-53%)}}@keyframes turn{0%,100%{transform:rotateY(-7deg)}50%{transform:rotateY(7deg)}}@keyframes flapL{50%{transform:translateY(-50%) rotateY(48deg)}}@keyframes flapR{50%{transform:translateY(-50%) rotateY(-48deg)}}@keyframes twinkle{to{opacity:.45;filter:brightness(1.7)}}
+.panels{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:20px}.panel{background:#111936c9;border:1px solid #ffffff20;border-radius:22px;padding:22px;backdrop-filter:blur(12px)}h2{font-family:Georgia,serif;font-weight:500;font-size:1.6rem;margin:0 0 7px}.muted{color:#b8b8d8;font-size:.9rem;line-height:1.55;margin-top:0}
+label{display:block;font-size:.83rem;color:#d8d2f0;margin:13px 0 6px}input,select,textarea{width:100%;border:1px solid #8272b5;background:#0b1230;color:white;border-radius:12px;padding:12px;font:inherit}textarea{min-height:95px;resize:vertical}button.submit{margin-top:15px;border:0;border-radius:999px;padding:13px 20px;background:linear-gradient(100deg,#7c5bd4,#4d83c8);color:white;font-weight:700;cursor:pointer;width:100%}button.submit:hover{filter:brightness(1.12)}
+.stats{display:flex;gap:12px;margin-top:15px}.stat{flex:1;background:#ffffff0b;border-radius:14px;padding:13px}.stat strong{display:block;font-size:1.5rem;color:#e2d8ff}.stat span{font-size:.75rem;color:#b8b8d8}
+footer{text-align:center;color:#9695b9;font-size:.78rem;padding:22px 10px}
+dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20px;max-width:420px;width:calc(100% - 30px);padding:22px}dialog::backdrop{background:#030615bb}dialog button{float:right;background:#6550a6;border:0;color:white;padding:8px 14px;border-radius:20px}
+@media(max-width:700px){.panels{grid-template-columns:1fr}.stage{min-height:420px}.butterfly-wrap{height:310px}.hint{font-size:.72rem;padding:0 12px}.panel{padding:18px}}
+  @keyframes holdSpinY {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+  }
+  .butterfly.hold-spin {
+  animation: holdSpinY 3s linear infinite;
+  }
+  .thanks-dialog {
+  border: 1px solid #d5b7ff;
+  border-radius: 24px;
+  padding: 0;
+  width: min(88%, 380px);
+  background: transparent;
+  color: white;
+  overflow: visible;
+}
+
+.thanks-dialog::backdrop {
+  background: rgba(8, 5, 25, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.thanks-card {
+  text-align: center;
+  padding: 30px 24px;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    #21163d,
+    #38204d,
+    #173d4a
+  );
+  box-shadow: 0 0 30px #a879ff55;
+}
+
+.thanks-icon {
+  font-size: 48px;
+  color: #ffd98a;
+  animation: thanksGlow 2s ease-in-out infinite alternate;
+}
+
+.thanks-card h2 {
+  color: #e3caff;
+  margin: 12px 0;
+}
+
+.thanks-card p {
+  line-height: 1.6;
+  color: #f1eaff;
+}
+
+#continueStar {
+  margin-top: 18px;
+  border: 0;
+  border-radius: 30px;
+  padding: 12px 26px;
+  color: #201332;
+  background: linear-gradient(90deg, #d5b7ff, #ffbd83, #8ce4df);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes thanksGlow {
+  from { transform: scale(1); opacity: .8; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+  #starFlight {
+  position: fixed;
+  left: -60px;
+  top: 65%;
+  z-index: 9999;
+  font-size: 38px;
+  color: #ffd98a;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow:
+    0 0 8px #fff,
+    0 0 20px #d5b7ff,
+    0 0 35px #ffbd83;
+}
+
+#starFlight.fly {
+  animation: starJourney 2.2s ease-in-out forwards;
+}
+
+@keyframes starJourney {
+  0% {
+    left: -60px;
+    top: 70%;
+    opacity: 0;
+    transform: scale(.5) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.3) rotate(220deg);
+  }
+  100% {
+    left: 110%;
+    top: 18%;
+    opacity: 0;
+    transform: scale(.2) rotate(360deg);
+  }
+}
+
+/* Muro de la Creatividad */
+.creativity-wall{margin-top:22px;padding-top:20px;border-top:1px solid #ffffff20}
+.creativity-heading{text-align:left}
+.creativity-kicker{color:#d8c7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+.creativity-heading h2{margin:7px 0}
+.art-tools{display:grid;gap:7px;margin-top:14px}
+.art-tools label{margin:5px 0 2px}
+.art-tool-row{display:flex;align-items:end;gap:12px}
+.art-tool-row>div{flex:1;min-width:0}
+.art-color{height:43px;padding:4px;cursor:pointer}
+.brush-control input{padding:8px 0}
+.art-actions{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+.art-actions button,.art-small-button,.art-stickers button,.art-mode-button,.art-edit-button{border:1px solid #8575b8;background:#24234c;color:#f4f0ff;border-radius:10px;padding:10px 12px;cursor:pointer}
+.art-actions button:active,.art-small-button:active,.art-stickers button:active,.art-mode-button:active,.art-edit-button:active{transform:scale(.97)}
+.art-add-text{flex:1;min-width:0}
+.art-small-button{height:44px;margin-bottom:0}
+.art-stickers{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:7px 0}
+.art-stickers span{font-size:.82rem;color:#d8d2f0}
+.art-stickers button{font-size:1.15rem;padding:6px 9px}
+.art-upload{display:block!important;text-align:center;padding:12px;border:1px dashed #a995e6;border-radius:12px;background:#ffffff0a;cursor:pointer;margin-top:6px!important}
+.art-mode-switch{display:flex;gap:9px;margin:14px 0 8px}
+.art-mode-button{flex:1;min-height:46px;font-weight:700;background:#171d3c}
+.art-mode-button.active{background:linear-gradient(100deg,#7656c8,#376eae);border-color:#c6b4ff;box-shadow:0 0 0 2px #bca8ff33}
+.art-edit-panel{display:none;margin-top:10px;padding:14px;border:1px solid #8f7bc4;border-radius:14px;background:#ffffff0b}
+.art-edit-panel.visible{display:block}
+.art-edit-panel h3{margin:0 0 8px;font-size:1rem}
+.art-edit-panel label{display:block;margin:9px 0 5px}
+.art-edit-panel input[type=range]{padding:7px 0}
+.art-edit-row{display:flex;gap:9px;align-items:center}
+.art-edit-row>*{flex:1;min-width:0}
+.art-edit-button{min-height:44px;font-weight:700}
+.art-selection{position:absolute;border:2px solid #8fc7ff;border-radius:7px;pointer-events:none;z-index:20;box-shadow:0 0 0 1px #18234a,0 0 14px #73b8ff66}
+.art-selection[hidden]{display:none}
+.art-handle{position:absolute;width:22px;height:22px;border:2px solid #fff;border-radius:50%;background:#3985e8;box-shadow:0 1px 7px #0009;pointer-events:auto;touch-action:none;padding:0}
+.art-handle.resize{right:-12px;bottom:-12px}
+.art-handle.rotate{left:50%;top:-42px;transform:translateX(-50%);width:26px;height:26px;background:#8b65d8}
+.art-selection:before{content:"";position:absolute;left:50%;top:-28px;height:28px;border-left:2px dashed #8fc7ff}
+.art-canvas-wrap{position:relative;margin-top:14px;border:1px solid #8f7bc4;border-radius:16px;overflow:hidden;background:#101936}
+#artCanvas{display:block;width:100%;height:auto;aspect-ratio:3/2;touch-action:none;cursor:crosshair}
+#artObjects{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#artCanvas.drawing-disabled{pointer-events:none;touch-action:pan-y;cursor:default}
+#artObjects.editing{pointer-events:auto}
+.art-object{position:absolute;left:50%;top:50%;min-width:64px;min-height:64px;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;border-radius:9px}
+.art-object:active{cursor:grabbing}
+.art-visual{display:flex;align-items:center;justify-content:center;pointer-events:none;transform-origin:center center}
+.art-object-text{max-width:250px;padding:3px 7px;font:700 34px/1.15 system-ui,sans-serif;overflow-wrap:anywhere;text-align:center;white-space:pre-wrap;text-shadow:0 1px 4px #0008}
+.art-object-sticker{font:76px/1.1 system-ui,sans-serif;white-space:nowrap}
+.art-object-image{display:block;width:180px;max-width:250px;max-height:220px;object-fit:contain;border:2px solid #ffffffaa;border-radius:8px;filter:drop-shadow(0 3px 8px #0008)}
+.art-canvas-hint{text-align:center;font-size:.76rem;color:#b8b8d8;margin:8px}
+.art-submit{margin-top:14px}
+.art-footnote{font-size:.78rem;color:#aaa8ca;line-height:1.5;margin:9px 0 0}
+@media(max-width:420px){.art-tool-row{gap:8px}.art-actions button{flex:1;padding:9px 7px;font-size:.78rem}.art-selection{border-width:2px}.art-handle{width:25px;height:25px}.art-handle.resize{right:-13px;bottom:-13px}}
+
+</style>
+</head>
+<body>
+<header><div class="eyebrow">un universo de cariño · una estrella a la vez</div><h1>We love you Elena</h1><p>Desde distintos rincones del mundo, dejamos pequeñas estrellas para recordarte cuánto cariño puede reunir un solo universo.</p></header>
+<button id="elenaSecretButton" aria-label="Entrada secreta">
+  🦋
+</button>
+  <main>
+<section class="stage" aria-label="Mariposa galáctica interactiva">
+<div class="stage-label">✦ Nuestra mariposa de estrellas</div>
+<div class="butterfly-wrap"><div class="butterfly" id="butterfly">
+<div class="wing left"><div class="wing-shape"></div></div><div class="wing right"><div class="wing-shape"></div></div><div class="body"></div>
+</div></div>
+<div id="stars"></div><div class="hint">Toca una estrella para descubrir su dedicatoria · La mariposa se mueve suavemente</div>
+</section>
+<section class="panels">
+<div class="panel">
+<h2>Deja tu estrella ✧</h2><p class="muted">Puedes enviar varias estrellas con el mismo usuario. Elige el país desde donde participas.</p>
+<form id="starForm">
+<label for="username">Tu nombre de usuario</label><input id="username" maxlength="24" placeholder="@tu_usuario" required>
+<label for="country">País</label><select id="country" required><option value="">Selecciona tu país</option></select>
+<label for="dedication">Tu dedicatoria</label><textarea id="dedication" placeholder="Escribe unas palabras para Elena..." required></textarea>
+<label for="color">Color de tu estrella</label><select id="color"><option value="#fff0a6">Dorado</option><option value="#a9caff">Azul</option><option value="#d5b7ff">Violeta</option><option value="#ffb9dd">Rosa</option><option value="#a8f0d0">Verde</option></select>
+<button class="submit" type="submit">Enviar mi estrella ✦</button>
+</form>
+<p class="muted" id="notice" aria-live="polite"></p>
+</div>
+<div class="panel">
+<h2>Nuestro universo</h2><p class="muted">Cada estrella representa una dedicatoria. Los datos de este prototipo se guardan únicamente en este navegador.</p>
+<div class="stats"><div class="stat"><strong id="starCount">0</strong><span>Estrellas</span></div><div class="stat"><strong id="countryCount">0</strong><span>Países</span></div></div>
+ <section class="creativity-wall" aria-labelledby="creativityTitle">
+   <div class="creativity-heading">
+     <span class="creativity-kicker">✦ Un rincón para crear</span>
+     <h2 id="creativityTitle">Muro de la Creatividad</h2>
+     <p class="muted">Deja un mensaje creativo para Elena. Un dibujo, unas palabras o una pequeña obra de arte tienen un lugar aquí.</p>
+   </div>
+   <div class="art-tools">
+     <label for="artName">Tu nombre o usuario (opcional)</label>
+     <input id="artName" maxlength="24" placeholder="¿Cómo quieres aparecer?">
+     <label for="artTitle">Título de tu creación (opcional)</label>
+     <input id="artTitle" maxlength="50" placeholder="Ponle un título a tu obra">
+     <label for="artCountry">País (opcional)</label>
+     <select id="artCountry"><option value="">Prefiero no indicarlo</option></select>
+     <div class="art-tool-row">
+       <div><label for="artColor">Color</label><input id="artColor" type="color" value="#bca8ff" class="art-color"></div>
+       <div class="brush-control"><label for="artBrush">Grosor del pincel</label><input id="artBrush" type="range" min="2" max="32" value="7"></div>
+     </div>
+     <label for="artBackground">Fondo</label>
+     <select id="artBackground"><option value="#101936">Azul noche</option><option value="#ffffff">Blanco</option><option value="#f6e9ff">Lila claro</option><option value="#fff1df">Crema</option><option value="#dff4f2">Menta</option></select>
+     <div class="art-actions">
+       <button type="button" id="artUndo">↶ Deshacer</button>
+       <button type="button" id="artEraser">⌫ Borrador</button>
+       <button type="button" id="artClear">Limpiar</button>
+     </div>
+     <div class="art-tool-row">
+       <div class="art-add-text"><label for="artText">Añadir texto</label><input id="artText" maxlength="90" placeholder="Escribe algo bonito..."></div>
+       <button type="button" id="artAddText" class="art-small-button">Añadir</button>
+     </div>
+     <div class="art-stickers"><span>Stickers:</span><button type="button" data-sticker="🦋">🦋</button><button type="button" data-sticker="⭐">⭐</button><button type="button" data-sticker="🍀">🍀</button><button type="button" data-sticker="🌷">🌷</button><button type="button" data-sticker="💜">💜</button></div>
+     <label class="art-upload" for="artUpload">＋ Subir una imagen desde mi teléfono</label>
+     <input id="artUpload" type="file" accept="image/*" hidden>
+   </div>
+   <div class="art-mode-switch" role="group" aria-label="Modo del mural">
+      <button type="button" id="artModeDraw" class="art-mode-button active">✎ Dibujar</button>
+      <button type="button" id="artModeEdit" class="art-mode-button">↗ Editar objetos</button>
+    </div>
+    <div id="artEditPanel" class="art-edit-panel" aria-live="polite">
+      <h3>✦ Ajustar objeto seleccionado</h3>
+      <label for="artScale">Tamaño <output id="artScaleValue">100%</output></label>
+      <input id="artScale" type="range" min="25" max="350" value="100">
+      <label for="artRotation">Rotación <output id="artRotationValue">0°</output></label>
+      <input id="artRotation" type="range" min="-180" max="180" value="0">
+      <div class="art-edit-row">
+        <button type="button" id="artRotateLeft" class="art-edit-button">↶ -15°</button>
+        <button type="button" id="artRotateRight" class="art-edit-button">↷ +15°</button>
+        <button type="button" id="artDelete" class="art-edit-button">Eliminar</button>
+      </div>
+    </div>
+    <div class="art-canvas-wrap"><canvas id="artCanvas" width="900" height="600" aria-label="Lienzo para dibujar"></canvas><div id="artObjects" aria-label="Elementos que puedes mover"></div></div><p class="art-canvas-hint" id="artCanvasHint">Modo dibujo: pinta directamente sobre el lienzo. Cambia a «Editar objetos» para seleccionar, mover, agrandar y girar elementos sin dibujar accidentalmente.</p>
+   <button type="button" class="submit art-submit" id="artPrepare">Enviar mi creación ✦</button>
+   <p id="artNotice" class="muted" aria-live="polite"></p>
+   <p class="art-footnote">Tu creación se guardará para revisión. Solo las obras aprobadas podrán aparecer en la galería pública.</p>
+ </section>
+</div>
+</section>
+</main>
+<footer>Hecho con cariño para Elena · We love you Elena ✦</footer>
+<dialog id="starDialog"><button id="closeDialog">Cerrar</button><div id="dialogContent"></div></dialog>
+  <dialog id="thanksDialog" class="thanks-dialog">
+  <div class="thanks-card">
+    <div class="thanks-icon">✦</div>
+    <h2>¡Gracias por participar!</h2>
+    <p>
+      Tu estrella va en camino.
+      Cuando sea aprobada, aparecerá en el cielo de Elena. ✨
+    </p>
+    <button id="continueStar" type="button">
+      Continuar ✨
+    </button>
+  </div>
+</dialog>
+
+<div id="starFlight" aria-hidden="true">✦</div>
+<script>
+const countries = ["Argentina","Bolivia","Brasil","Canadá","Chile","Colombia","Costa Rica","Cuba","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","Puerto Rico","República Dominicana","Uruguay","Venezuela","Alemania","Francia","Italia","Portugal","Reino Unido","Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India","Australia","Otro"];
+const countryEl=document.querySelector("#country");
+countries.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;countryEl.append(o)});
+const artCountryEl = document.querySelector("#artCountry");
+countries.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;artCountryEl.append(o)});
+const zones={"Sudamérica": ["Argentina","Bolivia","Brasil","Chile","Colombia","Ecuador","Paraguay","Perú","Uruguay","Venezuela"],"Norteamérica": ["Canadá","Estados Unidos","México","Cuba","Costa Rica","El Salvador","Guatemala","Honduras","Nicaragua","Panamá","Puerto Rico","República Dominicana"],"Europa":["España","Alemania","Francia","Italia","Portugal","Reino Unido"],"Asia":["Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India"],"Oceanía":["Australia"]};
+function region(country){return Object.entries(zones).find(([r,arr])=>arr.includes(country))?.[0]||"Otros";}
+const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let stars = [];
+const stage=document.querySelector("#stars"), dialog=document.querySelector("#starDialog");
+function positionFor(s,i){let side=s.region==="Sudamérica"||s.region==="Norteamérica"?"left":s.region==="Europa"||s.region==="Asia"?"right":(i%2?"left":"right");let left=side==="left"?12+(i*37%34):54+(i*41%34);let top=24+(i*29%54);return {left,top};}
+function render(){
+ stage.innerHTML="";
+ stars.forEach((s,i)=>{const p=positionFor(s,i),b=document.createElement("button");b.className="star";b.type="button";b.textContent="✦";b.style.left=p.left+"%";b.style.top=p.top+"%";b.style.color=s.color;b.style.animationDelay=(i%7)*.2+"s";b.setAttribute("aria-label","Estrella de "+s.username+" desde "+s.country);b.onclick=()=>openStar(s);stage.append(b)});
+ document.querySelector("#starCount").textContent=stars.length;
+ document.querySelector("#countryCount").textContent=new Set(stars.map(s=>s.country)).size;
+
+}
+  async function loadApprovedStars() {
+  const { data, error } = await supabaseClient
+    .from("dedications")
+    .select("username,country,region,message,color,created_at")
+    .eq("status", "approved")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    document.querySelector("#notice").textContent =
+      "No se pudieron cargar las estrellas. Inténtalo más tarde.";
+    return;
+  }
+
+  stars = (data || []).map(row => ({
+    username: row.username,
+    country: row.country,
+    region: row.region,
+    message: row.message,
+    color: row.color,
+    date: row.created_at
+  }));
+
+  render();
+}
+function openStar(s){document.querySelector("#dialogContent").innerHTML="";const h=document.createElement("h2");h.textContent="✦ "+s.username;const meta=document.createElement("p");meta.className="muted";meta.textContent="🌍 "+s.country+" · "+s.region;const p=document.createElement("p");p.textContent=s.message;document.querySelector("#dialogContent").append(h,meta,p);dialog.showModal()}
+document.querySelector("#closeDialog").onclick=()=>dialog.close();
+  const thanksDialog = document.querySelector("#thanksDialog");
+const continueStar = document.querySelector("#continueStar");
+const starFlight = document.querySelector("#starFlight");
+
+continueStar.addEventListener("click", () => {
+  thanksDialog.close();
+
+  starFlight.classList.remove("fly");
+  void starFlight.offsetWidth;
+  starFlight.classList.add("fly");
+});
+
+starFlight.addEventListener("animationend", () => {
+  starFlight.classList.remove("fly");
+});
+document.querySelector("#starForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const country = document.querySelector("#country").value;
+
+  const s = {
+    username: document.querySelector("#username").value.trim(),
+    country,
+    region: region(country),
+    message: document.querySelector("#dedication").value.trim(),
+    color: document.querySelector("#color").value,
+    status: "pending"
+  };
+
+  if (!s.username || !country || !s.message) return;
+
+  try {
+  const { error } = await supabaseClient
+    .from("dedications")
+    .insert(s);
+
+  if (error) throw error;
+
+  document.querySelector("#dedication").value = "";
+  thanksDialog.showModal();
+
+} catch (error) {
+  console.error("Error al enviar la estrella:", error);
+
+  document.querySelector("#notice").textContent =
+    "No se pudo enviar tu estrella. Comprueba tu conexión e inténtalo de nuevo.";
+  }
+  });
+
+loadApprovedStars();
+  
+
+const butterflyWrap = document.querySelector(".butterfly-wrap");
+const butterfly = butterflyWrap?.querySelector(".butterfly");
+
+if (butterflyWrap && butterfly) {
+  const pointers = new Map();
+
+  let dragX = 0;
+  let dragY = 0;
+  let rotateX = 0;
+  let rotateY = 0;
+  let zoom = 1;
+  let gesture = null;
+  let holdTimer = null;
+let holdStartX = 0;
+let holdStartY = 0;
+
+  function centerOf(points) {
+    return {
+      x: (points[0].x + points[1].x) / 2,
+      y: (points[0].y + points[1].y) / 2
+    };
+  }
+
+  function distanceOf(a, b) {
+    return Math.hypot(b.x - a.x, b.y - a.y);
+  }
+
+  function angleOf(a, b) {
+    return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+  }
+
+  function startGesture() {
+    const points = [...pointers.values()];
+
+    if (points.length === 1) {
+      gesture = {
+        type: "one",
+        x: points[0].x,
+        y: points[0].y,
+        dragX,
+        dragY
+      };
+    }
+
+    if (points.length >= 2) {
+      const a = points[0];
+      const b = points[1];
+
+      gesture = {
+        type: "two",
+        center: centerOf([a, b]),
+        distance: distanceOf(a, b),
+        angle: angleOf(a, b),
+        dragX,
+        dragY,
+        rotateX,
+        rotateY,
+        zoom
+      };
+
+      butterfly.style.animation = "none";
+    }
+  }
+
+  function apply3D() {
+    butterfly.style.transform =
+      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${zoom})`;
+  }
+
+  butterflyWrap.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    if (pointers.size === 0) {
+  holdStartX = e.clientX;
+  holdStartY = e.clientY;
+
+  holdTimer = setTimeout(() => {
+    if (pointers.size === 1) {
+      butterfly.classList.add("hold-spin");
+    }
+    holdTimer = null;
+  }, 500);
+    }
+    butterflyWrap.setPointerCapture(e.pointerId);
+
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+if (pointers.size > 1) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+  butterfly.classList.remove("hold-spin");
+}
+    butterflyWrap.classList.add("dragging");
+    startGesture();
+  });
+
+  butterflyWrap.addEventListener("pointermove", e => {
+    if (!pointers.has(e.pointerId)) return;
+if (holdTimer && Math.hypot(
+  e.clientX - holdStartX,
+  e.clientY - holdStartY
+) > 8) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+
+    const points = [...pointers.values()];
+
+    if (points.length === 1 && gesture?.type === "one") {
+      dragX = gesture.dragX + points[0].x - gesture.x;
+      dragY = gesture.dragY + points[0].y - gesture.y;
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+    }
+
+    if (points.length >= 2 && gesture?.type === "two") {
+      const a = points[0];
+      const b = points[1];
+      const center = centerOf([a, b]);
+
+      dragX = gesture.dragX + center.x - gesture.center.x;
+      dragY = gesture.dragY + center.y - gesture.center.y;
+
+      rotateY = gesture.rotateY + angleOf(a, b) - gesture.angle;
+      rotateX = gesture.rotateX + (center.y - gesture.center.y) * 0.25;
+
+      zoom = Math.max(0.7, Math.min(
+        1.4,
+        gesture.zoom * distanceOf(a, b) / Math.max(gesture.distance, 1)
+      ));
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+
+      apply3D();
+    }
+  });
+
+  function stopPointer(e) {
+    if (holdTimer) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+
+butterfly.classList.remove("hold-spin");
+    pointers.delete(e.pointerId);
+
+    if (pointers.size > 0) {
+      startGesture();
+    } else {
+      gesture = null;
+      butterflyWrap.classList.remove("dragging");
+    }
+  }
+
+  butterflyWrap.addEventListener("pointerup", stopPointer);
+  butterflyWrap.addEventListener("pointercancel", stopPointer);
+}
+  
+</script>
+  
+<style>
+#elenaSecretButton {
+  position: static; display: block;
+margin: 0 16px 12px auto;
+  z-index: 9998;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #b99cff;
+  border-radius: 50%;
+  background: #211638;
+  color: #e6d5ff;
+  font-size: 25px;
+  box-shadow: 0 0 18px #a879ff88;
+  cursor: pointer;
+}
+
+#elenaSecretDoor {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(circle, #30204e, #090716 75%);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+#elenaSecretDoor.open {
+  display: flex;
+}
+
+#elenaSecretPanel {
+  width: min(100%, 380px);
+  text-align: center;
+  padding: 28px 22px;
+  border: 1px solid #a98ad9;
+  border-radius: 22px;
+  background: #171126;
+  box-shadow: 0 0 35px #9c70dc55;
+}
+
+#elenaSecretPanel input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  margin: 14px 0;
+  border-radius: 10px;
+  border: 1px solid #a98ad9;
+  background: #0e0a19;
+  color: white;
+  font-size: 16px;
+}
+
+#elenaSecretPanel button {
+  padding: 11px 20px;
+  margin: 5px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#elenaSecretEnter {
+  background: #b99cff;
+  color: #211638;
+}
+
+#elenaSecretClose {
+  background: #352849;
+  color: white;
+}
+
+#elenaSecretMessage {
+  min-height: 24px;
+  color: #e5caff;
+}
+
+#elenaSecretLibrary {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  padding: 28px 18px;
+  background: radial-gradient(circle at top, #30204e, #090716 75%);
+  color: white;
+}
+
+#elenaSecretLibrary h2 {
+  text-align: center;
+}
+
+.elenaDedication {
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid #725b98;
+  border-radius: 14px;
+  background: #211832;
+}
+</style>
+
+
+
+<div id="elenaSecretDoor">
+  <div id="elenaSecretPanel">
+    <div style="font-size:48px">🦋</div>
+    <h2>Una puerta entre estrellas</h2>
+    <p>Hay un pequeño universo que te está esperando...</p>
+
+    <input
+      id="elenaSecretCode"
+      type="password"
+      placeholder="Tu clave secreta"
+      autocomplete="off"
+    >
+
+    <p id="elenaSecretMessage" aria-live="polite"></p>
+
+    <button id="elenaSecretEnter">Abrir la puerta ✨</button>
+    <button id="elenaSecretClose">Volver</button>
+  </div>
+</div>
+
+<div id="elenaSecretLibrary">
+  <h2>✦ La biblioteca secreta de Elena ✦</h2>
+  <p style="text-align:center">
+    Cada estrella guarda un mensaje especial.
+  </p>
+  <div id="elenaSecretDedications"></div>
+  <button id="elenaSecretLibraryClose">Cerrar biblioteca</button>
+</div>
+
+<script>
+(() => {
+  const endpoint =
+    "https://jiiniyttaifztzbtqhnl.supabase.co/functions/v1/elena-library";
+
+  const door = document.querySelector("#elenaSecretDoor");
+  const codeInput = document.querySelector("#elenaSecretCode");
+  const message = document.querySelector("#elenaSecretMessage");
+  const library = document.querySelector("#elenaSecretLibrary");
+  const dedicationList =
+    document.querySelector("#elenaSecretDedications");
+
+  document.querySelector("#elenaSecretButton").onclick = () => {
+    door.classList.add("open");
+    codeInput.focus();
+  };
+
+  document.querySelector("#elenaSecretClose").onclick = () => {
+    door.style.display = "flex";
+door.classList.add("open");
+    codeInput.value = "";
+    message.textContent = "";
+  };
+
+  document.querySelector("#elenaSecretLibraryClose").onclick = () => {
+    library.style.display = "none";
+  };
+
+  async function enterLibrary() {
+    const code = codeInput.value;
+    if (!code) {
+      message.textContent = "Escribe tu clave secreta.";
+      return;
+    }
+
+    const enterButton = document.querySelector("#elenaSecretEnter");
+    enterButton.disabled = true;
+    message.textContent = "La puerta está escuchando...";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        },
+        body: JSON.stringify({ code })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.success !== true) {
+        message.textContent =
+          response.status === 429
+            ? "Demasiados intentos. Inténtalo más tarde."
+            : "¡Tú no eres Elena! 🐈";
+        return;
+      }
+
+      
+dedicationList.replaceChildren();
+
+function normalizeCountry(name) {
+  return (name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+const regionNames = new Intl.DisplayNames(["es"], {
+  type: "region"
+});
+
+const countryCodes = {};
+
+for (let first = 65; first <= 90; first++) {
+  for (let second = 65; second <= 90; second++) {
+    const code = String.fromCharCode(first, second);
+    const name = regionNames.of(code);
+
+    if (name && name !== code) {
+      countryCodes[normalizeCountry(name)] = code;
+    }
+  }
+}
+
+const aliases = {
+  "mexico": "MX",
+  "estados unidos": "US",
+  "united states": "US",
+  "eeuu": "US",
+  "brasil": "BR",
+  "brazil": "BR",
+  "espana": "ES",
+  "spain": "ES",
+  "peru": "PE",
+  "corea del sur": "KR",
+  "south korea": "KR",
+  "reino unido": "GB",
+  "united kingdom": "GB",
+  "paises bajos": "NL",
+  "holanda": "NL",
+  "rusia": "RU",
+  "russia": "RU",
+  "vaticano": "VA",
+  "ciudad del vaticano": "VA",
+  "palestina": "PS"
+};
+
+Object.assign(countryCodes, aliases);
+
+function countryFlag(country) {
+  const code = countryCodes[normalizeCountry(country)];
+
+  if (!code) return "🌍";
+
+  return String.fromCodePoint(
+    ...[...code].map(letter =>
+      127397 + letter.charCodeAt(0)
+    )
+  );
+}
+
+const countries = {};
+
+(result.dedications || []).forEach(item => {
+  const country = (item.country || "Otros rincones").trim();
+
+  if (!countries[country]) {
+    countries[country] = [];
+  }
+
+  countries[country].push(item);
+});
+
+Object.keys(countries).sort().forEach(country => {
+  const group = document.createElement("section");
+  group.className = "elenaDedication";
+
+  const heading = document.createElement("h3");
+  heading.textContent =
+    countryFlag(country) + " " + country +
+    " · " + countries[country].length + " estrellas";
+
+  group.append(heading);
+
+  countries[country].forEach(item => {
+    const card = document.createElement("article");
+    card.className = "elenaDedication";
+
+    const title = document.createElement("h4");
+    title.textContent = "✦ " + (item.username || "Una estrella");
+
+    const location = document.createElement("p");
+    location.textContent = item.region || "";
+
+    const note = document.createElement("p");
+    note.textContent = item.message || "";
+
+    card.append(title, location, note);
+    group.append(card);
+  });
+
+  dedicationList.append(group);
+});
+
+      door.classList.remove("open");
+      codeInput.value = "";
+      library.style.display = "block";
+
+    } catch (error) {
+      message.textContent = "No pudimos abrir la puerta. Inténtalo luego.";
+    } finally {
+      enterButton.disabled = false;
+    }
+  }
+
+  document.querySelector("#elenaSecretEnter").onclick = enterLibrary;
+
+  codeInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") enterLibrary();
+  });
+})();
+</script>
+
+<script>
+
+// Editor del Muro de la Creatividad: modos separados, selección amplia, escala y rotación.
+(() => {
+  const canvas = document.querySelector('#artCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const color = document.querySelector('#artColor');
+  const brush = document.querySelector('#artBrush');
+  const background = document.querySelector('#artBackground');
+  const notice = document.querySelector('#artNotice');
+  const objectLayer = document.querySelector('#artObjects');
+  const editPanel = document.querySelector('#artEditPanel');
+  const scaleInput = document.querySelector('#artScale');
+  const scaleValue = document.querySelector('#artScaleValue');
+  const rotationInput = document.querySelector('#artRotation');
+  const rotationValue = document.querySelector('#artRotationValue');
+  const selection = document.createElement('div');
+  selection.className = 'art-selection';
+  selection.hidden = true;
+  selection.innerHTML = '<button type="button" class="art-handle rotate" aria-label="Girar objeto"></button><button type="button" class="art-handle resize" aria-label="Cambiar tamaño"></button>';
+  objectLayer.append(selection);
+  const rotateHandle = selection.querySelector('.rotate');
+  const resizeHandle = selection.querySelector('.resize');
+
+  const undoStack = [];
+  let drawing = false, erasing = false, last = null, hasContent = false;
+  let nextObjectId = 1, objects = [], selectedId = null, mode = 'draw', activeTransform = null;
+
+  const selectedObject = () => objects.find(o => o.id === selectedId) || null;
+  const selectedElement = () => objectLayer.querySelector('.art-object[data-object-id="' + selectedId + '"]');
+  function saveState() {
+    if (undoStack.length >= 25) undoStack.shift();
+    undoStack.push({canvas:ctx.getImageData(0,0,canvas.width,canvas.height),objects:objects.map(o=>({...o}))});
+  }
+  function resetCanvas() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=background.value; ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+  function applyTransform(item, visual) {
+    visual.style.transform = `rotate(${item.rotation || 0}deg) scale(${item.scale || 1})`;
+  }
+  function updateSelectionFrame() {
+    const el=selectedElement();
+    if(!el || mode!=='edit'){selection.hidden=true;return;}
+    const layer=objectLayer.getBoundingClientRect(), r=el.getBoundingClientRect();
+    selection.style.left=(r.left-layer.left)+'px'; selection.style.top=(r.top-layer.top)+'px';
+    selection.style.width=r.width+'px'; selection.style.height=r.height+'px'; selection.hidden=false;
+  }
+  function syncPanel() {
+    const item=selectedObject();
+    editPanel.classList.toggle('visible',mode==='edit' && !!item);
+    if(!item){selection.hidden=true;return;}
+    scaleInput.value=Math.round((item.scale||1)*100); scaleValue.textContent=scaleInput.value+'%';
+    let angle=((item.rotation||0)%360+360)%360; if(angle>180) angle-=360;
+    rotationInput.value=Math.round(angle); rotationValue.textContent=Math.round(angle)+'°';
+    updateSelectionFrame();
+  }
+  function selectObject(id) {
+    selectedId=id;
+    objectLayer.querySelectorAll('.art-object').forEach(el=>{
+      el.style.background=Number(el.dataset.objectId)===id?'#8fc7ff18':'transparent';
+    });
+    syncPanel();
+  }
+  function redrawObjects() {
+    objectLayer.querySelectorAll('.art-object').forEach(el=>el.remove());
+    objects.forEach(item=>{
+      const el=document.createElement('div'); el.className='art-object'; el.dataset.objectId=item.id;
+      el.style.left=item.x+'%'; el.style.top=item.y+'%';
+      const visual=item.type==='image'?document.createElement('img'):document.createElement('div');
+      visual.className='art-visual '+(item.type==='image'?'art-object-image':item.type==='text'?'art-object-text':'art-object-sticker');
+      if(item.type==='image'){visual.src=item.content;visual.alt='Imagen añadida al mural';}
+      else{visual.textContent=item.content;visual.style.color=item.color||color.value;}
+      applyTransform(item,visual); el.append(visual);
+      if(item.id===selectedId)el.style.background='#8fc7ff18';
+      el.addEventListener('pointerdown',event=>{
+        if(mode!=='edit')return;
+        event.preventDefault();event.stopPropagation();selectObject(item.id);
+        try{el.setPointerCapture(event.pointerId);}catch(_){}
+        const r=objectLayer.getBoundingClientRect();
+        activeTransform={kind:'move',pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,startLeft:item.x,startTop:item.y,width:r.width,height:r.height};
+      });
+      el.addEventListener('pointermove',event=>{
+        if(!activeTransform||activeTransform.kind!=='move'||activeTransform.pointerId!==event.pointerId)return;
+        event.preventDefault();
+        item.x=Math.max(3,Math.min(97,activeTransform.startLeft+(event.clientX-activeTransform.startX)/Math.max(activeTransform.width,1)*100));
+        item.y=Math.max(4,Math.min(96,activeTransform.startTop+(event.clientY-activeTransform.startY)/Math.max(activeTransform.height,1)*100));
+        el.style.left=item.x+'%';el.style.top=item.y+'%';updateSelectionFrame();
+      });
+      const end=event=>{if(activeTransform?.kind==='move'&&activeTransform.pointerId===event.pointerId)activeTransform=null;};
+      el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+      objectLayer.insertBefore(el,selection);
+    });
+    syncPanel();
+  }
+  function setMode(next) {
+    mode=next;const draw=mode==='draw';
+    document.querySelector('#artModeDraw').classList.toggle('active',draw);
+    document.querySelector('#artModeEdit').classList.toggle('active',!draw);
+    canvas.classList.toggle('drawing-disabled',!draw);
+    objectLayer.classList.toggle('editing',!draw);
+    document.querySelector('#artCanvasHint').textContent=draw
+      ?'Modo dibujo: pinta directamente sobre el lienzo. Cambia a «Editar objetos» para seleccionar, mover, agrandar y girar elementos sin dibujar accidentalmente.'
+      :'Modo edición: toca un objeto (su zona de selección es amplia), arrástralo para moverlo y usa los controles para cambiar tamaño o girarlo.';
+    if(draw){selectedId=null;selection.hidden=true;editPanel.classList.remove('visible');objectLayer.querySelectorAll('.art-object').forEach(el=>el.style.background='transparent');}
+    else syncPanel();
+  }
+  function addObject(type,content) {
+    saveState();const item={id:nextObjectId++,type,content,color:color.value,x:50,y:50,scale:1,rotation:0};
+    objects.push(item);hasContent=true;setMode('edit');redrawObjects();selectObject(item.id);
+  }
+  function point(event) {
+    const r=canvas.getBoundingClientRect();
+    return{x:(event.clientX-r.left)*canvas.width/r.width,y:(event.clientY-r.top)*canvas.height/r.height};
+  }
+
+  resetCanvas();setMode('draw');
+  document.querySelector('#artModeDraw').addEventListener('click',()=>setMode('draw'));
+  document.querySelector('#artModeEdit').addEventListener('click',()=>setMode('edit'));
+  background.addEventListener('change',()=>{saveState();resetCanvas();});
+  canvas.addEventListener('pointerdown',event=>{
+    if(mode!=='draw')return;event.preventDefault();saveState();drawing=true;last=point(event);
+    canvas.setPointerCapture(event.pointerId);ctx.beginPath();ctx.arc(last.x,last.y,Math.max(1,Number(brush.value)/2),0,Math.PI*2);
+    ctx.fillStyle=erasing?background.value:color.value;ctx.fill();if(!erasing)hasContent=true;
+  });
+  canvas.addEventListener('pointermove',event=>{
+    if(!drawing||mode!=='draw')return;event.preventDefault();const current=point(event);
+    ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(current.x,current.y);ctx.lineWidth=Number(brush.value);
+    ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=erasing?background.value:color.value;ctx.stroke();
+    last=current;if(!erasing)hasContent=true;
+  });
+  const stopDrawing=()=>{drawing=false;last=null;};
+  canvas.addEventListener('pointerup',stopDrawing);canvas.addEventListener('pointercancel',stopDrawing);
+
+  function startHandle(kind,event) {
+    const item=selectedObject(),el=selectedElement();if(!item||!el||mode!=='edit')return;
+    event.preventDefault();event.stopPropagation();const r=el.getBoundingClientRect();
+    const cx=r.left+r.width/2,cy=r.top+r.height/2;
+    activeTransform={kind,pointerId:event.pointerId,cx,cy,startAngle:Math.atan2(event.clientY-cy,event.clientX-cx),
+      startDistance:Math.max(8,Math.hypot(event.clientX-cx,event.clientY-cy)),startScale:item.scale||1,startRotation:item.rotation||0};
+    try{event.currentTarget.setPointerCapture(event.pointerId);}catch(_){}
+  }
+  rotateHandle.addEventListener('pointerdown',e=>startHandle('rotate',e));
+  resizeHandle.addEventListener('pointerdown',e=>startHandle('resize',e));
+  function moveHandle(event) {
+    if(!activeTransform||activeTransform.pointerId!==event.pointerId||!['rotate','resize'].includes(activeTransform.kind))return;
+    event.preventDefault();const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    const angle=Math.atan2(event.clientY-activeTransform.cy,event.clientX-activeTransform.cx);
+    if(activeTransform.kind==='rotate'){
+      let delta=(angle-activeTransform.startAngle)*180/Math.PI;if(delta>180)delta-=360;if(delta< -180)delta+=360;
+      item.rotation=activeTransform.startRotation+delta;
+    }else{
+      const d=Math.max(8,Math.hypot(event.clientX-activeTransform.cx,event.clientY-activeTransform.cy));
+      item.scale=Math.max(.25,Math.min(3.5,activeTransform.startScale*d/activeTransform.startDistance));
+    }
+    applyTransform(item,el.querySelector('.art-visual'));syncPanel();
+  }
+  [rotateHandle,resizeHandle].forEach(handle=>{
+    handle.addEventListener('pointermove',moveHandle);
+    const stop=e=>{if(activeTransform?.pointerId===e.pointerId)activeTransform=null;};
+    handle.addEventListener('pointerup',stop);handle.addEventListener('pointercancel',stop);handle.addEventListener('lostpointercapture',stop);
+  });
+  scaleInput.addEventListener('input',()=>{
+    const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    item.scale=Number(scaleInput.value)/100;applyTransform(item,el.querySelector('.art-visual'));
+    scaleValue.textContent=scaleInput.value+'%';updateSelectionFrame();
+  });
+  rotationInput.addEventListener('input',()=>{
+    const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    item.rotation=Number(rotationInput.value);applyTransform(item,el.querySelector('.art-visual'));
+    rotationValue.textContent=rotationInput.value+'°';updateSelectionFrame();
+  });
+  function rotateBy(deg) {
+    const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    item.rotation=(item.rotation||0)+deg;let shown=((Math.round(item.rotation)%360)+360)%360;if(shown>180)shown-=360;
+    rotationInput.value=Math.max(-180,Math.min(180,shown));rotationValue.textContent=shown+'°';
+    applyTransform(item,el.querySelector('.art-visual'));updateSelectionFrame();
+  }
+  document.querySelector('#artRotateLeft').addEventListener('click',()=>rotateBy(-15));
+  document.querySelector('#artRotateRight').addEventListener('click',()=>rotateBy(15));
+  document.querySelector('#artDelete').addEventListener('click',()=>{
+    if(!selectedObject())return;saveState();objects=objects.filter(o=>o.id!==selectedId);selectedId=null;redrawObjects();notice.textContent='Objeto eliminado.';
+  });
+  document.querySelector('#artUndo').addEventListener('click',()=>{
+    const prev=undoStack.pop();if(!prev)return;ctx.putImageData(prev.canvas,0,0);objects=prev.objects;selectedId=null;redrawObjects();hasContent=objects.length>0||undoStack.length>0;
+  });
+  document.querySelector('#artEraser').addEventListener('click',event=>{
+    erasing=!erasing;event.currentTarget.textContent=erasing?'✎ Volver al pincel':'⌫ Borrador';if(erasing)setMode('draw');
+  });
+  document.querySelector('#artClear').addEventListener('click',()=>{
+    saveState();resetCanvas();objects=[];selectedId=null;redrawObjects();hasContent=false;notice.textContent='Lienzo limpio. ¡Puedes empezar de nuevo!';
+  });
+  document.querySelector('#artAddText').addEventListener('click',()=>{
+    const input=document.querySelector('#artText'),value=input.value.trim();if(!value)return;
+    addObject('text',value);input.value='';notice.textContent='Texto añadido. En modo edición puedes moverlo, agrandarlo y girarlo.';
+  });
+  document.querySelectorAll('[data-sticker]').forEach(button=>button.addEventListener('click',()=>{
+    addObject('sticker',button.dataset.sticker);notice.textContent='Sticker añadido y seleccionado. Usa el marco para girar o cambiar su tamaño.';
+  }));
+  document.querySelector('#artUpload').addEventListener('change',event=>{
+    const file=event.target.files&&event.target.files[0];if(!file)return;
+    const allowedTypes=['image/jpeg','image/png','image/webp'];
+    if(!allowedTypes.includes(file.type)){notice.textContent='Elige una imagen JPG, PNG o WebP.';event.target.value='';return;}
+    if(file.size>6*1024*1024){notice.textContent='La imagen debe pesar menos de 6 MB.';event.target.value='';return;}
+    const reader=new FileReader();reader.onload=()=>{addObject('image',reader.result);notice.textContent='Imagen añadida y seleccionada. Usa el marco para girar o cambiar su tamaño.';};
+    reader.onerror=()=>{notice.textContent='No se pudo leer esa imagen. Prueba con otra.';};
+    reader.readAsDataURL(file);event.target.value='';
+  });
+
+  function wrapArtworkText(exportCtx,text,maxWidth) {
+    const words=String(text).split(/\s+/);const lines=[];let line='';
+    words.forEach(word=>{
+      const candidate=line?line+' '+word:word;
+      if(line && exportCtx.measureText(candidate).width>maxWidth){lines.push(line);line=word;}
+      else line=candidate;
+    });
+    if(line)lines.push(line);
+    return lines;
+  }
+
+  function loadArtworkImage(src) {
+    return new Promise((resolve,reject)=>{
+      const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src;
+    });
+  }
+
+  async function makeArtworkBlob() {
+    const output=document.createElement('canvas');
+    output.width=canvas.width;output.height=canvas.height;
+    const exportCtx=output.getContext('2d');
+    exportCtx.drawImage(canvas,0,0);
+    for(const item of objects) {
+      const x=item.x/100*output.width,y=item.y/100*output.height;
+      exportCtx.save();exportCtx.translate(x,y);
+      exportCtx.rotate((item.rotation||0)*Math.PI/180);
+      exportCtx.scale(item.scale||1,item.scale||1);
+      if(item.type==='text') {
+        exportCtx.font='700 34px system-ui, sans-serif';
+        exportCtx.textAlign='center';exportCtx.textBaseline='middle';
+        exportCtx.fillStyle=item.color||'#ffffff';
+        exportCtx.shadowColor='#00000088';exportCtx.shadowBlur=4;
+        const lines=wrapArtworkText(exportCtx,item.content,250);
+        const lineHeight=39,startY=-(lines.length-1)*lineHeight/2;
+        lines.forEach((line,index)=>exportCtx.fillText(line,0,startY+index*lineHeight,250));
+      } else if(item.type==='sticker') {
+        exportCtx.font='76px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
+        exportCtx.textAlign='center';exportCtx.textBaseline='middle';exportCtx.fillText(item.content,0,0);
+      } else if(item.type==='image') {
+        const img=await loadArtworkImage(item.content);
+        const ratio=Math.min(180/img.naturalWidth,220/img.naturalHeight,1.4);
+        const w=img.naturalWidth*ratio,h=img.naturalHeight*ratio;
+        exportCtx.drawImage(img,-w/2,-h/2,w,h);
+        exportCtx.strokeStyle='#ffffffaa';exportCtx.lineWidth=2;exportCtx.strokeRect(-w/2,-h/2,w,h);
+      }
+      exportCtx.restore();
+    }
+    return await new Promise((resolve,reject)=>{
+      output.toBlob(blob=>blob?resolve(blob):reject(new Error('No se pudo preparar la imagen.')),'image/png');
+    });
+  }
+
+  async function submitArtwork() {
+    const button=document.querySelector('#artPrepare');
+    const name=document.querySelector('#artName').value.trim();
+    const title=document.querySelector('#artTitle').value.trim();
+    const country=document.querySelector('#artCountry').value||null;
+    if(!hasContent){notice.textContent='Primero crea un dibujo o añade una imagen al lienzo.';return;}
+    if(!navigator.onLine){notice.textContent='No hay conexión a internet. Inténtalo cuando vuelvas a estar en línea.';return;}
+    button.disabled=true;button.textContent='Enviando creación...';
+    notice.textContent='Estamos guardando tu obra de arte...';
+    let uploadedPath=null;
+    try {
+      const blob=await makeArtworkBlob();
+      const fileId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+      uploadedPath='submissions/'+fileId+'.png';
+      const {error:uploadError}=await supabaseClient.storage.from('creativity-wall')
+        .upload(uploadedPath,blob,{contentType:'image/png',upsert:false,cacheControl:'3600'});
+      if(uploadError)throw uploadError;
+      const {error:insertError}=await supabaseClient.from('creativity_submissions').insert({
+        username:name||null,title:title||null,country,image_path:uploadedPath,status:'pending'
+      });
+      if(insertError)throw insertError;
+      notice.textContent='¡Tu creación fue enviada! Quedará pendiente de revisión antes de aparecer en el mural. ✨';
+      resetCanvas();objects=[];selectedId=null;redrawObjects();hasContent=false;setMode('draw');
+      document.querySelector('#artName').value='';
+      document.querySelector('#artTitle').value='';
+      document.querySelector('#artCountry').value='';
+    } catch(error) {
+      console.error('Error al enviar la creación:',error);
+      if(uploadedPath) {
+        try { await supabaseClient.storage.from('creativity-wall').remove([uploadedPath]); }
+        catch(cleanupError) { console.warn('No se pudo limpiar el archivo temporal:',cleanupError); }
+      }
+      notice.textContent='No se pudo enviar tu creación. Comprueba la conexión y vuelve a intentarlo.';
+    } finally {
+      button.disabled=false;button.textContent='Enviar mi creación ✦';
+    }
+  }
+  document.querySelector('#artPrepare').addEventListener('click',submitArtwork);
+  window.addEventListener('resize',updateSelectionFrame);
+})();
+</script>
+</body></html>
