@@ -1,0 +1,2016 @@
+<!doctype html>
+<html lang="es">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d25">
+<title>We love you Elena ✦</title>
+<style>
+:root{--night:#080d25;--deep:#111b43;--purple:#6544a5;--lav:#bca8ff;--white:#f4f0ff}
+*{box-sizing:border-box}body{margin:0;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 50% 20%,#20245c 0,#111638 36%,#080d25 76%);min-height:100vh}
+header{text-align:center;padding:38px 16px 14px}header .eyebrow{letter-spacing:.28em;text-transform:uppercase;color:#c7b7ff;font-size:.72rem}h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(2.3rem,7vw,4.7rem);margin:12px 0 8px;text-shadow:0 0 25px #8d70ff88}header p{color:#c5c4e2;margin:0 auto;max-width:620px;line-height:1.6}
+main{max-width:1050px;margin:auto;padding:12px 18px 56px}.stage{position:relative;min-height:490px;border:1px solid #ffffff20;border-radius:28px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#39316c77,transparent 42%),linear-gradient(140deg,#0c1534,#17133b 55%,#090e29);box-shadow:0 20px 70px #0006}
+.stage:before,.stage:after{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 8% 20%,#fff 99%,transparent),radial-gradient(2px 2px at 78% 18%,#d6c7ff 99%,transparent),radial-gradient(1px 1px at 34% 76%,#fff 99%,transparent),radial-gradient(1px 1px at 89% 66%,#fff 99%,transparent),radial-gradient(2px 2px at 18% 84%,#bca8ff 99%,transparent);background-size:230px 190px;opacity:.65;pointer-events:none}
+.stage:after{filter:blur(1px);transform:translate(45px,30px);opacity:.35}
+.stage-label{position:absolute;top:18px;left:20px;color:#c7b7ff;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;z-index:3}
+.butterfly-wrap{
+position:absolute;
+left:calc(50% + var(--drag-x, 0px));
+top:calc(48% + var(--drag-y, 0px));
+width:min(82vw,650px);
+height:390px;
+transform:translate(-50%,-50%);
+perspective:1000px;
+animation:float 5s ease-in-out infinite;
+z-index:1;
+touch-action:none;
+cursor:grab;
+user-select:none;
+}
+.butterfly-wrap.dragging{cursor:grabbing}
+.butterfly{position:absolute;inset:0;transform-style:preserve-3d;animation:turn 18s ease-in-out infinite}
+.wing{position:absolute;top:50%;width:49%;height:72%;transform-style:preserve-3d;filter:drop-shadow(0 0 18px #8e6bff88)}
+.wing.left{left:1%;transform-origin:100% 50%;transform:translateY(-50%) rotateY(17deg);animation:flapL 3.2s ease-in-out infinite}
+.wing.right{right:1%;transform-origin:0 50%;transform:translateY(-50%) rotateY(-17deg);animation:flapR 3.2s ease-in-out infinite}
+.wing-shape{position:absolute;inset:0;clip-path:polygon(100% 43%,84% 18%,58% 3%,30% 0%,8% 17%,0% 42%,12% 66%,34% 82%,62% 100%,84% 78%,96% 59%);background:radial-gradient(ellipse at 45% 45%,#bca8ff55 0 4%,transparent 38%),radial-gradient(ellipse at 65% 65%,#41a7dc66 0 2%,transparent 40%),radial-gradient(ellipse at 25% 75%,#a04bda88,transparent 52%),linear-gradient(135deg,#243b85 0%,#542c91 45%,#13285e 100%);border:1px solid #d5c8ff88;box-shadow:inset 0 0 38px #a78bfa55,inset 0 0 8px #fff8}
+.right .wing-shape{transform:scaleX(-1)}
+.wing-shape:after{content:"";position:absolute;inset:8%;border-radius:inherit;background-image:radial-gradient(2px 2px at 20% 20%,#fff 98%,transparent),radial-gradient(1px 1px at 60% 25%,#fff 98%,transparent),radial-gradient(2px 2px at 75% 70%,#d8c8ff 98%,transparent),radial-gradient(1px 1px at 38% 78%,#fff 98%,transparent);background-size:65px 60px;opacity:.9}
+.body{position:absolute;z-index:4;left:50%;top:50%;width:13px;height:155px;border-radius:50%;background:linear-gradient(90deg,#17152f,#d4c7ff,#30204e);transform:translate(-50%,-50%);box-shadow:0 0 22px #c6aaff}
+.body:before,.body:after{content:"";position:absolute;top:-28px;width:55px;height:55px;border-top:2px solid #d7c8ff;border-radius:50% 50% 0 0}.body:before{right:2px;transform:rotate(25deg)}.body:after{left:2px;transform:rotate(-25deg)}
+.star{position:absolute;z-index:5;border:0;background:transparent;color:#fff4b5;font-size:17px;text-shadow:0 0 9px #fff,0 0 18px #bba4ff;cursor:pointer;padding:4px;animation:twinkle 2.2s ease-in-out infinite alternate}
+.star:hover{transform:scale(1.7);color:white}
+.hint{position:absolute;bottom:17px;left:0;right:0;text-align:center;color:#d1c9ed;font-size:.82rem;z-index:5}
+@keyframes float{50%{transform:translate(-50%,-53%)}}@keyframes turn{0%,100%{transform:rotateY(-7deg)}50%{transform:rotateY(7deg)}}@keyframes flapL{50%{transform:translateY(-50%) rotateY(48deg)}}@keyframes flapR{50%{transform:translateY(-50%) rotateY(-48deg)}}@keyframes twinkle{to{opacity:.45;filter:brightness(1.7)}}
+.panels{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:20px}.panel{background:#111936c9;border:1px solid #ffffff20;border-radius:22px;padding:22px;backdrop-filter:blur(12px)}h2{font-family:Georgia,serif;font-weight:500;font-size:1.6rem;margin:0 0 7px}.muted{color:#b8b8d8;font-size:.9rem;line-height:1.55;margin-top:0}
+label{display:block;font-size:.83rem;color:#d8d2f0;margin:13px 0 6px}input,select,textarea{width:100%;border:1px solid #8272b5;background:#0b1230;color:white;border-radius:12px;padding:12px;font:inherit}textarea{min-height:95px;resize:vertical}button.submit{margin-top:15px;border:0;border-radius:999px;padding:13px 20px;background:linear-gradient(100deg,#7c5bd4,#4d83c8);color:white;font-weight:700;cursor:pointer;width:100%}button.submit:hover{filter:brightness(1.12)}
+.stats{display:flex;gap:12px;margin-top:15px}.stat{flex:1;background:#ffffff0b;border-radius:14px;padding:13px}.stat strong{display:block;font-size:1.5rem;color:#e2d8ff}.stat span{font-size:.75rem;color:#b8b8d8}
+footer{text-align:center;color:#9695b9;font-size:.78rem;padding:22px 10px}
+dialog{background:#151a3a;color:white;border:1px solid #a995e6;border-radius:20px;max-width:420px;width:calc(100% - 30px);padding:22px}dialog::backdrop{background:#030615bb}dialog button{float:right;background:#6550a6;border:0;color:white;padding:8px 14px;border-radius:20px}
+@media(max-width:700px){.panels{grid-template-columns:1fr}.stage{min-height:420px}.butterfly-wrap{height:310px}.hint{font-size:.72rem;padding:0 12px}.panel{padding:18px}}
+  @keyframes holdSpinY {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+  }
+  .butterfly.hold-spin {
+  animation: holdSpinY 3s linear infinite;
+  }
+  .thanks-dialog {
+  border: 1px solid #d5b7ff;
+  border-radius: 24px;
+  padding: 0;
+  width: min(88%, 380px);
+  background: transparent;
+  color: white;
+  overflow: visible;
+}
+
+.thanks-dialog::backdrop {
+  background: rgba(8, 5, 25, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.thanks-card {
+  text-align: center;
+  padding: 30px 24px;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    #21163d,
+    #38204d,
+    #173d4a
+  );
+  box-shadow: 0 0 30px #a879ff55;
+}
+
+.thanks-icon {
+  font-size: 48px;
+  color: #ffd98a;
+  animation: thanksGlow 2s ease-in-out infinite alternate;
+}
+
+.thanks-card h2 {
+  color: #e3caff;
+  margin: 12px 0;
+}
+
+.thanks-card p {
+  line-height: 1.6;
+  color: #f1eaff;
+}
+
+#continueStar {
+  margin-top: 18px;
+  border: 0;
+  border-radius: 30px;
+  padding: 12px 26px;
+  color: #201332;
+  background: linear-gradient(90deg, #d5b7ff, #ffbd83, #8ce4df);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes thanksGlow {
+  from { transform: scale(1); opacity: .8; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+  #starFlight {
+  position: fixed;
+  left: -60px;
+  top: 65%;
+  z-index: 9999;
+  font-size: 38px;
+  color: #ffd98a;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow:
+    0 0 8px #fff,
+    0 0 20px #d5b7ff,
+    0 0 35px #ffbd83;
+}
+
+#starFlight.fly {
+  animation: starJourney 2.2s ease-in-out forwards;
+}
+
+@keyframes starJourney {
+  0% {
+    left: -60px;
+    top: 70%;
+    opacity: 0;
+    transform: scale(.5) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.3) rotate(220deg);
+  }
+  100% {
+    left: 110%;
+    top: 18%;
+    opacity: 0;
+    transform: scale(.2) rotate(360deg);
+  }
+}
+
+/* Muro de la Creatividad */
+.creativity-wall{margin-top:22px;padding-top:20px;border-top:1px solid #ffffff20}
+.creativity-heading{text-align:left}
+.creativity-kicker{color:#d8c7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+.creativity-heading h2{margin:7px 0}
+.art-tools{display:grid;gap:7px;margin-top:14px}
+.art-tools label{margin:5px 0 2px}
+.art-tool-row{display:flex;align-items:end;gap:12px}
+.art-tool-row>div{flex:1;min-width:0}
+.art-color{height:43px;padding:4px;cursor:pointer}
+.brush-control input{padding:8px 0}
+.art-actions{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+.art-actions button,.art-small-button,.art-stickers button,.art-mode-button,.art-edit-button{border:1px solid #8575b8;background:#24234c;color:#f4f0ff;border-radius:10px;padding:10px 12px;cursor:pointer}
+.art-actions button:active,.art-small-button:active,.art-stickers button:active,.art-mode-button:active,.art-edit-button:active{transform:scale(.97)}
+.art-add-text{flex:1;min-width:0}
+.art-small-button{height:44px;margin-bottom:0}
+.art-stickers{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:7px 0}
+.art-stickers span{font-size:.82rem;color:#d8d2f0}
+.art-stickers button{font-size:1.15rem;padding:6px 9px}
+.art-upload{display:block!important;text-align:center;padding:12px;border:1px dashed #a995e6;border-radius:12px;background:#ffffff0a;cursor:pointer;margin-top:6px!important}
+.art-mode-switch{display:flex;gap:9px;margin:14px 0 8px}
+.art-mode-button{flex:1;min-height:46px;font-weight:700;background:#171d3c}
+.art-mode-button.active{background:linear-gradient(100deg,#7656c8,#376eae);border-color:#c6b4ff;box-shadow:0 0 0 2px #bca8ff33}
+.art-edit-panel{display:none;margin-top:10px;padding:14px;border:1px solid #8f7bc4;border-radius:14px;background:#ffffff0b}
+.art-edit-panel.visible{display:block}
+.art-edit-panel h3{margin:0 0 8px;font-size:1rem}
+.art-edit-panel label{display:block;margin:9px 0 5px}
+.art-edit-panel input[type=range]{padding:7px 0}
+.art-edit-row{display:flex;gap:9px;align-items:center}
+.art-edit-row>*{flex:1;min-width:0}
+.art-edit-button{min-height:44px;font-weight:700}
+.art-selection{position:absolute;border:2px solid #8fc7ff;border-radius:7px;pointer-events:none;z-index:20;box-shadow:0 0 0 1px #18234a,0 0 14px #73b8ff66}
+.art-selection[hidden]{display:none}
+.art-handle{position:absolute;width:22px;height:22px;border:2px solid #fff;border-radius:50%;background:#3985e8;box-shadow:0 1px 7px #0009;pointer-events:auto;touch-action:none;padding:0}
+.art-handle.resize{right:-12px;bottom:-12px}
+.art-handle.rotate{left:50%;top:-42px;transform:translateX(-50%);width:26px;height:26px;background:#8b65d8}
+.art-selection:before{content:"";position:absolute;left:50%;top:-28px;height:28px;border-left:2px dashed #8fc7ff}
+.art-canvas-wrap{position:relative;margin-top:14px;border:1px solid #8f7bc4;border-radius:16px;overflow:hidden;background:#101936}
+#artCanvas{display:block;width:100%;height:auto;aspect-ratio:3/2;touch-action:none;cursor:crosshair}
+#artObjects{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#artCanvas.drawing-disabled{pointer-events:none;touch-action:pan-y;cursor:default}
+#artObjects.editing{pointer-events:auto}
+.art-object{position:absolute;left:50%;top:50%;min-width:64px;min-height:64px;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;border-radius:9px}
+.art-object:active{cursor:grabbing}
+.art-visual{display:flex;align-items:center;justify-content:center;pointer-events:none;transform-origin:center center}
+.art-object-text{width:max-content;max-width:none;padding:3px 7px;font:700 34px/1.15 system-ui,sans-serif;overflow-wrap:normal;word-break:normal;text-align:center;white-space:pre;text-shadow:0 1px 4px #0008}
+.art-object-sticker{font:76px/1.1 system-ui,sans-serif;white-space:nowrap}
+.art-object-image{display:block;width:180px;max-width:250px;max-height:220px;object-fit:contain;border:2px solid #ffffffaa;border-radius:8px;filter:drop-shadow(0 3px 8px #0008)}
+.art-canvas-hint{text-align:center;font-size:.76rem;color:#b8b8d8;margin:8px}
+.art-submit{margin-top:14px}
+.art-footnote{font-size:.78rem;color:#aaa8ca;line-height:1.5;margin:9px 0 0}
+
+/* Galería pública de creaciones aprobadas */
+.art-gallery{margin-top:22px;padding-top:18px;border-top:1px solid #ffffff20}
+.art-gallery-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.art-gallery-head h3{margin:0;font:500 1.35rem Georgia,serif;color:#e5d8ff}
+.art-gallery-strip{display:flex;gap:12px;overflow-x:auto;padding:12px 2px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.art-gallery-card{flex:0 0 154px;scroll-snap-align:start;border:1px solid #8f7bc4;border-radius:14px;background:#171d3c;color:#f4f0ff;padding:8px;text-align:left;cursor:pointer}
+.art-gallery-card img{display:block;width:100%;height:112px;object-fit:cover;border-radius:9px;background:#101936}
+.art-gallery-card strong{display:block;margin:7px 2px 2px;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art-gallery-card span{display:block;margin:0 2px;color:#b8b8d8;font-size:.73rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art-gallery-empty{color:#b8b8d8;font-size:.85rem;padding:12px 2px}
+.art-gallery-more{border:1px solid #a995e6;border-radius:999px;background:#28204c;color:#f4f0ff;padding:9px 16px;font-weight:700;cursor:pointer}
+.art-gallery-dialog{width:min(94vw,760px);max-width:760px;max-height:88vh;overflow:auto;background:#121936;color:#f4f0ff;border:1px solid #a995e6;border-radius:20px;padding:18px}
+.art-gallery-dialog::backdrop{background:#030615d9;backdrop-filter:blur(5px)}
+.art-gallery-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:#121936;padding-bottom:12px;z-index:2}
+.art-gallery-dialog-head h3{margin:0;font:500 1.35rem Georgia,serif}
+.art-gallery-close{border:0;border-radius:999px;background:#6550a6;color:white;padding:8px 13px;cursor:pointer}
+.art-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.art-gallery-preview-image{display:block;width:100%;max-height:62vh;object-fit:contain;border-radius:12px;background:#080d25}
+.art-gallery-preview-meta{text-align:center;color:#d4c8f0;line-height:1.5}
+@media(max-width:420px){.art-gallery-card{flex-basis:138px}.art-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+@media(max-width:420px){.art-tool-row{gap:8px}.art-actions button{flex:1;padding:9px 7px;font-size:.78rem}.art-selection{border-width:2px}.art-handle{width:25px;height:25px}.art-handle.resize{right:-13px;bottom:-13px}}
+
+</style>
+</head>
+<body>
+<header><div class="eyebrow">un universo de cariño · una estrella a la vez</div><h1>We love you Elena</h1><p>Desde distintos rincones del mundo, dejamos pequeñas estrellas para recordarte cuánto cariño puede reunir un solo universo.</p></header>
+<button id="elenaSecretButton" aria-label="Entrada secreta">
+  🦋
+</button>
+  <main>
+<section class="stage" aria-label="Mariposa galáctica interactiva">
+<div class="stage-label">✦ Nuestra mariposa de estrellas</div>
+<div class="butterfly-wrap"><div class="butterfly" id="butterfly">
+<div class="wing left"><div class="wing-shape"></div></div><div class="wing right"><div class="wing-shape"></div></div><div class="body"></div>
+</div></div>
+<div id="stars"></div><div class="hint">Toca una estrella para descubrir su dedicatoria · La mariposa se mueve suavemente</div>
+</section>
+<section class="panels">
+<div class="panel">
+<h2>Deja tu estrella ✧</h2><p class="muted">Puedes enviar varias estrellas con el mismo usuario. Elige el país desde donde participas.</p>
+<form id="starForm">
+<label for="username">Tu nombre de usuario</label><input id="username" maxlength="24" placeholder="@tu_usuario" required>
+<label for="country">País</label><select id="country" required><option value="">Selecciona tu país</option></select>
+<label for="dedication">Tu dedicatoria</label><textarea id="dedication" placeholder="Escribe unas palabras para Elena..." required></textarea>
+<label for="color">Color de tu estrella</label><select id="color"><option value="#fff0a6">Dorado</option><option value="#a9caff">Azul</option><option value="#d5b7ff">Violeta</option><option value="#ffb9dd">Rosa</option><option value="#a8f0d0">Verde</option></select>
+<button class="submit" type="submit">Enviar mi estrella ✦</button>
+</form>
+<p class="muted" id="notice" aria-live="polite"></p>
+</div>
+<div class="panel">
+<h2>Nuestro universo</h2><p class="muted">Cada estrella representa una dedicatoria. Los datos de este prototipo se guardan únicamente en este navegador.</p>
+<div class="stats"><div class="stat"><strong id="starCount">0</strong><span>Estrellas</span></div><div class="stat"><strong id="countryCount">0</strong><span>Países</span></div></div>
+ <section class="creativity-wall" aria-labelledby="creativityTitle">
+   <div class="creativity-heading">
+     <span class="creativity-kicker">✦ Un rincón para crear</span>
+     <h2 id="creativityTitle">Muro de la Creatividad</h2>
+     <p class="muted">Deja un mensaje creativo para Elena. Un dibujo, unas palabras o una pequeña obra de arte tienen un lugar aquí.</p>
+   </div>
+   <div class="art-tools">
+     <label for="artName">Tu nombre o usuario (opcional)</label>
+     <input id="artName" maxlength="24" placeholder="¿Cómo quieres aparecer?">
+     <label for="artTitle">Título de tu creación (opcional)</label>
+     <input id="artTitle" maxlength="50" placeholder="Ponle un título a tu obra">
+     <label for="artCountry">País (opcional)</label>
+     <select id="artCountry"><option value="">Prefiero no indicarlo</option></select>
+     <div class="art-tool-row">
+       <div><label for="artColor">Color</label><input id="artColor" type="color" value="#bca8ff" class="art-color"></div>
+       <div class="brush-control"><label for="artBrush">Grosor del pincel</label><input id="artBrush" type="range" min="2" max="32" value="7"></div>
+     </div>
+     <label for="artBackground">Fondo</label>
+     <select id="artBackground"><option value="#101936">Azul noche</option><option value="#ffffff">Blanco</option><option value="#f6e9ff">Lila claro</option><option value="#fff1df">Crema</option><option value="#dff4f2">Menta</option></select>
+     <div class="art-actions">
+       <button type="button" id="artUndo">↶ Deshacer</button>
+       <button type="button" id="artEraser">⌫ Borrador</button>
+       <button type="button" id="artClear">Limpiar</button>
+     </div>
+     <div class="art-tool-row">
+       <div class="art-add-text"><label for="artText">Añadir texto</label><input id="artText" maxlength="90" placeholder="Escribe algo bonito..."></div>
+       <button type="button" id="artAddText" class="art-small-button">Añadir</button>
+     </div>
+     <div class="art-stickers"><span>Stickers:</span><button type="button" data-sticker="🦋">🦋</button><button type="button" data-sticker="⭐">⭐</button><button type="button" data-sticker="🍀">🍀</button><button type="button" data-sticker="🌷">🌷</button><button type="button" data-sticker="💜">💜</button></div>
+     <label class="art-upload" for="artUpload">＋ Subir una imagen desde mi teléfono</label>
+     <input id="artUpload" type="file" accept="image/*" hidden>
+   </div>
+   <div class="art-mode-switch" role="group" aria-label="Modo del mural">
+      <button type="button" id="artModeDraw" class="art-mode-button active">✎ Dibujar</button>
+      <button type="button" id="artModeEdit" class="art-mode-button">↗ Editar objetos</button>
+    </div>
+    <div id="artEditPanel" class="art-edit-panel" aria-live="polite">
+      <h3>✦ Ajustar objeto seleccionado</h3>
+      <label for="artScale">Tamaño <output id="artScaleValue">100%</output></label>
+      <input id="artScale" type="range" min="25" max="350" value="100">
+      <label for="artRotation">Rotación <output id="artRotationValue">0°</output></label>
+      <input id="artRotation" type="range" min="-180" max="180" value="0">
+      <div class="art-edit-row">
+        <button type="button" id="artRotateLeft" class="art-edit-button">↶ -15°</button>
+        <button type="button" id="artRotateRight" class="art-edit-button">↷ +15°</button>
+        <button type="button" id="artDelete" class="art-edit-button">Eliminar</button>
+      </div>
+    </div>
+    <div class="art-canvas-wrap"><canvas id="artCanvas" width="900" height="600" aria-label="Lienzo para dibujar"></canvas><div id="artObjects" aria-label="Elementos que puedes mover"></div></div><p class="art-canvas-hint" id="artCanvasHint">Modo dibujo: pinta directamente sobre el lienzo. Cambia a «Editar objetos» para seleccionar, mover, agrandar y girar elementos sin dibujar accidentalmente.</p>
+   <button type="button" class="submit art-submit" id="artPrepare">Enviar mi creación ✦</button>
+   <p id="artNotice" class="muted" aria-live="polite"></p>
+   <p class="art-footnote">Tu creación se guardará para revisión. Solo las obras aprobadas podrán aparecer en la galería pública.</p>
+
+    <section class="art-gallery" aria-labelledby="artGalleryTitle">
+      <div class="art-gallery-head">
+        <h3 id="artGalleryTitle">✦ Creaciones que ya brillan</h3>
+        <button type="button" class="art-gallery-more" id="artGalleryMore">Ver más</button>
+      </div>
+      <div id="artGalleryStrip" class="art-gallery-strip" aria-live="polite">
+        <p class="art-gallery-empty">Cargando las creaciones aprobadas…</p>
+      </div>
+    </section>
+    <dialog id="artGalleryDialog" class="art-gallery-dialog">
+      <div class="art-gallery-dialog-head">
+        <h3>✦ Galería de creatividad</h3>
+        <button type="button" class="art-gallery-close" data-close-gallery>Cerrar</button>
+      </div>
+      <div id="artGalleryGrid" class="art-gallery-grid"></div>
+    </dialog>
+    <dialog id="artPreviewDialog" class="art-gallery-dialog">
+      <div class="art-gallery-dialog-head">
+        <h3 id="artPreviewTitle">Una creación especial</h3>
+        <button type="button" class="art-gallery-close" data-close-preview>Cerrar</button>
+      </div>
+      <img id="artPreviewImage" class="art-gallery-preview-image" alt="Creación aprobada para Elena">
+      <p id="artPreviewMeta" class="art-gallery-preview-meta"></p>
+    </dialog>
+
+ </section>
+</div>
+</section>
+</main>
+<footer>Hecho con cariño para Elena · We love you Elena ✦</footer>
+<dialog id="starDialog"><button id="closeDialog">Cerrar</button><div id="dialogContent"></div></dialog>
+  <dialog id="thanksDialog" class="thanks-dialog">
+  <div class="thanks-card">
+    <div class="thanks-icon">✦</div>
+    <h2>¡Gracias por participar!</h2>
+    <p>
+      Tu estrella va en camino.
+      Cuando sea aprobada, aparecerá en el cielo de Elena. ✨
+    </p>
+    <button id="continueStar" type="button">
+      Continuar ✨
+    </button>
+  </div>
+</dialog>
+
+<dialog id="artThanksDialog" class="thanks-dialog">
+  <div class="thanks-card">
+    <div class="thanks-icon">✦</div>
+    <h2>¡Gracias por participar!</h2>
+    <p>
+      Tu creación ya va en camino.
+      Cuando sea aprobada, aparecerá en el Muro de la Creatividad de Elena. ✨
+    </p>
+    <button id="continueArtwork" type="button">Continuar ✨</button>
+  </div>
+</dialog>
+
+<div id="starFlight" aria-hidden="true">✦</div>
+<script>
+const countries = ["Argentina","Bolivia","Brasil","Canadá","Chile","Colombia","Costa Rica","Cuba","Ecuador","El Salvador","España","Estados Unidos","Guatemala","Honduras","México","Nicaragua","Panamá","Paraguay","Perú","Puerto Rico","República Dominicana","Uruguay","Venezuela","Alemania","Francia","Italia","Portugal","Reino Unido","Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India","Australia","Otro"];
+const countryEl=document.querySelector("#country");
+countries.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;countryEl.append(o)});
+const artCountryEl = document.querySelector("#artCountry");
+countries.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;artCountryEl.append(o)});
+const zones={"Sudamérica": ["Argentina","Bolivia","Brasil","Chile","Colombia","Ecuador","Paraguay","Perú","Uruguay","Venezuela"],"Norteamérica": ["Canadá","Estados Unidos","México","Cuba","Costa Rica","El Salvador","Guatemala","Honduras","Nicaragua","Panamá","Puerto Rico","República Dominicana"],"Europa":["España","Alemania","Francia","Italia","Portugal","Reino Unido"],"Asia":["Tailandia","Japón","Corea del Sur","Filipinas","Indonesia","India"],"Oceanía":["Australia"]};
+function region(country){return Object.entries(zones).find(([r,arr])=>arr.includes(country))?.[0]||"Otros";}
+const SUPABASE_URL = "https://jiiniyttaifztzbtqhnl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7UZMUn6bF73EhIClN_4J5w_bf5GRLJ2";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let stars = [];
+const stage=document.querySelector("#stars"), dialog=document.querySelector("#starDialog");
+function positionFor(s,i){let side=s.region==="Sudamérica"||s.region==="Norteamérica"?"left":s.region==="Europa"||s.region==="Asia"?"right":(i%2?"left":"right");let left=side==="left"?12+(i*37%34):54+(i*41%34);let top=24+(i*29%54);return {left,top};}
+function render(){
+ stage.innerHTML="";
+ stars.forEach((s,i)=>{const p=positionFor(s,i),b=document.createElement("button");b.className="star";b.type="button";b.textContent="✦";b.style.left=p.left+"%";b.style.top=p.top+"%";b.style.color=s.color;b.style.animationDelay=(i%7)*.2+"s";b.setAttribute("aria-label","Estrella de "+s.username+" desde "+s.country);b.onclick=()=>openStar(s);stage.append(b)});
+ document.querySelector("#starCount").textContent=stars.length;
+ document.querySelector("#countryCount").textContent=new Set(stars.map(s=>s.country)).size;
+
+}
+  async function loadApprovedStars() {
+  const { data, error } = await supabaseClient
+    .from("dedications")
+    .select("username,country,region,message,color,created_at")
+    .eq("status", "approved")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    document.querySelector("#notice").textContent =
+      "No se pudieron cargar las estrellas. Inténtalo más tarde.";
+    return;
+  }
+
+  stars = (data || []).map(row => ({
+    username: row.username,
+    country: row.country,
+    region: row.region,
+    message: row.message,
+    color: row.color,
+    date: row.created_at
+  }));
+
+  render();
+}
+function openStar(s){document.querySelector("#dialogContent").innerHTML="";const h=document.createElement("h2");h.textContent="✦ "+s.username;const meta=document.createElement("p");meta.className="muted";meta.textContent="🌍 "+s.country+" · "+s.region;const p=document.createElement("p");p.textContent=s.message;document.querySelector("#dialogContent").append(h,meta,p);dialog.showModal()}
+document.querySelector("#closeDialog").onclick=()=>dialog.close();
+  const thanksDialog = document.querySelector("#thanksDialog");
+const continueStar = document.querySelector("#continueStar");
+const starFlight = document.querySelector("#starFlight");
+
+continueStar.addEventListener("click", () => {
+  thanksDialog.close();
+
+  starFlight.classList.remove("fly");
+  void starFlight.offsetWidth;
+  starFlight.classList.add("fly");
+});
+
+starFlight.addEventListener("animationend", () => {
+  starFlight.classList.remove("fly");
+});
+document.querySelector("#starForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const country = document.querySelector("#country").value;
+
+  const s = {
+    username: document.querySelector("#username").value.trim(),
+    country,
+    region: region(country),
+    message: document.querySelector("#dedication").value.trim(),
+    color: document.querySelector("#color").value,
+    status: "pending"
+  };
+
+  if (!s.username || !country || !s.message) return;
+
+  try {
+  const { error } = await supabaseClient
+    .from("dedications")
+    .insert(s);
+
+  if (error) throw error;
+
+  document.querySelector("#dedication").value = "";
+  thanksDialog.showModal();
+
+} catch (error) {
+  console.error("Error al enviar la estrella:", error);
+
+  document.querySelector("#notice").textContent =
+    "No se pudo enviar tu estrella. Comprueba tu conexión e inténtalo de nuevo.";
+  }
+  });
+
+loadApprovedStars();
+  
+
+const butterflyWrap = document.querySelector(".butterfly-wrap");
+const butterfly = butterflyWrap?.querySelector(".butterfly");
+
+if (butterflyWrap && butterfly) {
+  const pointers = new Map();
+
+  let dragX = 0;
+  let dragY = 0;
+  let rotateX = 0;
+  let rotateY = 0;
+  let zoom = 1;
+  let gesture = null;
+  let holdTimer = null;
+let holdStartX = 0;
+let holdStartY = 0;
+
+  function centerOf(points) {
+    return {
+      x: (points[0].x + points[1].x) / 2,
+      y: (points[0].y + points[1].y) / 2
+    };
+  }
+
+  function distanceOf(a, b) {
+    return Math.hypot(b.x - a.x, b.y - a.y);
+  }
+
+  function angleOf(a, b) {
+    return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+  }
+
+  function startGesture() {
+    const points = [...pointers.values()];
+
+    if (points.length === 1) {
+      gesture = {
+        type: "one",
+        x: points[0].x,
+        y: points[0].y,
+        dragX,
+        dragY
+      };
+    }
+
+    if (points.length >= 2) {
+      const a = points[0];
+      const b = points[1];
+
+      gesture = {
+        type: "two",
+        center: centerOf([a, b]),
+        distance: distanceOf(a, b),
+        angle: angleOf(a, b),
+        dragX,
+        dragY,
+        rotateX,
+        rotateY,
+        zoom
+      };
+
+      butterfly.style.animation = "none";
+    }
+  }
+
+  function apply3D() {
+    butterfly.style.transform =
+      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${zoom})`;
+  }
+
+  butterflyWrap.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    if (pointers.size === 0) {
+  holdStartX = e.clientX;
+  holdStartY = e.clientY;
+
+  holdTimer = setTimeout(() => {
+    if (pointers.size === 1) {
+      butterfly.classList.add("hold-spin");
+    }
+    holdTimer = null;
+  }, 500);
+    }
+    butterflyWrap.setPointerCapture(e.pointerId);
+
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+if (pointers.size > 1) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+  butterfly.classList.remove("hold-spin");
+}
+    butterflyWrap.classList.add("dragging");
+    startGesture();
+  });
+
+  butterflyWrap.addEventListener("pointermove", e => {
+    if (!pointers.has(e.pointerId)) return;
+if (holdTimer && Math.hypot(
+  e.clientX - holdStartX,
+  e.clientY - holdStartY
+) > 8) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+    pointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY
+    });
+
+    const points = [...pointers.values()];
+
+    if (points.length === 1 && gesture?.type === "one") {
+      dragX = gesture.dragX + points[0].x - gesture.x;
+      dragY = gesture.dragY + points[0].y - gesture.y;
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+    }
+
+    if (points.length >= 2 && gesture?.type === "two") {
+      const a = points[0];
+      const b = points[1];
+      const center = centerOf([a, b]);
+
+      dragX = gesture.dragX + center.x - gesture.center.x;
+      dragY = gesture.dragY + center.y - gesture.center.y;
+
+      rotateY = gesture.rotateY + angleOf(a, b) - gesture.angle;
+      rotateX = gesture.rotateX + (center.y - gesture.center.y) * 0.25;
+
+      zoom = Math.max(0.7, Math.min(
+        1.4,
+        gesture.zoom * distanceOf(a, b) / Math.max(gesture.distance, 1)
+      ));
+
+      butterflyWrap.style.setProperty("--drag-x", dragX + "px");
+      butterflyWrap.style.setProperty("--drag-y", dragY + "px");
+
+      apply3D();
+    }
+  });
+
+  function stopPointer(e) {
+    if (holdTimer) {
+  clearTimeout(holdTimer);
+  holdTimer = null;
+}
+
+butterfly.classList.remove("hold-spin");
+    pointers.delete(e.pointerId);
+
+    if (pointers.size > 0) {
+      startGesture();
+    } else {
+      gesture = null;
+      butterflyWrap.classList.remove("dragging");
+    }
+  }
+
+  butterflyWrap.addEventListener("pointerup", stopPointer);
+  butterflyWrap.addEventListener("pointercancel", stopPointer);
+}
+  
+</script>
+  
+<style>
+#elenaSecretButton {
+  position: static; display: block;
+margin: 0 16px 12px auto;
+  z-index: 9998;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #b99cff;
+  border-radius: 50%;
+  background: #211638;
+  color: #e6d5ff;
+  font-size: 25px;
+  box-shadow: 0 0 18px #a879ff88;
+  cursor: pointer;
+}
+
+#elenaSecretDoor {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(circle, #30204e, #090716 75%);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+#elenaSecretDoor.open {
+  display: flex;
+}
+
+#elenaSecretPanel {
+  width: min(100%, 380px);
+  text-align: center;
+  padding: 28px 22px;
+  border: 1px solid #a98ad9;
+  border-radius: 22px;
+  background: #171126;
+  box-shadow: 0 0 35px #9c70dc55;
+}
+
+#elenaSecretPanel input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  margin: 14px 0;
+  border-radius: 10px;
+  border: 1px solid #a98ad9;
+  background: #0e0a19;
+  color: white;
+  font-size: 16px;
+}
+
+#elenaSecretPanel button {
+  padding: 11px 20px;
+  margin: 5px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#elenaSecretEnter {
+  background: #b99cff;
+  color: #211638;
+}
+
+#elenaSecretClose {
+  background: #352849;
+  color: white;
+}
+
+#elenaSecretMessage {
+  min-height: 24px;
+  color: #e5caff;
+}
+
+#elenaSecretLibrary {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  padding: 28px 18px;
+  background: radial-gradient(circle at top, #30204e, #090716 75%);
+  color: white;
+}
+
+#elenaSecretLibrary h2 {
+  text-align: center;
+}
+
+.elenaDedication {
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid #725b98;
+  border-radius: 14px;
+  background: #211832;
+}
+
+/* Primera sala de la biblioteca: ambiente cálido y lectura descansada */
+#elenaSecretLibrary{background:radial-gradient(ellipse at 50% 0%,#3a3150 0%,#171522 48%,#090b16 100%);padding:20px 16px 34px;color:#f4ead8;font-family:Georgia,serif}
+.library-topbar{max-width:1050px;margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #a78b674d;padding-bottom:14px}
+.library-kicker{font:10px/1.4 Arial,sans-serif;letter-spacing:2.5px;color:#c9b58f}
+.library-topbar h2{margin:5px 0 0;text-align:left;font-size:clamp(23px,5vw,34px);font-weight:500;color:#f3e4c8}
+.library-exit{border:1px solid #a98c68;background:#292331;color:#f5e9d6;border-radius:22px;padding:10px 13px;font-size:13px}
+.library-room{position:relative;isolation:isolate;overflow:hidden;max-width:1050px;min-height:620px;margin:auto;padding:22px clamp(14px,4vw,42px) 28px;border:1px solid #80694f;border-radius:12px;background:linear-gradient(90deg,#211c20 0%,#493629 13%,#352a28 50%,#493629 87%,#211c20 100%);box-shadow:inset 0 0 65px #08070b,0 18px 55px #0008}
+.library-room:before{content:"";position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(90deg,transparent 0 9%,#d1a56b0b 9.2% 9.5%),linear-gradient(180deg,#17172a 0%,transparent 35%,#100d12 100%)}
+.library-room:after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:0;height:18%;background:repeating-linear-gradient(90deg,#60442e 0 2px,#3b2b25 2px 95px);border-top:5px solid #78563a;box-shadow:inset 0 12px 18px #130e0b}
+.library-window{position:absolute;right:7%;top:22px;width:clamp(105px,19vw,190px);height:clamp(145px,23vw,220px);border:9px solid #6e5038;border-radius:48% 48% 5px 5px;background:radial-gradient(ellipse at 55% 35%,#4b4c73 0%,#1a2541 48%,#101323 100%);box-shadow:0 0 35px #8c83b044,inset 0 0 25px #a6a6d033;opacity:.9}
+.library-window span,.library-window i,.library-window b,.library-window em{position:absolute;color:#f7e9c4;text-shadow:0 0 10px #fff; font-style:normal}.library-window span{top:18%;left:25%}.library-window i{top:42%;right:20%}.library-window b{top:65%;left:55%}.library-window em{top:28%;right:40%}
+.library-welcome{position:relative;z-index:1;max-width:470px;margin:10px 0 35px;padding:15px 18px 15px 22px;background:linear-gradient(135deg,#b18b5c22,#1b1724dd);border:1px solid #b69a6e88;box-shadow:0 5px 22px #0005;color:#f1dfc0}
+.library-welcome span{position:absolute;left:8px;top:8px;color:#e9ca8c}.library-welcome p{margin:0;font-size:14px;line-height:1.75}
+.library-shelf-heading{position:relative;z-index:1;margin:0 0 13px;color:#ead5ae;font:11px Arial,sans-serif;letter-spacing:2px}.library-shelf-heading small{display:block;margin-top:6px;color:#c4b6a0;letter-spacing:.2px;font-size:12px}
+.library-shelves{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px;padding-bottom:20px}
+.library-shelves>.elenaDedication{position:relative;margin:0;padding:12px 12px 16px;border:1px solid #886646;border-radius:5px;background:linear-gradient(180deg,#61452f,#3d2a23);box-shadow:0 9px 16px #080608aa,inset 0 0 0 3px #2b211d;cursor:default}
+.library-shelves>.elenaDedication:after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:linear-gradient(#98704a,#513821);border-top:2px solid #b28a5b}
+.library-shelves>.elenaDedication h3{margin:0 0 10px;padding:8px 9px;background:#241c1b;border:1px solid #8e6a46;color:#f1d9ad;font-size:15px;font-weight:500;text-align:center}
+.library-shelves>.elenaDedication article{margin:7px 0;padding:10px 11px;border:1px solid #b0926a66;border-radius:3px;background:#e9dcc5;color:#382b24;box-shadow:0 2px 4px #160e0b55}
+.library-shelves>.elenaDedication article h4{margin:0 0 4px;font:600 12px Arial,sans-serif;color:#694b32}.library-shelves>.elenaDedication article p{margin:5px 0;font-size:13px;line-height:1.55;overflow-wrap:anywhere}.library-shelves>.elenaDedication article p:nth-of-type(1){font:11px Arial,sans-serif;color:#806b56}
+.library-rest-corner{position:relative;z-index:1;display:flex;align-items:center;gap:14px;max-width:720px;margin:22px auto 8px;padding:18px;background:#211d1cdd;border:1px solid #9c805e;border-radius:7px;box-shadow:0 0 22px #d2a56a18}.library-rest-corner strong{color:#e9d0a7;font-size:17px;font-weight:500}.library-rest-corner p{margin:7px 0 0;color:#e0d3c0;font-size:13px;line-height:1.7}.rest-lamp{font-size:29px;color:#e7c98e;text-shadow:0 0 16px #e8bd74}.rest-chair{font-size:30px;opacity:.8}.library-cat{position:relative;z-index:1;text-align:right;margin-top:14px;font-size:30px;opacity:.88}.library-cat small{display:block;font:10px Arial,sans-serif;letter-spacing:1px;color:#c8b99e}.library-footnote{max-width:1000px;margin:14px auto 0;text-align:center;color:#c9bda9;font:12px/1.6 Arial,sans-serif}
+@media(max-width:560px){.library-room{padding:18px 12px 24px;min-height:600px}.library-window{right:12px;top:15px;opacity:.62}.library-welcome{max-width:78%;margin-top:8px}.library-welcome p{font-size:12px}.library-shelves{grid-template-columns:1fr}.library-rest-corner{align-items:flex-start}.rest-chair{display:none}}
+
+/* Exploración panorámica inicial: movimiento manual, suave y compatible con móvil */
+.lookaround-label{position:relative;z-index:2;margin:8px 0 9px;color:#e9d5b3;font:11px Arial,sans-serif;letter-spacing:2px}
+.lookaround-label small{display:block;margin-top:6px;color:#c8b99e;letter-spacing:.2px;font-size:12px}
+.lookaround-viewport{position:relative;z-index:2;height:220px;overflow-x:auto;overflow-y:hidden;border:1px solid #947655;border-radius:8px;background:#15131c;scrollbar-color:#947655 #211b1b;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;cursor:grab;touch-action:pan-x;}
+.lookaround-viewport.is-dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
+.lookaround-world{display:grid;grid-template-columns: minmax(230px,.8fr) minmax(330px,1.35fr) minmax(230px,.8fr);width:max(100%,790px);height:100%;background:linear-gradient(180deg,#24243a,#352820 70%,#211817);}
+.lookaround-zone{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:9px;padding:16px 12px 17px;text-align:center;overflow:hidden;border-right:5px solid #63472f;scroll-snap-align:center;background:linear-gradient(90deg,#211a1b,#493528 50%,#211a1b);}
+.lookaround-zone:before{content:"";position:absolute;inset:0 0 18% ;opacity:.55;background:repeating-linear-gradient(90deg,transparent 0 17%,#d8b47a12 17.2% 17.7%),linear-gradient(180deg,#101426,#3c2b26 75%);pointer-events:none}
+.zone-window{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:58%;height:78px;border:7px solid #76563a;border-radius:48% 48% 4px 4px;background:radial-gradient(ellipse,#596080,#18203c 70%);color:#f6e5b8;padding-top:24px;box-shadow:0 0 22px #9a91c044}
+.zone-shelf{position:relative;z-index:1;width:88%;padding:10px 5px;border-top:8px solid #8b6640;border-bottom:7px solid #62452f;background:repeating-linear-gradient(90deg,#68452e 0 12px,#a77c4b 13px 17px,#34251e 18px 22px);color:#f1d5a0;letter-spacing:8px;text-shadow:0 0 8px #e8c58a}
+.zone-lamp{position:absolute;right:17%;top:43%;color:#f0ce8a;text-shadow:0 0 18px #f2c77b;font-size:23px;animation:lampBreath 4s ease-in-out infinite}
+.zone-object{position:relative;z-index:2;margin-bottom:1px;padding:7px 14px;border:1px solid #b39469;border-radius:7px;background:#211a19dd;color:#f4e6cc;font-size:27px;cursor:pointer;box-shadow:0 0 18px #e5c58a18}
+.zone-object small{display:block;font:11px Arial,sans-serif;color:#ead6b8;margin-top:3px}
+.lookaround-zone strong{position:relative;z-index:1;color:#f0d9b5;font:16px Georgia,serif}
+.lookaround-zone>small{position:relative;z-index:1;color:#d1bea2;font:11px Arial,sans-serif}
+.zone-table{position:relative;z-index:1;width:72%;padding:13px;border:5px solid #795638;border-radius:50%;background:#38251d;color:#e9c995;box-shadow:0 12px 18px #080606aa;font-size:22px}
+.world-map-art{position:relative;z-index:1;margin-bottom:8px;font-size:62px;filter:drop-shadow(0 0 13px #9c9bd0)}
+.lookaround-hint{margin:7px 0 20px;color:#c8b99e;font:11px/1.5 Arial,sans-serif;text-align:center}
+@keyframes lampBreath{50%{opacity:.55;text-shadow:0 0 28px #f2c77b;transform:scale(1.08)}}
+.library-shelves>.elenaDedication{cursor:pointer;transition:transform .25s,box-shadow .25s}
+.library-shelves>.elenaDedication:hover,.library-shelves>.elenaDedication:focus-within{transform:translateY(-4px);box-shadow:0 14px 22px #080608cc,0 0 0 1px #d7b47b66}
+.book-reading-overlay{display:none;position:fixed;inset:0;z-index:10020;align-items:center;justify-content:center;padding:18px;background:#08070deF;backdrop-filter:blur(8px)}
+.book-reading-overlay.open{display:flex;animation:readingFade .35s ease both}
+.reading-book{width:min(100%,520px);padding:17px;border:1px solid #a9875c;border-radius:12px;background:linear-gradient(135deg,#3d2b22,#211a1b);box-shadow:0 24px 70px #000b;color:#f3e7d2;animation:bookArrives .55s cubic-bezier(.2,.8,.2,1) both}
+.reading-topline{display:flex;justify-content:space-between;align-items:center;color:#d5bd94;font:10px Arial,sans-serif;letter-spacing:2px}
+.reading-topline button,.reading-controls button{border:1px solid #a98a63;border-radius:20px;background:#30251f;color:#f4e6d0;padding:8px 12px}
+.reading-book h2{text-align:center;font:24px Georgia,serif;color:#f3dfbd;margin:12px 0}
+.paper-page{min-height:260px;padding:24px 22px;border:1px solid #c7b18d;background:linear-gradient(90deg,#e6d8bd,#f4ead7 8%,#f4ead7 92%,#dfcfb1);color:#43372b;box-shadow:inset 0 0 22px #8c704222;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.paper-mark{color:#98774e;font-size:20px}.paper-page h3{font:600 16px Arial,sans-serif;color:#74563a;margin:12px 0 4px}.paper-page p{font:16px/1.85 Georgia,serif;overflow-wrap:anywhere}.paper-page .reading-region{font:12px Arial,sans-serif;color:#89775f;margin:3px 0}
+.reading-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px;color:#dfcba9;font:12px Arial,sans-serif}
+.reading-controls button:disabled{opacity:.35;cursor:not-allowed}
+.secret-discovery{display:none;position:fixed;z-index:10030;left:50%;bottom:22px;transform:translateX(-50%);width:min(90%,420px);padding:18px 42px 18px 18px;border:1px solid #c1a476;border-radius:10px;background:#211b20f5;color:#f3e6cf;box-shadow:0 12px 35px #0009;font:14px/1.65 Georgia,serif}
+.secret-discovery.open{display:block;animation:readingFade .3s ease both}
+.secret-discovery button{position:absolute;right:10px;top:8px;border:0;background:transparent;color:#f3e6cf;font-size:18px}
+@keyframes readingFade{from{opacity:0}to{opacity:1}}@keyframes bookArrives{from{opacity:0;transform:translateY(35px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){.lookaround-viewport{height:205px}.lookaround-world{grid-template-columns:230px 330px 230px}.paper-page{min-height:245px;padding:18px}.paper-page p{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.zone-lamp{animation:none}.reading-book{animation:none}.book-reading-overlay.open,.secret-discovery.open{animation:none}}
+
+/* Placa de bienvenida interactiva de la pared posterior */
+#welcomeWallDialog{display:none;position:fixed;inset:0;z-index:10050;align-items:center;justify-content:center;padding:22px;background:#050817df;backdrop-filter:blur(8px)}
+#welcomeWallDialog.open{display:flex}
+#welcomeWallDialog .welcome-card{position:relative;width:min(92vw,560px);padding:34px 28px 30px;border:2px solid #c4a574;border-radius:12px;background:linear-gradient(145deg,#35271f,#171522);box-shadow:0 20px 70px #000c;color:#f3e5c9;text-align:center}
+#welcomeWallDialog h2{font:26px Georgia,serif;color:#f1d6a7;margin:0 0 18px}
+#welcomeWallDialog p{font:clamp(17px,3.7vw,21px)/1.9 Georgia,serif;margin:0}
+#welcomeWallDialog button{position:absolute;right:12px;top:10px;border:1px solid #c4a574;border-radius:50%;width:36px;height:36px;background:#211a1b;color:#fff1d5;font-size:19px}
+
+.memory-photos-button{display:block;margin:14px auto 8px;border:1px solid #c5a36c;border-radius:999px;background:linear-gradient(120deg,#4a3529,#2b2630);color:#f7e8c8;padding:11px 18px;font-weight:700;cursor:pointer}
+.memory-photos-dialog{width:min(94vw,900px);max-width:900px;max-height:88vh;overflow:auto;background:#171522;color:#f3e5c9;border:1px solid #c4a574;border-radius:16px;padding:18px}
+.memory-photos-dialog::backdrop{background:#050817df;backdrop-filter:blur(7px)}
+.memory-photos-head{display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:0;background:#171522;padding-bottom:12px;z-index:2}
+.memory-photos-head h3{margin:0;font:22px Georgia,serif}
+.memory-photos-close{border:1px solid #c4a574;border-radius:999px;background:#30251f;color:#f3e5c9;padding:8px 13px;cursor:pointer}
+.memory-photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.memory-photo-card{border:1px solid #806344;border-radius:12px;background:#241e27;color:#f3e5c9;padding:8px;text-align:left;cursor:pointer;min-width:0}
+.memory-photo-card img{width:100%;height:140px;object-fit:cover;border-radius:8px;background:#0d1020;display:block}
+.memory-photo-card strong,.memory-photo-card span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:6px}
+.memory-photo-card span{font-size:.78rem;color:#d2c2a6}
+.memory-photo-preview{width:min(94vw,760px);max-width:760px;max-height:90vh;overflow:auto;background:#171522;color:#f3e5c9;border:1px solid #c4a574;border-radius:16px;padding:16px}
+.memory-photo-preview::backdrop{background:#050817e8;backdrop-filter:blur(7px)}
+.memory-photo-preview img{display:block;max-width:100%;max-height:65vh;object-fit:contain;margin:0 auto;border-radius:10px}
+.memory-photo-preview p{text-align:center;line-height:1.5;color:#e4d6bd}
+@media(max-width:480px){.memory-photos-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-photo-card img{height:112px}}
+
+</style>
+<div id="elenaSecretDoor">
+  <div id="elenaSecretPanel">
+    <div style="font-size:48px">🦋</div>
+    <h2>Una puerta entre estrellas</h2>
+    <p>Hay un pequeño universo que te está esperando...</p>
+
+    <input
+      id="elenaSecretCode"
+      type="password"
+      placeholder="Tu clave secreta"
+      autocomplete="off"
+    >
+
+    <p id="elenaSecretMessage" aria-live="polite"></p>
+
+    <button id="elenaSecretEnter">Abrir la puerta ✨</button>
+    <button id="elenaSecretClose">Volver</button>
+  </div>
+</div>
+
+
+<div id="elenaLibraryIntro" aria-live="polite" aria-label="Abriendo la biblioteca secreta">
+  <div class="intro-stars"></div>
+  <div class="intro-butterfly">🦋</div>
+  <div class="intro-doors"></div>
+  <div class="intro-shelves" aria-hidden="true">
+    <span style="--h:72%"></span><span style="--h:90%"></span><span style="--h:65%"></span>
+    <span style="--h:82%"></span><span style="--h:96%"></span><span style="--h:70%"></span><span style="--h:86%"></span>
+  </div>
+  <div class="intro-cat">🐈‍⬛</div>
+  <div class="intro-title">✦ La biblioteca secreta de Elena ✦</div>
+  <p class="intro-subtitle">Cada libro guarda las palabras de quienes te quieren.</p>
+</div>
+
+<div id="elenaSecretLibrary" aria-label="Biblioteca secreta de Elena">
+  <div class="library-topbar">
+    <div><span class="library-kicker">UN REFUGIO ENTRE LAS ESTRELLAS</span><h2>La biblioteca de Elena</h2></div>
+    <button id="elenaSecretLibraryClose" class="library-exit" aria-label="Cerrar biblioteca">Salir ✕</button>
+  </div>
+  <div class="library-room">
+    <div class="library-window" aria-hidden="true"><span>✦</span><i>✧</i><b>·</b><em>✦</em></div>
+    <div class="library-welcome"><span>✧</span><p>Allá afuera, en ese inmenso universo, eres la «Vice Elena». Pero aquí dentro puedes ser simplemente Elena. No necesitas cargar con el peso de todos; aquí solo tienes que ser tú misma.</p></div>
+    <div class="lookaround-label">✦ LA BIBLIOTECA EN 360° <small>Arrastra para mirar alrededor · pellizca o usa los controles para acercarte</small></div>
+    <div class="three-library" id="threeLibrary" aria-label="Biblioteca tridimensional interactiva"><div class="three-loading" id="threeLoading">Preparando tu biblioteca…</div><div class="three-hud"><span>360° · EXPLORA A TU RITMO</span><div><button type="button" id="zoomOut360" aria-label="Alejar">−</button><button type="button" id="zoomIn360" aria-label="Acercar">+</button><button type="button" id="reset360" aria-label="Centrar vista">◎</button></div></div></div><div class="lookaround-viewport" id="libraryLookaround" tabindex="0" aria-label="Recorrido panorámico por la biblioteca" hidden>
+      <div class="lookaround-world" id="libraryWorld">
+        <section class="lookaround-zone zone-angel">
+          <div class="zone-window">✧　✦　·</div><div class="zone-lamp">♨</div>
+          <div class="zone-object" role="button" tabindex="0" data-secret="angel">🪽<small>Un recuerdo lleno de luz</small></div>
+          <div class="zone-shelf">▥ ▥ ▥ ▥ ▥</div><strong>El rincón de los recuerdos</strong>
+        </section>
+        <section class="lookaround-zone zone-center">
+          <div class="zone-window">✦　·　✧　·　✦</div><div class="zone-shelf">▥ ▥ ▥ ▥ ▥ ▥ ▥</div>
+          <div class="zone-table">✧　📖　✧</div><strong>Los libros del mundo</strong><small>Historias reunidas desde muchos países</small>
+        </section>
+        <section class="lookaround-zone zone-map">
+          <div class="zone-window">✧　·　✦</div><div class="world-map-art">🌎</div>
+          <div class="zone-object" role="button" tabindex="0" data-secret="map">⭐<small>Mapa de las estrellas</small></div>
+          <button type="button" data-secret="volleyball" hidden aria-hidden="true" tabindex="-1"></button>
+          <strong>Un mundo unido por el cariño</strong>
+        </section>
+      </div>
+    </div>
+    <p class="lookaround-hint">Puedes recorrer la panorámica de lado a lado. En esta etapa es una vista panorámica interactiva; más adelante construiremos la experiencia 3D de 360°.</p>
+    <div class="library-shelf-heading"><span>LOS RECUERDOS DEL MUNDO</span><small>Libros creados con las dedicatorias que te dejaron</small></div>
+    <div id="elenaSecretDedications" class="library-shelves"></div>
+    <div class="library-rest-corner">
+      <div class="rest-lamp">☼</div><div><strong>Un rincón para descansar</strong><p>En este lugar se reúnen los mensajes de todas las personas que te admiramos y te queremos. Gracias por estar siempre para nosotros, incluso en esos momentos en los que tú también necesitas que alguien esté para ti. Recuerda que no tienes que poder con todo ni cuidar de todos siempre. Tú también mereces recibir todo ese cariño que tantas veces nos das.</p></div>
+      <div class="rest-chair" aria-hidden="true">🪑</div>
+    </div>
+    <div class="library-cat" aria-hidden="true">🐈‍⬛<small>guardiana de los recuerdos</small></div>
+  </div>
+  <button type="button" id="openMemoryPhotos" class="memory-photos-button">Ver todos los recuerdos fotográficos ✦</button>
+  <dialog id="memoryPhotosDialog" class="memory-photos-dialog">
+    <div class="memory-photos-head"><h3>El mapa de nuestros recuerdos</h3><button type="button" id="closeMemoryPhotos" class="memory-photos-close">Cerrar ✕</button></div>
+    <p class="muted">Todas las fotografías aprobadas que te han enviado desde distintos rincones del mundo.</p>
+    <div id="memoryPhotosGrid" class="memory-photos-grid"><p class="art-gallery-empty">Las fotografías aparecerán aquí cuando estén aprobadas.</p></div>
+  </dialog>
+  <dialog id="memoryPhotoPreview" class="memory-photo-preview">
+    <div class="memory-photos-head"><strong id="memoryPhotoTitle">Un recuerdo</strong><button type="button" id="closeMemoryPhotoPreview" class="memory-photos-close">Cerrar ✕</button></div>
+    <img id="memoryPhotoLarge" alt="Fotografía aprobada del mapa de recuerdos">
+    <p id="memoryPhotoCaption"></p>
+  </dialog>
+  <p class="library-footnote">Puedes recorrer este lugar con calma. Cada libro reúne las voces de quienes te quieren. 🦋</p>
+</div>
+<div class="book-reading-overlay" id="bookReadingOverlay" aria-hidden="true">
+  <section class="reading-book" role="dialog" aria-modal="true" aria-labelledby="readingBookTitle">
+    <div class="reading-topline"><span>UN RECUERDO DEL MUNDO</span><button type="button" id="closeReadingBook" aria-label="Cerrar libro">✕</button></div>
+    <h2 id="readingBookTitle">Libro de recuerdos</h2>
+    <div class="paper-page" id="readingPaper"><div class="paper-mark">✦</div><h3 id="readingAuthor"></h3><p class="reading-region" id="readingRegion"></p><p id="readingMessage"></p><div class="paper-mark">❦</div></div>
+    <div class="reading-controls"><button type="button" id="previousDedication">← Anterior</button><span id="readingPageCount">1 / 1</span><button type="button" id="nextDedication">Siguiente →</button></div>
+  </section>
+</div>
+<div id="multilingualSecretTriggers" hidden aria-hidden="true">
+  <button type="button" data-secret="msg-en"></button><button type="button" data-secret="msg-fr"></button><button type="button" data-secret="msg-it"></button><button type="button" data-secret="msg-pt"></button><button type="button" data-secret="msg-ja"></button><button type="button" data-secret="msg-ko"></button><button type="button" data-secret="msg-de"></button><button type="button" data-secret="msg-th"></button><button type="button" data-secret="msg-zh"></button><button type="button" data-secret="msg-ar"></button><button type="button" data-secret="msg-ru"></button><button type="button" data-secret="msg-tr"></button>
+</div>
+<div class="secret-discovery" id="secretDiscovery" role="status" aria-live="polite"><button type="button" id="closeSecretDiscovery" aria-label="Cerrar">✕</button><span id="secretDiscoveryText"></span></div>
+<div id="welcomeWallDialog" role="dialog" aria-modal="true" aria-labelledby="welcomeWallTitle"><section class="welcome-card"><button type="button" id="closeWelcomeWall" aria-label="Cerrar mensaje">✕</button><h2 id="welcomeWallTitle">Un lugar para ser tú misma</h2><p>Allá afuera, en ese inmenso universo, eres la «Vice Elena». Pero aquí dentro puedes ser simplemente Elena. No necesitas cargar con el peso de todos; aquí solo tienes que ser tú misma.</p></section></div>
+
+<script>
+(() => {
+  const welcomeDialog=document.getElementById('welcomeWallDialog');
+  document.getElementById('closeWelcomeWall').addEventListener('click',()=>welcomeDialog.classList.remove('open'));
+  welcomeDialog.addEventListener('click',event=>{if(event.target===welcomeDialog)welcomeDialog.classList.remove('open');});
+  const endpoint =
+    "https://jiiniyttaifztzbtqhnl.supabase.co/functions/v1/elena-library";
+
+  const door = document.querySelector("#elenaSecretDoor");
+  const codeInput = document.querySelector("#elenaSecretCode");
+  const message = document.querySelector("#elenaSecretMessage");
+  const library = document.querySelector("#elenaSecretLibrary");
+  const dedicationList =
+    document.querySelector("#elenaSecretDedications");
+  const memoryPhotosDialog=document.querySelector('#memoryPhotosDialog');
+  const memoryPhotosGrid=document.querySelector('#memoryPhotosGrid');
+  const memoryPhotoPreview=document.querySelector('#memoryPhotoPreview');
+  const memoryPhotoLarge=document.querySelector('#memoryPhotoLarge');
+  const memoryPhotoTitle=document.querySelector('#memoryPhotoTitle');
+  const memoryPhotoCaption=document.querySelector('#memoryPhotoCaption');
+  document.querySelector('#openMemoryPhotos').addEventListener('click',()=>memoryPhotosDialog.showModal());
+  document.querySelector('#closeMemoryPhotos').addEventListener('click',()=>memoryPhotosDialog.close());
+  document.querySelector('#closeMemoryPhotoPreview').addEventListener('click',()=>memoryPhotoPreview.close());
+  function renderApprovedMemoryPhotos(photos){
+    memoryPhotosGrid.replaceChildren();
+    if(!Array.isArray(photos)||!photos.length){
+      const empty=document.createElement('p');empty.className='art-gallery-empty';
+      empty.textContent='Todavía no hay fotografías aprobadas.';memoryPhotosGrid.append(empty);return;
+    }
+    photos.forEach(photo=>{
+      if(!photo.signed_url)return;
+      const card=document.createElement('button');card.type='button';card.className='memory-photo-card';
+      const image=document.createElement('img');image.src=photo.signed_url;image.alt='Recuerdo enviado por '+(photo.display_name||'una persona especial');image.loading='lazy';
+      const name=document.createElement('strong');name.textContent=photo.display_name||'Un recuerdo anónimo';
+      const country=document.createElement('span');country.textContent=photo.country||'Desde algún rincón del mundo';
+      card.append(image,name,country);
+      card.addEventListener('click',()=>{
+        memoryPhotoLarge.src=photo.signed_url;
+        memoryPhotoTitle.textContent=photo.display_name||'Un recuerdo especial';
+        memoryPhotoCaption.textContent=[photo.country||'',photo.message||''].filter(Boolean).join(' · ');
+        memoryPhotoPreview.showModal();
+      });
+      memoryPhotosGrid.append(card);
+    });
+  }
+
+
+  document.querySelector("#elenaSecretButton").onclick = () => {
+    door.classList.add("open");
+    codeInput.focus();
+  };
+
+  document.querySelector("#elenaSecretClose").onclick = () => {
+    door.classList.remove("open");
+    codeInput.value = "";
+    message.textContent = "";
+  };
+
+  document.querySelector("#elenaSecretLibraryClose").onclick = () => {
+    library.style.display = "none";
+  };
+
+  let activePages = [];
+  let activePageIndex = 0;
+  const bookOverlay = document.querySelector("#bookReadingOverlay");
+  const pageAuthor = document.querySelector("#readingAuthor");
+  const pageRegion = document.querySelector("#readingRegion");
+  const pageMessage = document.querySelector("#readingMessage");
+  const pageCount = document.querySelector("#readingPageCount");
+  const previousPage = document.querySelector("#previousDedication");
+  const nextPage = document.querySelector("#nextDedication");
+
+  function renderBookPage() {
+    const page = activePages[activePageIndex];
+    if (!page) return;
+    pageAuthor.textContent = page.author;
+    pageRegion.textContent = page.region;
+    pageMessage.textContent = page.message;
+    pageCount.textContent = (activePageIndex + 1) + " / " + activePages.length;
+    previousPage.disabled = activePageIndex === 0;
+    nextPage.disabled = activePageIndex === activePages.length - 1;
+  }
+
+  function openCountryBook(country, group) {
+    pageAuthor.style.display = ''; pageRegion.style.display = '';
+    document.querySelector('.reading-controls').style.display = '';
+    document.querySelector('.reading-topline span').textContent = 'UN RECUERDO DEL MUNDO';
+    activePages = [...group.querySelectorAll("article")].map(article => ({
+      author: article.querySelector("h4")?.textContent || "Una estrella",
+      region: article.querySelector("p")?.textContent || "",
+      message: article.querySelectorAll("p")[1]?.textContent || ""
+    }));
+    if (!activePages.length) return;
+    activePageIndex = 0;
+    document.querySelector("#readingBookTitle").textContent = "Libro de " + country;
+    renderBookPage();
+    bookOverlay.classList.add("open");
+    bookOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeCountryBook() {
+    bookOverlay.classList.remove("open");
+    bookOverlay.setAttribute("aria-hidden", "true");
+    window.dispatchEvent(new Event("elena-book-reader-closed"));
+  }
+  function openMemoryMessage(title, message, eyebrow='UN RECUERDO ESPECIAL') {
+    activePages = [{author:'', region:'', message}];
+    activePageIndex = 0;
+    document.querySelector('#readingBookTitle').textContent = title;
+    document.querySelector('.reading-topline span').textContent = eyebrow;
+    pageAuthor.style.display = 'none'; pageRegion.style.display = 'none';
+    document.querySelector('.reading-controls').style.display = 'none';
+    renderBookPage();
+    bookOverlay.classList.add('open'); bookOverlay.setAttribute('aria-hidden','false');
+  }
+  function openViceNote() {
+    openMemoryMessage('Un mensaje para Elena', 'Allá afuera, en ese inmenso universo, eres la «Vice Elena». Pero aquí dentro puedes ser simplemente Elena. No necesitas cargar con el peso de todos; aquí solo tienes que ser tú misma.', 'UNA NOTA ESPECIAL');
+  }
+  window.addEventListener('open-vice-note', openViceNote);
+  window.addEventListener('open-reading-note', () => openMemoryMessage('Un lugar lleno de cariño', 'En este lugar se reúnen los mensajes de todas las personas que te admiramos y te queremos. Gracias por estar siempre para nosotros, incluso en esos momentos en los que tú también necesitas que alguien esté para ti. Recuerda que no tienes que poder con todo ni cuidar de todos siempre. Tú también mereces recibir todo ese cariño que tantas veces nos das.', 'UNA NOTA EN LA BIBLIOTECA'));
+  window.addEventListener('birthday-cake-tap', () => {
+    openMemoryMessage('¡Feliz cumpleaños, Elena!', '¡Feliz cumpleaños, Elena! Que este día esté lleno de cariño, alegría y momentos bonitos. 🦋', 'UN PEQUEÑO DESEO DE CUMPLEAÑOS');
+  });
+  document.querySelector("#closeReadingBook").addEventListener("click", closeCountryBook);
+  bookOverlay.addEventListener("click", event => { if (event.target === bookOverlay) closeCountryBook(); });
+  previousPage.addEventListener("click", () => { if (activePageIndex > 0) { activePageIndex--; renderBookPage(); } });
+  nextPage.addEventListener("click", () => { if (activePageIndex < activePages.length - 1) { activePageIndex++; renderBookPage(); } });
+
+  const lookaround = document.querySelector("#libraryLookaround");
+  let dragging = false, dragStartX = 0, scrollStart = 0;
+  lookaround.addEventListener("pointerdown", event => {
+    if (event.target.closest("[data-secret]")) return;
+    dragging = true; dragStartX = event.clientX; scrollStart = lookaround.scrollLeft;
+    lookaround.classList.add("is-dragging");
+    lookaround.setPointerCapture(event.pointerId);
+  });
+  lookaround.addEventListener("pointermove", event => {
+    if (!dragging) return;
+    lookaround.scrollLeft = scrollStart - (event.clientX - dragStartX);
+  });
+  const stopDragging = () => { dragging = false; lookaround.classList.remove("is-dragging"); };
+  lookaround.addEventListener("pointerup", stopDragging);
+  lookaround.addEventListener("pointercancel", stopDragging);
+
+  const discovery = document.querySelector("#secretDiscovery");
+  const discoveryText = document.querySelector("#secretDiscoveryText");
+  const discoveries = {
+    angel: {title:'Un recuerdo que te acompaña', eyebrow:'EL RECUERDO DEL ÁNGEL', message:'Desde arriba te mandan sus bendiciones los ángeles que te cuidan. Estarían muy orgullosos de vos por ser la persona que eres; en tu corazón vivirán siempre.'},
+    map: {title:'Un mundo unido por el cariño', eyebrow:'EL GLOBO DEL MUNDO', message:'Tu huella es tan grande que ha llegado a cada rincón del mundo. Aunque estemos lejos, de alguna manera, todos llevamos un pedacito de ti con nosotros.'},
+    volleyball: {title:'Un espacio para lo que te hace feliz', eyebrow:'UN RECUERDO DE VOLEIBOL', message:'Entre tantos recuerdos, también hay espacio para las cosas que te hacen feliz. Nunca dejes de disfrutar aquello que amas.'},
+    'msg-en': {title:'A little message', eyebrow:'ENGLISH', message:'You deserve to receive the same kindness you give to the world.'},
+    'msg-fr': {title:'Un petit message', eyebrow:'FRANÇAIS', message:'Même les étoiles ont besoin de se reposer.'},
+    'msg-it': {title:'Un piccolo messaggio', eyebrow:'ITALIANO', message:'Il mondo è più bello perché tu esisti.'},
+    'msg-pt': {title:'Uma pequena mensagem', eyebrow:'PORTUGUÊS', message:'Você também merece ser cuidada.'},
+    'msg-ja': {title:'小さなメッセージ', eyebrow:'日本語', message:'あなたは今のままで素晴らしい。'},
+    'msg-ko': {title:'작은 메시지', eyebrow:'한국어', message:'당신도 사랑받고 쉴 자격이 있어요.'},
+    'msg-de': {title:'Eine kleine Nachricht', eyebrow:'DEUTSCH', message:'Du bist genauso wertvoll, wie du bist.'},
+    'msg-th': {title:'ข้อความเล็ก ๆ', eyebrow:'ภาษาไทย', message:'คุณก็สมควรได้รับความอบอุ่นแบบเดียวกับที่คุณมอบให้พวกเรานะ'},
+    'msg-zh': {title:'一份小小的留言', eyebrow:'中文', message:'你也值得被温柔以待。'},
+    'msg-ar': {title:'رسالة صغيرة', eyebrow:'العربية', message:'أنتِ أيضًا تستحقين الحب والراحة.'},
+    'msg-ru': {title:'Небольшое послание', eyebrow:'РУССКИЙ', message:'Ты тоже заслуживаешь заботы и тепла.'},
+    'msg-tr': {title:'Küçük bir mesaj', eyebrow:'TÜRKÇE', message:'Sen de sevgiyi ve huzuru hak ediyorsun.'}
+  };
+  function revealSecret(target) {
+    const item = discoveries[target.dataset.secret];
+    if (!item) return;
+    openMemoryMessage(item.title, item.message, item.eyebrow);
+  }
+  document.querySelectorAll("[data-secret]").forEach(target => {
+    target.addEventListener("click", () => revealSecret(target));
+    target.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); revealSecret(target); } });
+  });
+  document.querySelector("#closeSecretDiscovery").addEventListener("click", () => discovery.classList.remove("open"));
+
+  async function enterLibrary() {
+    const code = codeInput.value;
+    if (!code) {
+      message.textContent = "Escribe tu clave secreta.";
+      return;
+    }
+
+    const enterButton = document.querySelector("#elenaSecretEnter");
+    enterButton.disabled = true;
+    message.textContent = "La puerta está escuchando...";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        },
+        body: JSON.stringify({ code })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.success !== true) {
+        message.textContent =
+          response.status === 429
+            ? "Demasiados intentos. Inténtalo más tarde."
+            : "¡Tú no eres Elena! 🐈";
+        return;
+      }
+
+      
+dedicationList.replaceChildren();
+
+function normalizeCountry(name) {
+  return (name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+const regionNames = new Intl.DisplayNames(["es"], {
+  type: "region"
+});
+
+const countryCodes = {};
+
+for (let first = 65; first <= 90; first++) {
+  for (let second = 65; second <= 90; second++) {
+    const code = String.fromCharCode(first, second);
+    const name = regionNames.of(code);
+
+    if (name && name !== code) {
+      countryCodes[normalizeCountry(name)] = code;
+    }
+  }
+}
+
+const aliases = {
+  "mexico": "MX",
+  "estados unidos": "US",
+  "united states": "US",
+  "eeuu": "US",
+  "brasil": "BR",
+  "brazil": "BR",
+  "espana": "ES",
+  "spain": "ES",
+  "peru": "PE",
+  "corea del sur": "KR",
+  "south korea": "KR",
+  "reino unido": "GB",
+  "united kingdom": "GB",
+  "paises bajos": "NL",
+  "holanda": "NL",
+  "rusia": "RU",
+  "russia": "RU",
+  "vaticano": "VA",
+  "ciudad del vaticano": "VA",
+  "palestina": "PS"
+};
+
+Object.assign(countryCodes, aliases);
+
+function countryFlag(country) {
+  const code = countryCodes[normalizeCountry(country)];
+
+  if (!code) return "🌍";
+
+  return String.fromCodePoint(
+    ...[...code].map(letter =>
+      127397 + letter.charCodeAt(0)
+    )
+  );
+}
+
+const countries = {};
+
+(result.dedications || []).forEach(item => {
+  const country = (item.country || "Otros rincones").trim();
+
+  if (!countries[country]) {
+    countries[country] = [];
+  }
+
+  countries[country].push(item);
+});
+
+Object.keys(countries).sort().forEach(country => {
+  const group = document.createElement("section");
+  group.className = "elenaDedication";
+
+  const heading = document.createElement("h3");
+  heading.textContent =
+    countryFlag(country) + " " + country +
+    " · " + countries[country].length + " estrellas";
+
+  group.append(heading);
+
+  countries[country].forEach(item => {
+    const card = document.createElement("article");
+    card.className = "elenaDedication";
+
+    const title = document.createElement("h4");
+    title.textContent = "✦ " + (item.username || "Una estrella");
+
+    const location = document.createElement("p");
+    location.textContent = item.region || "";
+
+    const note = document.createElement("p");
+    note.textContent = item.message || "";
+
+    card.append(title, location, note);
+    group.append(card);
+  });
+
+  group.setAttribute("role", "button");
+  group.setAttribute("tabindex", "0");
+  group.setAttribute("aria-label", "Abrir libro de " + country);
+  group.addEventListener("click", () => openCountryBook(country, group));
+  group.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openCountryBook(country, group);
+    }
+  });
+  dedicationList.append(group);
+});
+
+      window.__elenaApprovedMemoryPhotos = Array.isArray(result.memoryPhotos) ? result.memoryPhotos : [];
+      renderApprovedMemoryPhotos(window.__elenaApprovedMemoryPhotos);
+
+      door.classList.remove("open");
+      codeInput.value = "";
+
+      const intro = document.querySelector("#elenaLibraryIntro");
+      intro.classList.remove("play");
+      void intro.offsetWidth;
+      intro.classList.add("play");
+
+      window.setTimeout(() => {
+        intro.classList.remove("play");
+        library.style.display = "block";
+      }, 5000);
+
+    } catch (error) {
+      message.textContent = "No pudimos abrir la puerta. Inténtalo luego.";
+    } finally {
+      enterButton.disabled = false;
+    }
+  }
+
+  document.querySelector("#elenaSecretEnter").onclick = enterLibrary;
+
+  codeInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") enterLibrary();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") { closeCountryBook(); discovery.classList.remove("open"); }
+  });
+})();
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+(() => {
+ const host=document.getElementById('threeLibrary'); if(!host) return;
+ const loading=document.getElementById('threeLoading');
+ let renderer,scene,camera,raf, yaw=0,pitch=-0.05,zoom=70,drag=false,lastX=0,lastY=0,startX=0,startY=0,pinchStart=0;
+ const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),interactive=[];
+ const mat=(color,roughness=.8)=>new THREE.MeshStandardMaterial({color,roughness});
+ const wood=mat('#513725'),darkWood=mat('#2b201d'),gold=mat('#b18a55'),floorMat=mat('#30251f');
+ let groups=[];
+ let activeBookMotion=null;
+ let activeBookState=null;
+ let photoGallery=null;
+ function labelTexture(text){const c=document.createElement('canvas');c.width=128;c.height=512;const x=c.getContext('2d');x.fillStyle='#211a17';x.fillRect(0,0,128,512);x.strokeStyle='#c6a16b';x.lineWidth=5;x.strokeRect(5,5,118,502);x.save();x.translate(64,256);x.rotate(-Math.PI/2);x.fillStyle='#f1dfbd';x.font='bold 34px Georgia';x.textAlign='center';x.textBaseline='middle';x.fillText(text.slice(0,22),0,0,470);x.restore();const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;}
+ function addBox(parent,w,h,d,x,y,z,material){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);parent.add(m);return m;}
+ function makeBook(parent,group,idx,x,y,z,angle){const colors=['#6d392e','#345044','#34476a','#76552e','#533c68','#8a5a3a','#344e58'];const book=addBox(parent,.23,.66,.12,x,y,z,mat(colors[idx%colors.length],.55));book.rotation.y=angle;book.userData={group};interactive.push(book);const spine=addBox(parent,.035,.61,.126,x-.085,y,z-.005, gold);spine.rotation.y=angle;spine.userData={group};interactive.push(spine);return book;}
+ function build(){
+  const w=host.clientWidth,h=host.clientHeight;if(!w||!h){setTimeout(build,100);return;}
+  scene=new THREE.Scene();scene.background=new THREE.Color('#11182a');scene.fog=new THREE.Fog('#11182a',10,25);
+  camera=new THREE.PerspectiveCamera(70,w/h,.1,60);camera.position.set(0,1.62,0);
+  renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(w,h);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;host.insertBefore(renderer.domElement,host.firstChild);
+  scene.add(new THREE.HemisphereLight('#d6d9ff','#4a3021',2));const lamp=new THREE.PointLight('#ffd69a',85,18);lamp.position.set(0,4,0);scene.add(lamp);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(8,64),floorMat);floor.rotation.x=-Math.PI/2;floor.position.y=0;scene.add(floor);
+  const ceiling=new THREE.Mesh(new THREE.CircleGeometry(8,64),mat('#211d2a'));ceiling.rotation.x=Math.PI/2;ceiling.position.y=5.5;scene.add(ceiling);
+  const wall=new THREE.Mesh(new THREE.CylinderGeometry(8,8,5.5,96,1,true),mat('#302521'));wall.position.y=2.75;scene.add(wall);
+  // Ventanas discretas en las demás paredes. La pared posterior queda reservada
+  // para una ventana panorámica al universo y una placa de bienvenida táctil.
+  for(let i=0;i<8;i++){if(i===4)continue;const a=i*Math.PI/4;const win=new THREE.Mesh(new THREE.PlaneGeometry(1.15,2.25),new THREE.MeshBasicMaterial({color:'#293c61'}));win.position.set(Math.sin(a)*7.91,3.45,Math.cos(a)*7.91);win.rotation.y=a+Math.PI;scene.add(win);}
+  const rearWindow=new THREE.Group();rearWindow.position.set(0,3.05,-7.91);scene.add(rearWindow);
+  const space=new THREE.Mesh(new THREE.PlaneGeometry(3.15,2.35),new THREE.MeshBasicMaterial({color:'#101d45'}));space.position.z=.015;rearWindow.add(space);
+  // Estrellas y nebulosas dentro de la ventana, sin animación invasiva.
+  const nebula=new THREE.Mesh(new THREE.PlaneGeometry(2.95,2.15),new THREE.MeshBasicMaterial({color:'#354b86',transparent:true,opacity:.42}));nebula.position.z=.005;rearWindow.add(nebula);
+  for(let i=0;i<42;i++){const star=new THREE.Mesh(new THREE.SphereGeometry(.018+(i%4)*.006,6,6),new THREE.MeshBasicMaterial({color:i%5===0?'#d8c4ff':'#fff0c9'}));star.position.set((Math.random()-.5)*2.9,(Math.random()-.5)*2.05,.045);rearWindow.add(star);}
+  const frameMat=mat('#765536');
+  addBox(rearWindow,3.42,.16,.18,0,1.25,.06,frameMat);addBox(rearWindow,3.42,.16,.18,0,-1.25,.06,frameMat);
+  addBox(rearWindow,.16,2.58,.18,-1.63,0,.06,frameMat);addBox(rearWindow,.16,2.58,.18,1.63,0,.06,frameMat);
+  addBox(rearWindow,.10,2.35,.12,0,0,.08,gold);addBox(rearWindow,3.15,.10,.12,0,0,.08,gold);
+  // Placa sobre la ventana. Su superficie es seleccionable desde la cámara 360°.
+  const plaqueCanvas=document.createElement('canvas');plaqueCanvas.width=1024;plaqueCanvas.height=220;const pc=plaqueCanvas.getContext('2d');
+  pc.fillStyle='#2a201c';pc.fillRect(0,0,1024,220);pc.strokeStyle='#c5a16b';pc.lineWidth=12;pc.strokeRect(12,12,1000,196);
+  pc.fillStyle='#f2dfbd';pc.font='bold 52px Georgia';pc.textAlign='center';pc.textBaseline='middle';pc.fillText('✧  UN LUGAR PARA SER TÚ MISMA  ✧',512,110);
+  const plaqueTex=new THREE.CanvasTexture(plaqueCanvas);plaqueTex.colorSpace=THREE.SRGBColorSpace;
+  const plaque=new THREE.Mesh(new THREE.PlaneGeometry(3.7,.8),new THREE.MeshBasicMaterial({map:plaqueTex,side:THREE.DoubleSide}));plaque.position.set(0,4.78,-7.88);plaque.userData={secret:'welcome'};scene.add(plaque);interactive.push(plaque);
+  // Segunda nota permanente: placa discreta cerca de la zona de lectura, también táctil.
+  const readingNoteCanvas=document.createElement('canvas');readingNoteCanvas.width=1000;readingNoteCanvas.height=560;const rctx=readingNoteCanvas.getContext('2d');
+  rctx.fillStyle='#ead9b8';rctx.fillRect(0,0,1000,560);rctx.strokeStyle='#98734b';rctx.lineWidth=16;rctx.strokeRect(16,16,968,528);rctx.fillStyle='#624b35';rctx.textAlign='center';rctx.textBaseline='middle';rctx.font='bold 42px Georgia';rctx.fillText('UN LUGAR LLENO DE CARIÑO',500,92);rctx.font='30px Georgia';
+  ['En este lugar se reúnen los mensajes de todas las personas','que te admiramos y te queremos. Gracias por estar siempre','para nosotros, incluso cuando tú también necesitas apoyo.','No tienes que poder con todo ni cuidar de todos siempre.','Tú también mereces recibir todo ese cariño.'].forEach((line,i)=>rctx.fillText(line,500,190+i*68));
+  const readingNoteTexture=new THREE.CanvasTexture(readingNoteCanvas);readingNoteTexture.colorSpace=THREE.SRGBColorSpace;
+  const readingNote=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.22),new THREE.MeshBasicMaterial({map:readingNoteTexture,side:THREE.DoubleSide}));readingNote.position.set(-3.9,2.75,-6.85);readingNote.rotation.y=-.52;readingNote.userData={secret:'readingNote'};scene.add(readingNote);interactive.push(readingNote);
+  // Estanterías envolventes. Se deja libre solo el tramo central de la pared posterior.
+  // Las demás estanterías conservan sus coordenadas originales.
+  groups=[...document.querySelectorAll('#elenaSecretDedications > section')];
+  const shelfGroups=[], shelfDecorations=[];
+  for(let i=0;i<12;i++){if(i===6)continue;const a=i*Math.PI*2/12;const shelf=new THREE.Group();shelf.position.set(Math.sin(a)*6.45,0,Math.cos(a)*6.45);shelf.rotation.y=a+Math.PI;shelf.scale.set(1.05,1,1);scene.add(shelf);shelfGroups[i]=shelf;
+   const decorations=[];addBox(shelf,3.25,4.1,.34,0,2.1,0,wood);for(let level=0;level<5;level++){const y=.48+level*.86;addBox(shelf,3.05,.12,.62,0,y,.26,gold);for(let b=0;b<13;b++){const x=-1.38+b*.23;const deco=addBox(shelf,.16,.59,.16,x,y+.34,.24,mat(['#6c3d32','#385346','#384b6c','#78552f','#503b62'][((b+level+i)%5)],.6));deco.rotation.z=(b%3-1)*.035;decorations.push(deco);}}shelfDecorations[i]=decorations;
+  }
+  // Vitrina abierta de recuerdos en el lado este (estantería 3, hacia +X).
+  // Se conserva la estructura de madera y sus baldas; solo se retiran los bloques decorativos que parecían libros.
+  const memoryShelf=shelfGroups[3];
+  shelfDecorations[3].forEach(piece=>{memoryShelf.remove(piece);piece.geometry.dispose();if(piece.material && piece.material.dispose)piece.material.dispose();});
+  shelfDecorations[3]=[];
+  const displayGold=mat('#b18a55');
+  const displayDark=mat('#4a3022');
+  // Tres pequeños pedestales, separados y sin puertas ni cristal.
+  addBox(memoryShelf,.78,.09,.54,-1.02,.55,.72,displayGold);
+  addBox(memoryShelf,.78,.09,.54,.02,.55,.72,displayGold);
+  addBox(memoryShelf,.78,.09,.54,1.05,1.41,.72,displayGold);
+  // Ángel de porcelana: cabeza, cuerpo, alas y aureola delicada.
+  const angelDisplay=new THREE.Group();angelDisplay.position.set(-1.02,.53,.72);angelDisplay.userData={secret:'angel'};memoryShelf.add(angelDisplay);interactive.push(angelDisplay);
+  const porcelain=mat('#f4eee3');
+  const angelBody=new THREE.Mesh(new THREE.SphereGeometry(.17,18,14),porcelain);angelBody.scale.set(.82,1.25,.58);angelBody.position.y=.28;angelDisplay.add(angelBody);
+  const angelHead=new THREE.Mesh(new THREE.SphereGeometry(.105,16,12),porcelain);angelHead.position.set(0,.53,0);angelDisplay.add(angelHead);
+  const leftWing=new THREE.Mesh(new THREE.SphereGeometry(.15,14,10),porcelain);leftWing.scale.set(.55,1.1,.32);leftWing.position.set(-.19,.34,-.015);leftWing.rotation.z=-.38;angelDisplay.add(leftWing);
+  const rightWing=leftWing.clone();rightWing.position.x=.19;rightWing.rotation.z=.38;angelDisplay.add(rightWing);
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(.105,.012,8,28),mat('#d8b879'));halo.position.set(0,.68,0);angelDisplay.add(halo);
+  // Globo terráqueo sobre su soporte, con rotación lenta y continua.
+  const globeDisplay=new THREE.Group();globeDisplay.position.set(.02,.57,.72);globeDisplay.userData={secret:'map'};memoryShelf.add(globeDisplay);interactive.push(globeDisplay);
+  addBox(globeDisplay,.36,.055,.32,0,.05,0,displayDark);
+  const globeStem=new THREE.Mesh(new THREE.CylinderGeometry(.035,.055,.25,12),displayGold);globeStem.position.y=.2;globeDisplay.add(globeStem);
+  const globeSphere=new THREE.Mesh(new THREE.SphereGeometry(.245,28,20),mat('#426f91'));globeSphere.name='memoryGlobeSphere';globeSphere.position.y=.47;globeDisplay.add(globeSphere);
+  const continentMat=mat('#71936d');
+  [[-.09,.53,.19,.09,.055],[.08,.43,.205,.06,.09],[-.02,.34,.22,.08,.05],[.13,.58,.17,.05,.04]].forEach(([x,y,z,sx,sy])=>{const land=new THREE.Mesh(new THREE.SphereGeometry(1,10,8),continentMat);land.scale.set(sx,sy,.018);land.position.set(x,y,z);globeDisplay.add(land);});
+  const globeAxis=new THREE.Mesh(new THREE.TorusGeometry(.27,.009,6,32),displayGold);globeAxis.position.y=.47;globeAxis.rotation.x=.28;globeDisplay.add(globeAxis);
+  // Pelota de voleibol en una balda superior, con costuras visibles.
+  const volleyballDisplay=new THREE.Group();volleyballDisplay.position.set(1.05,1.455,.72);volleyballDisplay.userData={secret:'volleyball'};memoryShelf.add(volleyballDisplay);interactive.push(volleyballDisplay);
+  const ball=new THREE.Mesh(new THREE.SphereGeometry(.235,24,18),mat('#eee6d2'));ball.position.y=.24;volleyballDisplay.add(ball);
+  const seamMat=mat('#8c7658');
+  const seamA=new THREE.Mesh(new THREE.TorusGeometry(.236,.007,6,48),seamMat);seamA.position.y=.24;volleyballDisplay.add(seamA);
+  const seamB=seamA.clone();seamB.rotation.x=Math.PI/2;volleyballDisplay.add(seamB);
+  const seamC=seamA.clone();seamC.rotation.y=Math.PI/2;volleyballDisplay.add(seamC);
+  // La vitrina se completa con pequeños recuerdos interactivos en las baldas superiores.
+  // Cada pieza abre una nota en su idioma original, sin traducciones.
+  const keepsakeColors=['#e8c77e','#a9b8d8','#c88f9e','#9ebd9a','#c5a5d8','#e0b987'];
+  const keepsakeDefs=[
+   ['msg-en','star'],['msg-fr','moon'],['msg-it','butterfly'],['msg-pt','drawer'],
+   ['msg-ja','lantern'],['msg-ko','heart'],['msg-de','compass'],['msg-th','feather'],
+   ['msg-zh','crystal'],['msg-ar','key'],['msg-ru','frame'],['msg-tr','music']
+  ];
+  keepsakeDefs.forEach(([secret,kind],idx)=>{
+   const row=Math.floor(idx/4),col=idx%4;
+   const root=new THREE.Group();root.position.set(-1.18+col*.78,2.12+row*.88,.69);root.userData={secret};memoryShelf.add(root);interactive.push(root);
+   const color=mat(keepsakeColors[idx%keepsakeColors.length],.48);
+   if(kind==='star'||kind==='crystal'){
+    const gem=new THREE.Mesh(new THREE.OctahedronGeometry(kind==='star'?.13:.16,0),color);gem.position.y=.18;root.add(gem);
+    if(kind==='star'){const ring=new THREE.Mesh(new THREE.TorusGeometry(.17,.012,6,24),displayGold);ring.position.y=.18;root.add(ring);}
+   }else if(kind==='moon'){
+    const moon=new THREE.Mesh(new THREE.TorusGeometry(.14,.055,10,24,Math.PI*1.55),color);moon.rotation.z=-.55;moon.position.y=.18;root.add(moon);
+   }else if(kind==='butterfly'){
+    const body=new THREE.Mesh(new THREE.SphereGeometry(.035,8,8),displayDark);body.scale.set(.6,2.5,.6);body.position.y=.18;root.add(body);
+    [-1,1].forEach(side=>{const wing=new THREE.Mesh(new THREE.SphereGeometry(.09,12,10),color);wing.scale.set(1.1,.72,.22);wing.position.set(side*.09,.21,0);root.add(wing);});
+   }else if(kind==='drawer'||kind==='music'||kind==='frame'){
+    const box=addBox(root,kind==='frame'?.28:.28,kind==='frame'?.24:.18,.18,0,.16,0,displayDark);
+    if(kind==='frame'){const panel=addBox(root,.21,.17,.012,0,.17,.1,color);}
+    else {const knob=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),displayGold);knob.position.set(0,.16,.105);root.add(knob);}
+    if(kind==='music'){const lid=addBox(root,.3,.035,.2,0,.27,0,color);lid.rotation.x=-.12;}
+   }else if(kind==='lantern'){
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(.09,.11,.2,12),displayGold);body.position.y=.17;root.add(body);const glow=new THREE.Mesh(new THREE.SphereGeometry(.055,10,10),mat('#ffe2a0'));glow.position.y=.17;root.add(glow);
+   }else if(kind==='heart'){
+    const heart=new THREE.Mesh(new THREE.SphereGeometry(.12,14,12),color);heart.scale.set(1,.85,.55);heart.rotation.z=.35;heart.position.y=.18;root.add(heart);
+   }else if(kind==='compass'){
+    const disk=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.045,24),displayGold);disk.position.y=.15;root.add(disk);const needle=new THREE.Mesh(new THREE.ConeGeometry(.035,.16,8),color);needle.position.y=.25;root.add(needle);
+   }else if(kind==='feather'){
+    const stem=addBox(root,.018,.27,.018,0,.17,0,displayGold);stem.rotation.z=-.25;
+    for(let j=0;j<4;j++){const barb=addBox(root,.11,.025,.018,(j%2?1:-1)*.045,.12+j*.035,0,color);barb.rotation.z=(j%2?-.5:.5);}
+   }else if(kind==='key'){
+    const shaft=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.22,8),displayGold);shaft.rotation.z=Math.PI/2;shaft.position.y=.17;root.add(shaft);const bow=new THREE.Mesh(new THREE.TorusGeometry(.06,.018,8,20),color);bow.position.set(-.13,.17,0);root.add(bow);
+   }
+   const plinth=addBox(root,.34,.045,.28,0,.025,0,displayGold);plinth.position.y=.025;
+  });
+
+  // MURAL DE RECUERDOS DEL MUNDO: ocupa el antiguo lugar del baúl
+  // del lado oeste (índice 9). Los marcos quedan vacíos hasta recibir fotos aprobadas.
+  const westShelf=shelfGroups[9];
+  scene.remove(westShelf);
+  photoGallery=new THREE.Group();
+  photoGallery.position.set(-6.42,2.55,0);
+  photoGallery.rotation.y=Math.PI/2;
+  scene.add(photoGallery);
+
+  // Mapa del mundo en madera, dibujado como textura original (sin fotografías ficticias).
+  const mapCanvas=document.createElement('canvas');
+  mapCanvas.width=1200; mapCanvas.height=680;
+  const mapCtx=mapCanvas.getContext('2d');
+  mapCtx.clearRect(0,0,mapCanvas.width,mapCanvas.height);
+  mapCtx.fillStyle='#80532f'; mapCtx.strokeStyle='#4d321f'; mapCtx.lineWidth=9;
+  const continents=[
+    [[95,170],[145,105],[235,78],[300,105],[330,165],[292,215],[250,245],[222,315],[180,345],[145,300],[130,240],[85,220]],
+    [[285,365],[335,385],[360,455],[340,530],[315,610],[280,565],[270,485],[245,420]],
+    [[450,145],[510,105],[590,120],[630,165],[610,215],[555,230],[525,275],[480,245],[440,205]],
+    [[540,280],[590,295],[625,360],[605,445],[570,520],[535,475],[515,390]],
+    [[650,145],[730,95],[845,110],[930,145],[1015,190],[1040,245],[985,275],[915,260],[875,305],[815,285],[760,245],[690,250],[640,210]],
+    [[720,320],[785,300],[850,330],[880,390],[850,455],[795,480],[755,430],[725,380]],
+    [[960,440],[1040,425],[1090,470],[1065,525],[1000,540],[955,500]]
+  ];
+  continents.forEach(points=>{
+    mapCtx.beginPath(); points.forEach(([x,y],i)=>i?mapCtx.lineTo(x,y):mapCtx.moveTo(x,y)); mapCtx.closePath();
+    mapCtx.fill(); mapCtx.stroke();
+  });
+  // Vetas discretas para dar apariencia de madera tallada.
+  mapCtx.save(); mapCtx.globalAlpha=.18; mapCtx.strokeStyle='#e1b77d'; mapCtx.lineWidth=3;
+  for(let y=95;y<630;y+=38){mapCtx.beginPath();mapCtx.moveTo(60,y);mapCtx.bezierCurveTo(350,y-18,780,y+20,1135,y-8);mapCtx.stroke();}
+  mapCtx.restore();
+  const mapTexture=new THREE.CanvasTexture(mapCanvas); mapTexture.colorSpace=THREE.SRGBColorSpace;
+  const mapPlane=new THREE.Mesh(new THREE.PlaneGeometry(2.45,1.39),new THREE.MeshBasicMaterial({map:mapTexture,transparent:true,side:THREE.DoubleSide}));
+  mapPlane.position.set(0,.02,.12); photoGallery.add(mapPlane);
+  const mapBacking=addBox(photoGallery,2.58,1.5,.07,0,.02,.055,mat('#5a3924'));
+  mapBacking.position.z=.045;
+
+  // Doce marcos vacíos, conectados al mapa con hilos finos color lino.
+  const photoSlots=[
+    [-1.22,1.55],[-.66,1.82],[0,1.9],[.66,1.82],[1.22,1.55],[1.48,.82],
+    [1.48,-.78],[1.02,-1.55],[.35,-1.82],[-.35,-1.82],[-1.02,-1.55],[-1.48,-.78]
+  ];
+  const threadMaterial=new THREE.LineBasicMaterial({color:'#c9ad83',transparent:true,opacity:.9});
+  const frameWood=mat('#9a7048',.72), framePaper=new THREE.MeshBasicMaterial({color:'#fffdf8',side:THREE.DoubleSide});
+  const approvedPhotoFrames=[];
+  photoSlots.forEach(([x,y],idx)=>{
+    const end=new THREE.Vector3(x,y,.095);
+    const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,.02,.095),end]),threadMaterial);
+    photoGallery.add(line);
+    const frame=new THREE.Group(); frame.position.set(x,y,.17); photoGallery.add(frame);
+    const fw=.43, fh=.53, border=.045;
+    // Papel blanco vacío: la foto real se añadirá después de ser aprobada.
+    const blank=new THREE.Mesh(new THREE.PlaneGeometry(fw-border*2,fh-border*2),framePaper);
+    blank.position.z=.012; frame.add(blank); approvedPhotoFrames.push(blank);
+    addBox(frame,fw,border,.045,0,fh/2-border/2,0,frameWood);
+    addBox(frame,fw,border,.045,0,-fh/2+border/2,0,frameWood);
+    addBox(frame,border,fh,.045,-fw/2+border/2,0,0,frameWood);
+    addBox(frame,border,fh,.045,fw/2-border/2,0,0,frameWood);
+    const pin=new THREE.Mesh(new THREE.SphereGeometry(.035,10,8),mat('#c49a5d'));
+    pin.position.set(0,fh/2+.045,.035); frame.add(pin);
+  });
+  // Las fotos llegan únicamente después de validar el código secreto.
+  function loadApprovedMemoryPhotos(photos){
+   photos=Array.isArray(photos)?photos:[];
+   const loader=new THREE.TextureLoader();
+   approvedPhotoFrames.forEach((plane,index)=>{
+    const photo=photos[index];
+    if(!photo || !photo.signed_url) return;
+    loader.load(photo.signed_url,(texture)=>{
+     texture.colorSpace=THREE.SRGBColorSpace;
+     texture.minFilter=THREE.LinearFilter;
+     plane.material=new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide});
+     plane.userData.photoId=photo.id;
+     plane.userData.photoName=photo.display_name||'Un recuerdo';
+    },undefined,(error)=>console.warn('No se pudo cargar una fotografía aprobada:',error));
+   });
+   if(photos.length>approvedPhotoFrames.length){
+    console.info('La biblioteca recibió '+photos.length+' fotografías aprobadas; los doce marcos muestran las primeras doce. Ningún recuerdo se elimina del almacenamiento.');
+   }
+  }
+  loadApprovedMemoryPhotos(window.__elenaApprovedMemoryPhotos||[]);
+
+  // Libros de países: se conserva exactamente la distribución original.
+  groups.forEach((group,i)=>{
+    let shelfIndex=(6+Math.floor(i/65))%12;
+    if(shelfIndex===6)shelfIndex=5;
+    const slot=i%65, level=Math.floor(slot/13), col=slot%13;
+    const shelf=shelfGroups[shelfIndex], x=-1.38+col*.23, y=.48+level*.86;
+    const decoration=shelfDecorations[shelfIndex][slot];if(decoration){shelf.remove(decoration);decoration.geometry.dispose();}
+    const book=addBox(shelf,.17,.62,.19,x,y+.37,.19,mat(['#784536','#3d6654','#465d83','#8a6536','#624978'][i%5],.48));
+    book.rotation.z=((i%3)-1)*.025;
+    book.userData={group,bookRoot:book};
+    group._threeBook=book;group._threeBookParent=shelf;
+    interactive.push(book);
+    const title=(group.querySelector('h3')?.textContent||'Libro').replace(/\s*[·•]\s*\d+.*$/,'').trim();
+    const spineLabel=new THREE.Mesh(new THREE.PlaneGeometry(.14,.55),new THREE.MeshBasicMaterial({map:labelTexture(title),side:THREE.DoubleSide}));
+    spineLabel.position.set(x,y+.37,.291);spineLabel.userData={group,bookRoot:book};
+    shelf.add(spineLabel);interactive.push(spineLabel);group._threeLabel=spineLabel;
+  });
+  // Mesa central, libro abierto decorativo, sillones y guardiana
+  const table=addBox(scene,2.1,.16,1.35,0,.95,-1.3,wood);addBox(scene,.14,.9,.14,-.82,.48,-1.3,darkWood);addBox(scene,.14,.9,.14,.82,.48,-1.3,darkWood);
+  const openBook=addBox(scene,.92,.06,.66,0,1.08,-1.3,mat('#e7d7b9'));openBook.rotation.y=.12;
+  // Nota permanente sobre el costado derecho de la mesa, fuera del espacio de aterrizaje del libro.
+  const viceNoteCanvas=document.createElement('canvas');viceNoteCanvas.width=900;viceNoteCanvas.height=620;
+  const vctx=viceNoteCanvas.getContext('2d');
+  vctx.fillStyle='#ead9b8';vctx.fillRect(0,0,900,620);
+  vctx.strokeStyle='#98734b';vctx.lineWidth=18;vctx.strokeRect(18,18,864,584);
+  vctx.strokeStyle='#c3a477';vctx.lineWidth=3;vctx.strokeRect(38,38,824,544);
+  vctx.fillStyle='#624b35';vctx.textAlign='center';vctx.textBaseline='middle';
+  vctx.font='bold 42px Georgia';vctx.fillText('✧ UN MENSAJE PARA TI ✧',450,105);
+  vctx.font='34px Georgia';
+  ['Allá afuera, en ese inmenso universo,','eres la «Vice Elena».','Pero aquí dentro puedes ser simplemente Elena.','No necesitas cargar con el peso de todos;','aquí solo tienes que ser tú misma.'].forEach((line,i)=>vctx.fillText(line,450,210+i*70));
+  const viceNoteTexture=new THREE.CanvasTexture(viceNoteCanvas);viceNoteTexture.colorSpace=THREE.SRGBColorSpace;
+  const viceNote=new THREE.Mesh(new THREE.PlaneGeometry(.66,.44),new THREE.MeshBasicMaterial({map:viceNoteTexture,side:THREE.DoubleSide}));
+  viceNote.rotation.x=-Math.PI/2;viceNote.position.set(.76,1.045,-1.3);viceNote.userData={secret:'viceNote'};scene.add(viceNote);interactive.push(viceNote);
+  // Pastel de cumpleaños en la punta opuesta a la nota, sin invadir el espacio de llegada de los libros.
+  const birthdayCake=new THREE.Group();birthdayCake.position.set(-.76,1.035,-1.3);birthdayCake.userData={secret:'birthdayCake'};scene.add(birthdayCake);interactive.push(birthdayCake);
+  const cakeBase=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.17,32),mat('#d8a6a0'));cakeBase.position.y=.085;birthdayCake.add(cakeBase);
+  const cakeTop=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.025,32),mat('#f2dfc8'));cakeTop.position.y=.18;birthdayCake.add(cakeTop);
+  const icingEdge=new THREE.Mesh(new THREE.TorusGeometry(.18,.018,8,40),mat('#fff0dc'));icingEdge.rotation.x=Math.PI/2;icingEdge.position.y=.18;birthdayCake.add(icingEdge);
+  const candle=new THREE.Mesh(new THREE.CylinderGeometry(.025,.03,.15,12),mat('#f4e7b9'));candle.position.set(0,.265,0);birthdayCake.add(candle);
+  const wick=new THREE.Mesh(new THREE.CylinderGeometry(.004,.004,.025,6),mat('#4a3022'));wick.position.set(0,.352,0);birthdayCake.add(wick);
+  const flameMaterial=new THREE.MeshStandardMaterial({color:'#ffbd58',emissive:'#ff8a24',emissiveIntensity:1.4,roughness:.35});
+  const candleFlame=new THREE.Mesh(new THREE.SphereGeometry(.035,12,10),flameMaterial);candleFlame.name='birthdayCandleFlame';candleFlame.scale.set(.72,1.45,.72);candleFlame.position.set(0,.397,0);birthdayCake.add(candleFlame);
+  const cakeDecor=mat('#c78383');for(let i=0;i<8;i++){const a=i*Math.PI/4;const berry=new THREE.Mesh(new THREE.SphereGeometry(.018,8,8),cakeDecor);berry.position.set(Math.cos(a)*.145,.205,Math.sin(a)*.145);birthdayCake.add(berry);}
+  const cat=new THREE.Mesh(new THREE.SphereGeometry(.28,20,14),mat('#17151b'));cat.position.set(2.1,.42,-2.5);scene.add(cat);const ears=addBox(scene,.5,.18,.25,2.1,.72,-2.5,mat('#17151b'));
+  // Pequeñas estrellas flotantes
+  const stars=new THREE.Group();for(let i=0;i<130;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.018,6,6),new THREE.MeshBasicMaterial({color:i%4?'#f5e6c8':'#b9b4ff'}));const a=Math.random()*Math.PI*2;s.position.set(Math.sin(a)*(7.7+Math.random()*.2),.8+Math.random()*4.2,Math.cos(a)*(7.7+Math.random()*.2));stars.add(s);}scene.add(stars);
+  loading.classList.add('hidden');animate();
+ }
+ function updateCamera(){camera.rotation.order='YXZ';camera.rotation.y=yaw;camera.rotation.x=pitch;camera.fov=zoom;camera.updateProjectionMatrix();}
+ function animate(){raf=requestAnimationFrame(animate);updateCamera();const memoryGlobe=scene.getObjectByName('memoryGlobeSphere');if(memoryGlobe)memoryGlobe.rotation.y+=.003;const flame=scene.getObjectByName('birthdayCandleFlame');if(flame){const t=performance.now()*.008;flame.scale.set(.72+Math.sin(t)*.08,1.45+Math.sin(t*1.7)*.12,.72+Math.cos(t)*.07);}
+  renderer.render(scene,camera);}
+ function onDown(e){drag=true;lastX=startX=e.clientX;lastY=startY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId);}
+ function onMove(e){if(!drag)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;yaw-=dx*.004;pitch=Math.max(-1.05,Math.min(1.05,pitch-dy*.003));}
+ function animateBookTo(group,returning,done){
+  const source=group&&group._threeBook;if(!source){done?.();return;}
+  if(activeBookMotion)return;
+  const fromPos=source.getWorldPosition(new THREE.Vector3());
+  const fromQuat=source.getWorldQuaternion(new THREE.Quaternion());
+  const fromScale=source.getWorldScale(new THREE.Vector3());
+  let toPos,toQuat,toScale;
+  if(!returning){
+    const parent=source.parent;
+    activeBookState={group,source,parent,position:source.position.clone(),quaternion:source.quaternion.clone(),scale:source.scale.clone()};
+    scene.attach(source);
+    // Centro exacto de la mesa: superficie a y=1.03; el libro queda tumbado encima.
+    toPos=new THREE.Vector3(0,1.145,-1.3);
+    toQuat=new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI/2,0,0));
+    toScale=new THREE.Vector3(2.3,1.35,1.35);
+  }else{
+    const state=activeBookState;if(!state||state.group!==group){done?.();return;}
+    toPos=state.parent.localToWorld(state.position.clone());
+    toQuat=state.parent.getWorldQuaternion(new THREE.Quaternion()).multiply(state.quaternion);
+    toScale=state.parent.getWorldScale(new THREE.Vector3()).multiply(state.scale);
+  }
+  const started=performance.now(),duration=780;
+  activeBookMotion=true;
+  function step(now){
+    const t=Math.min(1,(now-started)/duration),ease=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    source.position.lerpVectors(fromPos,toPos,ease);
+    source.quaternion.slerpQuaternions(fromQuat,toQuat,ease);
+    source.scale.lerpVectors(fromScale,toScale,ease);
+    if(t<1){requestAnimationFrame(step);return;}
+    activeBookMotion=false;
+    if(returning&&activeBookState){
+      const state=activeBookState;state.parent.attach(source);
+      source.position.copy(state.position);source.quaternion.copy(state.quaternion);source.scale.copy(state.scale);
+      activeBookState=null;
+    }
+    done?.();
+  }
+  requestAnimationFrame(step);
+ }
+ function flyBookToTable(group,done){animateBookTo(group,false,done);}
+ function playBirthdayTune(){
+  const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return;
+  try{const ctx=new AudioCtx();ctx.resume();const now=ctx.currentTime;const notes=[261.63,261.63,293.66,261.63,349.23,329.63,261.63,261.63,293.66,261.63,392.00,349.23,261.63,261.63,523.25,440.00,349.23,329.63,293.66,466.16,466.16,440.00,349.23,392.00,349.23];
+   notes.forEach((freq,i)=>{const start=now+i*.6;const osc=ctx.createOscillator();const gain=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,start);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(.12,start+.035);gain.gain.setValueAtTime(.12,start+.43);gain.gain.exponentialRampToValueAtTime(.0001,start+.57);osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+.58);});
+   setTimeout(()=>ctx.close().catch(()=>{}),15100);
+  }catch(err){console.warn('No se pudo reproducir el sonido de cumpleaños:',err);}
+ }
+ function returnBookToShelf(){if(!activeBookState)return;const group=activeBookState.group;animateBookTo(group,true);}
+ function onUp(e){if(!drag)return;drag=false;if(Math.abs(e.clientX-startX)+Math.abs(e.clientY-startY)>12)return;const r=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(interactive,true)[0];if(hit){let o=hit.object;while(o&&!o.userData.group&&!o.userData.secret)o=o.parent;if(o?.userData.group){const group=o.userData.group;if(activeBookState||activeBookMotion)return;flyBookToTable(group,()=>setTimeout(()=>group.click(),850));}else if(o?.userData.secret==='welcome'){document.getElementById('welcomeWallDialog').classList.add('open');}else if(o?.userData.secret==='viceNote'){window.dispatchEvent(new Event('open-vice-note'));}else if(o?.userData.secret==='readingNote'){window.dispatchEvent(new Event('open-reading-note'));}else if(o?.userData.secret==='birthdayCake'){window.dispatchEvent(new Event('birthday-cake-tap'));playBirthdayTune();}else if(o?.userData.secret)document.querySelector('[data-secret="'+o.userData.secret+'"]').click();}}
+ // Los controles se conectan cuando el lienzo 3D ya está creado.
+ function attach(){const c=renderer.domElement;c.addEventListener('pointerdown',onDown);c.addEventListener('pointermove',onMove);c.addEventListener('pointerup',onUp);c.addEventListener('pointercancel',()=>drag=false);c.addEventListener('wheel',e=>{zoom=Math.max(42,Math.min(88,zoom+e.deltaY*.025));e.preventDefault();},{passive:false});let initialDist=0;c.addEventListener('touchstart',e=>{if(e.touches.length===2)initialDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);},{passive:true});c.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(42,Math.min(88,zoom+(initialDist-d)*.08));initialDist=d;}},{passive:true});}
+ document.getElementById('zoomIn360').onclick=()=>zoom=Math.max(42,zoom-6);document.getElementById('zoomOut360').onclick=()=>zoom=Math.min(88,zoom+6);document.getElementById('reset360').onclick=()=>{yaw=0;pitch=-.05;zoom=70;};
+ const observer=new ResizeObserver(()=>{if(!renderer)return;const w=host.clientWidth,h=host.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});observer.observe(host);
+ window.addEventListener('elena-book-reader-closed',returnBookToShelf);
+ const watch=new MutationObserver(()=>{if(document.getElementById('elenaSecretLibrary').style.display==='block'&&!renderer){build();setTimeout(()=>{if(renderer)attach();},150);watch.disconnect();}});watch.observe(document.getElementById('elenaSecretLibrary'),{attributes:true,attributeFilter:['style']});
+})();
+</script>
+<script>
+
+// Editor del Muro de la Creatividad: modos separados, selección amplia, escala y rotación.
+(() => {
+  const canvas = document.querySelector('#artCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const color = document.querySelector('#artColor');
+  const brush = document.querySelector('#artBrush');
+  const background = document.querySelector('#artBackground');
+  const notice = document.querySelector('#artNotice');
+  const objectLayer = document.querySelector('#artObjects');
+  const editPanel = document.querySelector('#artEditPanel');
+  const scaleInput = document.querySelector('#artScale');
+  const scaleValue = document.querySelector('#artScaleValue');
+  const rotationInput = document.querySelector('#artRotation');
+  const rotationValue = document.querySelector('#artRotationValue');
+  const selection = document.createElement('div');
+  selection.className = 'art-selection';
+  selection.hidden = true;
+  selection.innerHTML = '<button type="button" class="art-handle rotate" aria-label="Girar objeto"></button><button type="button" class="art-handle resize" aria-label="Cambiar tamaño"></button>';
+  objectLayer.append(selection);
+  const rotateHandle = selection.querySelector('.rotate');
+  const resizeHandle = selection.querySelector('.resize');
+
+  const undoStack = [];
+  let drawing = false, erasing = false, last = null, hasContent = false;
+  let nextObjectId = 1, objects = [], selectedId = null, mode = 'draw', activeTransform = null;
+
+  const selectedObject = () => objects.find(o => o.id === selectedId) || null;
+  const selectedElement = () => objectLayer.querySelector('.art-object[data-object-id="' + selectedId + '"]');
+  function saveState() {
+    if (undoStack.length >= 25) undoStack.shift();
+    undoStack.push({canvas:ctx.getImageData(0,0,canvas.width,canvas.height),objects:objects.map(o=>({...o}))});
+  }
+  function resetCanvas() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=background.value; ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+  function applyTransform(item, visual) {
+    visual.style.transform = `rotate(${item.rotation || 0}deg) scale(${item.scale || 1})`;
+  }
+  function updateSelectionFrame() {
+    const el=selectedElement();
+    if(!el || mode!=='edit'){selection.hidden=true;return;}
+    const layer=objectLayer.getBoundingClientRect(), r=el.getBoundingClientRect();
+    selection.style.left=(r.left-layer.left)+'px'; selection.style.top=(r.top-layer.top)+'px';
+    selection.style.width=r.width+'px'; selection.style.height=r.height+'px'; selection.hidden=false;
+  }
+  function syncPanel() {
+    const item=selectedObject();
+    editPanel.classList.toggle('visible',mode==='edit' && !!item);
+    if(!item){selection.hidden=true;return;}
+    scaleInput.value=Math.round((item.scale||1)*100); scaleValue.textContent=scaleInput.value+'%';
+    let angle=((item.rotation||0)%360+360)%360; if(angle>180) angle-=360;
+    rotationInput.value=Math.round(angle); rotationValue.textContent=Math.round(angle)+'°';
+    updateSelectionFrame();
+  }
+  function selectObject(id) {
+    selectedId=id;
+    objectLayer.querySelectorAll('.art-object').forEach(el=>{
+      el.style.background=Number(el.dataset.objectId)===id?'#8fc7ff18':'transparent';
+    });
+    syncPanel();
+  }
+  function redrawObjects() {
+    objectLayer.querySelectorAll('.art-object').forEach(el=>el.remove());
+    objects.forEach(item=>{
+      const el=document.createElement('div'); el.className='art-object'; el.dataset.objectId=item.id;
+      el.style.left=item.x+'%'; el.style.top=item.y+'%';
+      const visual=item.type==='image'?document.createElement('img'):document.createElement('div');
+      visual.className='art-visual '+(item.type==='image'?'art-object-image':item.type==='text'?'art-object-text':'art-object-sticker');
+      if(item.type==='image'){visual.src=item.content;visual.alt='Imagen añadida al mural';}
+      else{visual.textContent=item.content;visual.style.color=item.color||color.value;}
+      applyTransform(item,visual); el.append(visual);
+      if(item.id===selectedId)el.style.background='#8fc7ff18';
+      el.addEventListener('pointerdown',event=>{
+        if(mode!=='edit')return;
+        event.preventDefault();event.stopPropagation();selectObject(item.id);
+        try{el.setPointerCapture(event.pointerId);}catch(_){}
+        const r=objectLayer.getBoundingClientRect();
+        activeTransform={kind:'move',pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,startLeft:item.x,startTop:item.y,width:r.width,height:r.height};
+      });
+      el.addEventListener('pointermove',event=>{
+        if(!activeTransform||activeTransform.kind!=='move'||activeTransform.pointerId!==event.pointerId)return;
+        event.preventDefault();
+        item.x=Math.max(3,Math.min(97,activeTransform.startLeft+(event.clientX-activeTransform.startX)/Math.max(activeTransform.width,1)*100));
+        item.y=Math.max(4,Math.min(96,activeTransform.startTop+(event.clientY-activeTransform.startY)/Math.max(activeTransform.height,1)*100));
+        el.style.left=item.x+'%';el.style.top=item.y+'%';updateSelectionFrame();
+      });
+      const end=event=>{if(activeTransform?.kind==='move'&&activeTransform.pointerId===event.pointerId)activeTransform=null;};
+      el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+      objectLayer.insertBefore(el,selection);
+    });
+    syncPanel();
+  }
+  function setMode(next) {
+    mode=next;const draw=mode==='draw';
+    document.querySelector('#artModeDraw').classList.toggle('active',draw);
+    document.querySelector('#artModeEdit').classList.toggle('active',!draw);
+    canvas.classList.toggle('drawing-disabled',!draw);
+    objectLayer.classList.toggle('editing',!draw);
+    document.querySelector('#artCanvasHint').textContent=draw
+      ?'Modo dibujo: pinta directamente sobre el lienzo. Cambia a «Editar objetos» para seleccionar, mover, agrandar y girar elementos sin dibujar accidentalmente.'
+      :'Modo edición: toca un objeto (su zona de selección es amplia), arrástralo para moverlo y usa los controles para cambiar tamaño o girarlo.';
+    if(draw){selectedId=null;selection.hidden=true;editPanel.classList.remove('visible');objectLayer.querySelectorAll('.art-object').forEach(el=>el.style.background='transparent');}
+    else syncPanel();
+  }
+  function addObject(type,content) {
+    saveState();const item={id:nextObjectId++,type,content,color:color.value,x:50,y:50,scale:1,rotation:0};
+    objects.push(item);hasContent=true;setMode('edit');redrawObjects();selectObject(item.id);
+  }
+  function point(event) {
+    const r=canvas.getBoundingClientRect();
+    return{x:(event.clientX-r.left)*canvas.width/r.width,y:(event.clientY-r.top)*canvas.height/r.height};
+  }
+
+  resetCanvas();setMode('draw');
+  document.querySelector('#artModeDraw').addEventListener('click',()=>setMode('draw'));
+  document.querySelector('#artModeEdit').addEventListener('click',()=>setMode('edit'));
+  background.addEventListener('change',()=>{saveState();resetCanvas();});
+  canvas.addEventListener('pointerdown',event=>{
+    if(mode!=='draw')return;event.preventDefault();saveState();drawing=true;last=point(event);
+    canvas.setPointerCapture(event.pointerId);ctx.beginPath();ctx.arc(last.x,last.y,Math.max(1,Number(brush.value)/2),0,Math.PI*2);
+    ctx.fillStyle=erasing?background.value:color.value;ctx.fill();if(!erasing)hasContent=true;
+  });
+  canvas.addEventListener('pointermove',event=>{
+    if(!drawing||mode!=='draw')return;event.preventDefault();const current=point(event);
+    ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(current.x,current.y);ctx.lineWidth=Number(brush.value);
+    ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=erasing?background.value:color.value;ctx.stroke();
+    last=current;if(!erasing)hasContent=true;
+  });
+  const stopDrawing=()=>{drawing=false;last=null;};
+  canvas.addEventListener('pointerup',stopDrawing);canvas.addEventListener('pointercancel',stopDrawing);
+
+  function startHandle(kind,event) {
+    const item=selectedObject(),el=selectedElement();if(!item||!el||mode!=='edit')return;
+    event.preventDefault();event.stopPropagation();const r=el.getBoundingClientRect();
+    const cx=r.left+r.width/2,cy=r.top+r.height/2;
+    activeTransform={kind,pointerId:event.pointerId,cx,cy,startAngle:Math.atan2(event.clientY-cy,event.clientX-cx),
+      startDistance:Math.max(8,Math.hypot(event.clientX-cx,event.clientY-cy)),startScale:item.scale||1,startRotation:item.rotation||0};
+    try{event.currentTarget.setPointerCapture(event.pointerId);}catch(_){}
+  }
+  rotateHandle.addEventListener('pointerdown',e=>startHandle('rotate',e));
+  resizeHandle.addEventListener('pointerdown',e=>startHandle('resize',e));
+  function moveHandle(event) {
+    if(!activeTransform||activeTransform.pointerId!==event.pointerId||!['rotate','resize'].includes(activeTransform.kind))return;
+    event.preventDefault();const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    const angle=Math.atan2(event.clientY-activeTransform.cy,event.clientX-activeTransform.cx);
+    if(activeTransform.kind==='rotate'){
+      let delta=(angle-activeTransform.startAngle)*180/Math.PI;if(delta>180)delta-=360;if(delta< -180)delta+=360;
+      item.rotation=activeTransform.startRotation+delta;
+    }else{
+      const d=Math.max(8,Math.hypot(event.clientX-activeTransform.cx,event.clientY-activeTransform.cy));
+      item.scale=Math.max(.25,Math.min(3.5,activeTransform.startScale*d/activeTransform.startDistance));
+    }
+    applyTransform(item,el.querySelector('.art-visual'));syncPanel();
+  }
+  [rotateHandle,resizeHandle].forEach(handle=>{
+    handle.addEventListener('pointermove',moveHandle);
+    const stop=e=>{if(activeTransform?.pointerId===e.pointerId)activeTransform=null;};
+    handle.addEventListener('pointerup',stop);handle.addEventListener('pointercancel',stop);handle.addEventListener('lostpointercapture',stop);
+  });
+  scaleInput.addEventListener('input',()=>{
+    const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    item.scale=Number(scaleInput.value)/100;applyTransform(item,el.querySelector('.art-visual'));
+    scaleValue.textContent=scaleInput.value+'%';updateSelectionFrame();
+  });
+  rotationInput.addEventListener('input',()=>{
+    const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    item.rotation=Number(rotationInput.value);applyTransform(item,el.querySelector('.art-visual'));
+    rotationValue.textContent=rotationInput.value+'°';updateSelectionFrame();
+  });
+  function rotateBy(deg) {
+    const item=selectedObject(),el=selectedElement();if(!item||!el)return;
+    item.rotation=(item.rotation||0)+deg;let shown=((Math.round(item.rotation)%360)+360)%360;if(shown>180)shown-=360;
+    rotationInput.value=Math.max(-180,Math.min(180,shown));rotationValue.textContent=shown+'°';
+    applyTransform(item,el.querySelector('.art-visual'));updateSelectionFrame();
+  }
+  document.querySelector('#artRotateLeft').addEventListener('click',()=>rotateBy(-15));
+  document.querySelector('#artRotateRight').addEventListener('click',()=>rotateBy(15));
+  document.querySelector('#artDelete').addEventListener('click',()=>{
+    if(!selectedObject())return;saveState();objects=objects.filter(o=>o.id!==selectedId);selectedId=null;redrawObjects();notice.textContent='Objeto eliminado.';
+  });
+  document.querySelector('#artUndo').addEventListener('click',()=>{
+    const prev=undoStack.pop();if(!prev)return;ctx.putImageData(prev.canvas,0,0);objects=prev.objects;selectedId=null;redrawObjects();hasContent=objects.length>0||undoStack.length>0;
+  });
+  document.querySelector('#artEraser').addEventListener('click',event=>{
+    erasing=!erasing;event.currentTarget.textContent=erasing?'✎ Volver al pincel':'⌫ Borrador';if(erasing)setMode('draw');
+  });
+  document.querySelector('#artClear').addEventListener('click',()=>{
+    saveState();resetCanvas();objects=[];selectedId=null;redrawObjects();hasContent=false;notice.textContent='Lienzo limpio. ¡Puedes empezar de nuevo!';
+  });
+  document.querySelector('#artAddText').addEventListener('click',()=>{
+    const input=document.querySelector('#artText'),value=input.value.trim();if(!value)return;
+    addObject('text',value);input.value='';notice.textContent='Texto añadido. En modo edición puedes moverlo, agrandarlo y girarlo.';
+  });
+  document.querySelectorAll('[data-sticker]').forEach(button=>button.addEventListener('click',()=>{
+    addObject('sticker',button.dataset.sticker);notice.textContent='Sticker añadido y seleccionado. Usa el marco para girar o cambiar su tamaño.';
+  }));
+  document.querySelector('#artUpload').addEventListener('change',event=>{
+    const file=event.target.files&&event.target.files[0];if(!file)return;
+    const allowedTypes=['image/jpeg','image/png','image/webp'];
+    if(!allowedTypes.includes(file.type)){notice.textContent='Elige una imagen JPG, PNG o WebP.';event.target.value='';return;}
+    if(file.size>6*1024*1024){notice.textContent='La imagen debe pesar menos de 6 MB.';event.target.value='';return;}
+    const reader=new FileReader();reader.onload=()=>{addObject('image',reader.result);notice.textContent='Imagen añadida y seleccionada. Usa el marco para girar o cambiar su tamaño.';};
+    reader.onerror=()=>{notice.textContent='No se pudo leer esa imagen. Prueba con otra.';};
+    reader.readAsDataURL(file);event.target.value='';
+  });
+
+  function wrapArtworkText(exportCtx,text,maxWidth) {
+    const words=String(text).split(/\s+/);const lines=[];let line='';
+    words.forEach(word=>{
+      const candidate=line?line+' '+word:word;
+      if(line && exportCtx.measureText(candidate).width>maxWidth){lines.push(line);line=word;}
+      else line=candidate;
+    });
+    if(line)lines.push(line);
+    return lines;
+  }
+
+  function loadArtworkImage(src) {
+    return new Promise((resolve,reject)=>{
+      const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src;
+    });
+  }
+
+  async function makeArtworkBlob() {
+    const output=document.createElement('canvas');
+    output.width=canvas.width;output.height=canvas.height;
+    const exportCtx=output.getContext('2d');
+    exportCtx.drawImage(canvas,0,0);
+    for(const item of objects) {
+      const x=item.x/100*output.width,y=item.y/100*output.height;
+      exportCtx.save();exportCtx.translate(x,y);
+      exportCtx.rotate((item.rotation||0)*Math.PI/180);
+      exportCtx.scale(item.scale||1,item.scale||1);
+      if(item.type==='text') {
+        exportCtx.font='700 34px system-ui, sans-serif';
+        exportCtx.textAlign='center';exportCtx.textBaseline='middle';
+        exportCtx.fillStyle=item.color||'#ffffff';
+        exportCtx.shadowColor='#00000088';exportCtx.shadowBlur=4;
+        const lines=String(item.content).split('\n');
+        const lineHeight=39,startY=-(lines.length-1)*lineHeight/2;
+        lines.forEach((line,index)=>exportCtx.fillText(line,0,startY+index*lineHeight));
+      } else if(item.type==='sticker') {
+        exportCtx.font='76px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
+        exportCtx.textAlign='center';exportCtx.textBaseline='middle';exportCtx.fillText(item.content,0,0);
+      } else if(item.type==='image') {
+        const img=await loadArtworkImage(item.content);
+        const ratio=Math.min(180/img.naturalWidth,220/img.naturalHeight,1.4);
+        const w=img.naturalWidth*ratio,h=img.naturalHeight*ratio;
+        exportCtx.drawImage(img,-w/2,-h/2,w,h);
+        exportCtx.strokeStyle='#ffffffaa';exportCtx.lineWidth=2;exportCtx.strokeRect(-w/2,-h/2,w,h);
+      }
+      exportCtx.restore();
+    }
+    return await new Promise((resolve,reject)=>{
+      output.toBlob(blob=>blob?resolve(blob):reject(new Error('No se pudo preparar la imagen.')),'image/png');
+    });
+  }
+
+  async function submitArtwork() {
+    const button=document.querySelector('#artPrepare');
+    const name=document.querySelector('#artName').value.trim();
+    const title=document.querySelector('#artTitle').value.trim();
+    const country=document.querySelector('#artCountry').value||null;
+    if(!hasContent){notice.textContent='Primero crea un dibujo o añade una imagen al lienzo.';return;}
+    if(!navigator.onLine){notice.textContent='No hay conexión a internet. Inténtalo cuando vuelvas a estar en línea.';return;}
+    button.disabled=true;button.textContent='Enviando creación...';
+    notice.textContent='Estamos guardando tu obra de arte...';
+    let uploadedPath=null;
+    try {
+      const blob=await makeArtworkBlob();
+      const fileId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+      uploadedPath='submissions/'+fileId+'.png';
+      const {error:uploadError}=await supabaseClient.storage.from('creativity-wall')
+        .upload(uploadedPath,blob,{contentType:'image/png',upsert:false,cacheControl:'3600'});
+      if(uploadError)throw uploadError;
+      const {error:insertError}=await supabaseClient.from('creativity_submissions').insert({
+        username:name||null,title:title||null,country,image_path:uploadedPath,status:'pending'
+      });
+      if(insertError)throw insertError;
+      notice.textContent='';
+      document.querySelector('#artThanksDialog').showModal();
+      resetCanvas();objects=[];selectedId=null;redrawObjects();hasContent=false;setMode('draw');
+      document.querySelector('#artName').value='';
+      document.querySelector('#artTitle').value='';
+      document.querySelector('#artCountry').value='';
+    } catch(error) {
+      console.error('Error al enviar la creación:',error);
+      if(uploadedPath) {
+        try { await supabaseClient.storage.from('creativity-wall').remove([uploadedPath]); }
+        catch(cleanupError) { console.warn('No se pudo limpiar el archivo temporal:',cleanupError); }
+      }
+      notice.textContent='No se pudo enviar tu creación. Comprueba la conexión y vuelve a intentarlo.';
+    } finally {
+      button.disabled=false;button.textContent='Enviar mi creación ✦';
+    }
+  }
+  document.querySelector('#continueArtwork').addEventListener('click',()=>{
+    document.querySelector('#artThanksDialog').close();
+  });
+  document.querySelector('#artPrepare').addEventListener('click',submitArtwork);
+  window.addEventListener('resize',updateSelectionFrame);
+})();
+</script>
+
+<script>
+// Galería pública: solo consulta y muestra creaciones aprobadas.
+(() => {
+  const strip = document.querySelector('#artGalleryStrip');
+  const moreButton = document.querySelector('#artGalleryMore');
+  const galleryDialog = document.querySelector('#artGalleryDialog');
+  const grid = document.querySelector('#artGalleryGrid');
+  const previewDialog = document.querySelector('#artPreviewDialog');
+  const previewImage = document.querySelector('#artPreviewImage');
+  const previewTitle = document.querySelector('#artPreviewTitle');
+  const previewMeta = document.querySelector('#artPreviewMeta');
+  if (!strip || !moreButton || !galleryDialog || !grid || !previewDialog) return;
+
+  let approvedArtworks = [];
+
+  function artworkUrl(path) {
+    const { data } = supabaseClient.storage.from('creativity-wall').getPublicUrl(path);
+    return data.publicUrl;
+  }
+
+  function openPreview(artwork) {
+    previewImage.src = artwork.url;
+    previewTitle.textContent = artwork.title || 'Una creación especial';
+    const details = [];
+    if (artwork.username) details.push('Por ' + artwork.username);
+    if (artwork.country) details.push('🌍 ' + artwork.country);
+    previewMeta.textContent = details.join(' · ');
+    previewDialog.showModal();
+  }
+
+  function makeCard(artwork) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'art-gallery-card';
+    button.addEventListener('click', () => openPreview(artwork));
+    const img = document.createElement('img');
+    img.src = artwork.url;
+    img.alt = artwork.title ? 'Obra: ' + artwork.title : 'Creación de la comunidad';
+    img.loading = 'lazy';
+    const title = document.createElement('strong');
+    title.textContent = artwork.title || 'Una creación especial';
+    const author = document.createElement('span');
+    author.textContent = artwork.username || 'Alguien que quiere a Elena';
+    button.append(img, title, author);
+    return button;
+  }
+
+  function renderGallery() {
+    strip.replaceChildren();
+    grid.replaceChildren();
+    if (!approvedArtworks.length) {
+      const empty = document.createElement('p');
+      empty.className = 'art-gallery-empty';
+      empty.textContent = 'Pronto aparecerán aquí las creaciones aprobadas. ✨';
+      strip.append(empty);
+      grid.append(empty.cloneNode(true));
+      return;
+    }
+    approvedArtworks.forEach(artwork => {
+      strip.append(makeCard(artwork));
+      grid.append(makeCard(artwork));
+    });
+  }
+
+  async function loadApprovedArtworks() {
+    try {
+      const { data, error } = await supabaseClient
+        .from('creativity_submissions')
+        .select('username,title,country,image_path,created_at')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      approvedArtworks = (data || []).map(row => ({
+        username: row.username, title: row.title, country: row.country,
+        url: artworkUrl(row.image_path), createdAt: row.created_at
+      }));
+      renderGallery();
+    } catch (error) {
+      console.error('No se pudo cargar la galería:', error);
+      strip.replaceChildren();
+      const message = document.createElement('p');
+      message.className = 'art-gallery-empty';
+      message.textContent = 'No pudimos cargar la galería en este momento.';
+      strip.append(message);
+    }
+  }
+
+  moreButton.addEventListener('click', () => galleryDialog.showModal());
+  document.querySelector('[data-close-gallery]').addEventListener('click', () => galleryDialog.close());
+  document.querySelector('[data-close-preview]').addEventListener('click', () => previewDialog.close());
+  loadApprovedArtworks();
+})();
+</script>
+
+</body></html>
